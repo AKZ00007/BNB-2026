@@ -23,7 +23,7 @@ export default function TemplatesPage() {
     };
 
     return (
-        <main className="min-h-screen bg-bg-base text-text-primary overflow-hidden relative">
+        <main className="min-h-screen bg-[#FAFAFA] text-gray-900 overflow-hidden relative">
             {/* Ambient background */}
             <div className="fixed inset-0 pointer-events-none z-0">
                 <div className="absolute top-[-15%] left-[-10%] w-[50%] h-[50%] bg-purple/6 rounded-full blur-[150px]" />
@@ -44,7 +44,7 @@ export default function TemplatesPage() {
                             </span>
                             {' '}with Templates
                         </h1>
-                        <p className="text-text-secondary max-w-2xl mx-auto text-lg">
+                        <p className="text-gray-600 max-w-2xl mx-auto text-lg">
                             Pre-built tokenomics configurations optimized for specific project categories.
                             Choose a template, customize it, and deploy — all in under 5 minutes.
                         </p>
@@ -58,7 +58,7 @@ export default function TemplatesPage() {
                                 onClick={() => setActiveCategory(cat.id)}
                                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${activeCategory === cat.id
                                         ? 'bg-gold/20 border border-gold/40 text-gold shadow-lg shadow-gold/5'
-                                        : 'bg-white/5 border border-white/10 text-text-secondary hover:bg-white/10 hover:text-text-primary'
+                                        : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                                     }`}
                             >
                                 {cat.icon} {cat.label}
@@ -71,7 +71,7 @@ export default function TemplatesPage() {
                         {filtered.map((template) => (
                             <div
                                 key={template.id}
-                                className="group relative rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-sm overflow-hidden hover:border-gold/30 transition-all duration-300 hover:shadow-lg hover:shadow-gold/5 cursor-pointer"
+                                className="group relative rounded-2xl border border-gray-200 bg-white/[0.03] backdrop-blur-sm overflow-hidden hover:border-gold/30 transition-all duration-300 hover:shadow-lg hover:shadow-gold/5 cursor-pointer"
                                 onClick={() => setSelectedTemplate(template)}
                             >
                                 {/* Gradient top bar */}
@@ -81,14 +81,14 @@ export default function TemplatesPage() {
                                     {/* Icon & Title */}
                                     <div className="flex items-start justify-between mb-4">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-2xl">
+                                            <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-2xl">
                                                 {template.icon}
                                             </div>
                                             <div>
-                                                <h3 className="font-bold text-text-primary group-hover:text-gold transition-colors">
+                                                <h3 className="font-bold text-gray-900 group-hover:text-gold transition-colors">
                                                     {template.name}
                                                 </h3>
-                                                <span className="text-xs text-text-tertiary uppercase tracking-wide">
+                                                <span className="text-xs text-gray-400 uppercase tracking-wide">
                                                     {template.category}
                                                 </span>
                                             </div>
@@ -96,22 +96,22 @@ export default function TemplatesPage() {
                                     </div>
 
                                     {/* Tagline */}
-                                    <p className="text-sm text-text-secondary mb-4 line-clamp-2">
+                                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">
                                         {template.tagline}
                                     </p>
 
                                     {/* Quick Stats */}
                                     <div className="grid grid-cols-3 gap-2 mb-4">
-                                        <div className="bg-white/5 rounded-lg p-2 text-center">
-                                            <div className="text-xs text-text-tertiary">TGE</div>
+                                        <div className="bg-white rounded-lg p-2 text-center">
+                                            <div className="text-xs text-gray-400">TGE</div>
                                             <div className="text-sm font-bold text-gold">{template.config.tgePercent}%</div>
                                         </div>
-                                        <div className="bg-white/5 rounded-lg p-2 text-center">
-                                            <div className="text-xs text-text-tertiary">PLU Lock</div>
+                                        <div className="bg-white rounded-lg p-2 text-center">
+                                            <div className="text-xs text-gray-400">PLU Lock</div>
                                             <div className="text-sm font-bold text-green-400">{template.config.plu.totalLockPercent}%</div>
                                         </div>
-                                        <div className="bg-white/5 rounded-lg p-2 text-center">
-                                            <div className="text-xs text-text-tertiary">Risk</div>
+                                        <div className="bg-white rounded-lg p-2 text-center">
+                                            <div className="text-xs text-gray-400">Risk</div>
                                             <div className="text-sm font-bold text-cyan-400">{template.config.risk.score}/10</div>
                                         </div>
                                     </div>
@@ -119,7 +119,7 @@ export default function TemplatesPage() {
                                     {/* Examples */}
                                     <div className="flex flex-wrap gap-1.5">
                                         {template.examples.map((ex, i) => (
-                                            <span key={i} className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-text-tertiary">
+                                            <span key={i} className="text-xs px-2 py-0.5 rounded-full bg-white text-gray-400">
                                                 {ex}
                                             </span>
                                         ))}
@@ -131,7 +131,7 @@ export default function TemplatesPage() {
 
                     {/* CTA */}
                     <div className="mt-12 text-center">
-                        <p className="text-text-tertiary mb-4">Don&apos;t see what you need?</p>
+                        <p className="text-gray-400 mb-4">Don&apos;t see what you need?</p>
                         <Link
                             href="/create"
                             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-gold to-gold/80 text-bg-base font-semibold hover:shadow-lg hover:shadow-gold/20 transition-all"
@@ -149,7 +149,7 @@ export default function TemplatesPage() {
                     onClick={() => setSelectedTemplate(null)}
                 >
                     <div
-                        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl border border-white/10 bg-bg-card shadow-2xl"
+                        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl border border-gray-200 bg-bg-card shadow-2xl"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Gradient bar */}
@@ -158,22 +158,22 @@ export default function TemplatesPage() {
                         <div className="p-8">
                             {/* Header */}
                             <div className="flex items-center gap-4 mb-6">
-                                <div className="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center text-3xl">
+                                <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center text-3xl">
                                     {selectedTemplate.icon}
                                 </div>
                                 <div>
                                     <h2 className="text-2xl font-bold">{selectedTemplate.name}</h2>
-                                    <p className="text-text-secondary text-sm">{selectedTemplate.tagline}</p>
+                                    <p className="text-gray-600 text-sm">{selectedTemplate.tagline}</p>
                                 </div>
                                 <button
                                     onClick={() => setSelectedTemplate(null)}
-                                    className="ml-auto w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-text-tertiary hover:text-text-primary transition-colors"
+                                    className="ml-auto w-8 h-8 rounded-lg bg-white flex items-center justify-center text-gray-400 hover:text-gray-900 transition-colors"
                                 >
                                     ✕
                                 </button>
                             </div>
 
-                            <p className="text-text-secondary text-sm mb-6">{selectedTemplate.description}</p>
+                            <p className="text-gray-600 text-sm mb-6">{selectedTemplate.description}</p>
 
                             {/* Config Details */}
                             <div className="space-y-4">
@@ -185,28 +185,28 @@ export default function TemplatesPage() {
                                         { label: 'Hard Cap', value: `${selectedTemplate.config.hardCapBnb} BNB` },
                                         { label: 'Risk Score', value: `${selectedTemplate.config.risk.score}/10` },
                                     ].map((m) => (
-                                        <div key={m.label} className="bg-white/5 rounded-xl p-3 text-center">
-                                            <div className="text-xs text-text-tertiary mb-1">{m.label}</div>
+                                        <div key={m.label} className="bg-white rounded-xl p-3 text-center">
+                                            <div className="text-xs text-gray-400 mb-1">{m.label}</div>
                                             <div className="text-sm font-bold text-gold">{m.value}</div>
                                         </div>
                                     ))}
                                 </div>
 
                                 {/* Vesting Distribution */}
-                                <div className="bg-white/5 rounded-xl p-4">
-                                    <h4 className="text-sm font-semibold mb-3 text-text-primary">📊 Token Distribution</h4>
+                                <div className="bg-white rounded-xl p-4">
+                                    <h4 className="text-sm font-semibold mb-3 text-gray-900">📊 Token Distribution</h4>
                                     <div className="space-y-2">
                                         {selectedTemplate.config.vesting.map((v, i) => (
                                             <div key={i} className="flex items-center justify-between text-sm">
-                                                <span className="text-text-secondary">{v.label}</span>
+                                                <span className="text-gray-600">{v.label}</span>
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-24 h-1.5 rounded-full bg-white/10 overflow-hidden">
+                                                    <div className="w-24 h-1.5 rounded-full bg-gray-100 overflow-hidden">
                                                         <div
                                                             className="h-full rounded-full bg-gradient-to-r from-gold to-purple"
                                                             style={{ width: `${v.percent}%` }}
                                                         />
                                                     </div>
-                                                    <span className="text-text-primary font-medium w-10 text-right">{v.percent}%</span>
+                                                    <span className="text-gray-900 font-medium w-10 text-right">{v.percent}%</span>
                                                 </div>
                                             </div>
                                         ))}
@@ -214,39 +214,39 @@ export default function TemplatesPage() {
                                 </div>
 
                                 {/* AMM Config */}
-                                <div className="bg-white/5 rounded-xl p-4">
-                                    <h4 className="text-sm font-semibold mb-3 text-text-primary">⚙️ AMM Settings</h4>
+                                <div className="bg-white rounded-xl p-4">
+                                    <h4 className="text-sm font-semibold mb-3 text-gray-900">⚙️ AMM Settings</h4>
                                     <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
                                         <div className="flex justify-between">
-                                            <span className="text-text-tertiary">DEX</span>
-                                            <span className="text-text-primary">{selectedTemplate.config.amm.dex}</span>
+                                            <span className="text-gray-400">DEX</span>
+                                            <span className="text-gray-900">{selectedTemplate.config.amm.dex}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-text-tertiary">Bonding Curve</span>
-                                            <span className="text-text-primary capitalize">{selectedTemplate.config.amm.bondingCurve}</span>
+                                            <span className="text-gray-400">Bonding Curve</span>
+                                            <span className="text-gray-900 capitalize">{selectedTemplate.config.amm.bondingCurve}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-text-tertiary">Buy Tax</span>
+                                            <span className="text-gray-400">Buy Tax</span>
                                             <span className="text-green-400">{selectedTemplate.config.amm.buyTaxPercent}%</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-text-tertiary">Sell Tax</span>
+                                            <span className="text-gray-400">Sell Tax</span>
                                             <span className="text-red-400">{selectedTemplate.config.amm.sellTaxPercent}%</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-text-tertiary">LP Allocation</span>
-                                            <span className="text-text-primary">{selectedTemplate.config.amm.initialLiquidityPercent}%</span>
+                                            <span className="text-gray-400">LP Allocation</span>
+                                            <span className="text-gray-900">{selectedTemplate.config.amm.initialLiquidityPercent}%</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-text-tertiary">Max Wallet</span>
-                                            <span className="text-text-primary">{selectedTemplate.config.amm.antiWhaleMaxWalletPercent}%</span>
+                                            <span className="text-gray-400">Max Wallet</span>
+                                            <span className="text-gray-900">{selectedTemplate.config.amm.antiWhaleMaxWalletPercent}%</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* PLU Milestones */}
-                                <div className="bg-white/5 rounded-xl p-4">
-                                    <h4 className="text-sm font-semibold mb-3 text-text-primary">
+                                <div className="bg-white rounded-xl p-4">
+                                    <h4 className="text-sm font-semibold mb-3 text-gray-900">
                                         🔒 PLU Lock — {selectedTemplate.config.plu.totalLockPercent}% Locked
                                     </h4>
                                     <div className="space-y-2">
@@ -255,9 +255,9 @@ export default function TemplatesPage() {
                                                 <div className="w-6 h-6 rounded-full bg-green-400/10 text-green-400 flex items-center justify-center text-xs font-bold">
                                                     {i + 1}
                                                 </div>
-                                                <span className="text-text-secondary flex-1">{m.condition}</span>
+                                                <span className="text-gray-600 flex-1">{m.condition}</span>
                                                 <span className="text-gold font-medium">{m.percent}%</span>
-                                                <span className="text-text-tertiary text-xs">Day {m.afterDays}</span>
+                                                <span className="text-gray-400 text-xs">Day {m.afterDays}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -265,7 +265,7 @@ export default function TemplatesPage() {
 
                                 {/* AI Summary */}
                                 <div className="bg-gold/5 border border-gold/10 rounded-xl p-4">
-                                    <p className="text-sm text-text-secondary italic">
+                                    <p className="text-sm text-gray-600 italic">
                                         💡 &quot;{selectedTemplate.config.aiSummary}&quot;
                                     </p>
                                 </div>
@@ -275,7 +275,7 @@ export default function TemplatesPage() {
                             <div className="mt-6 flex justify-end gap-3">
                                 <button
                                     onClick={() => setSelectedTemplate(null)}
-                                    className="px-5 py-2.5 rounded-xl bg-white/5 text-text-secondary hover:bg-white/10 transition-colors text-sm font-medium"
+                                    className="px-5 py-2.5 rounded-xl bg-white text-gray-600 hover:bg-gray-100 transition-colors text-sm font-medium"
                                 >
                                     Close
                                 </button>

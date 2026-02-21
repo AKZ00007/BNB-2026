@@ -41,8 +41,8 @@ export function TokenDistributionChart({ config }: TokenDistributionChartProps) 
 
     return (
         <div className="glass-card-prominent rounded-2xl p-6">
-            <h3 className="text-lg font-semibold text-text-primary mb-1">Token Distribution</h3>
-            <p className="text-text-secondary text-sm mb-4">Allocation breakdown</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">Token Distribution</h3>
+            <p className="text-gray-600 text-sm mb-4">Allocation breakdown</p>
 
             <ResponsiveContainer width="100%" height={260}>
                 <PieChart>
@@ -74,10 +74,10 @@ export function TokenDistributionChart({ config }: TokenDistributionChartProps) 
             {/* Legend */}
             <div className="grid grid-cols-2 gap-1.5 mt-2">
                 {data.map((item, i) => (
-                    <div key={item.name} className="flex items-center gap-2 text-sm text-text-secondary">
+                    <div key={item.name} className="flex items-center gap-2 text-sm text-gray-600">
                         <span className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ background: COLORS[i % COLORS.length] }} />
                         <span className="truncate">{item.name}</span>
-                        <span className="ml-auto text-text-primary font-medium">{item.value}%</span>
+                        <span className="ml-auto text-gray-900 font-medium">{item.value}%</span>
                     </div>
                 ))}
             </div>

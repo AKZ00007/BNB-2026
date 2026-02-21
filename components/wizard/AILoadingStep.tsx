@@ -59,7 +59,7 @@ export function AILoadingStep() {
                 {dots}
             </h2>
 
-            <p className="text-text-secondary text-lg min-h-[1.75rem] transition-all duration-500">
+            <p className="text-gray-600 text-lg min-h-[1.75rem] transition-all duration-500">
                 {MESSAGES[msgIndex]}
             </p>
 

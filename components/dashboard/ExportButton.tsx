@@ -24,7 +24,7 @@ export function ExportButton({ config }: ExportButtonProps) {
     return (
         <button
             onClick={handleExport}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border border-white/10 bg-white/5 text-text-secondary hover:text-gold hover:border-gold/30 hover:bg-gold/5 transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border border-gray-200 bg-white text-gray-600 hover:text-gold hover:border-gold/30 hover:bg-gold/5 transition-all"
         >
             <Download className="w-4 h-4" />
             Export JSON

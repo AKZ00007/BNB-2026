@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
-import { Header } from '@/components/layout/header';
 import { ConfigCard } from '@/components/dashboard/ConfigCard';
 import { Sparkles, Plus, Loader2, Search } from 'lucide-react';
 import Link from 'next/link';
@@ -108,13 +107,11 @@ export default function DashboardPage() {
     }
 
     return (
-        <main className="min-h-screen bg-bg-base text-text-primary overflow-hidden relative">
+        <main className="min-h-screen bg-[#FAFAFA] text-gray-900 overflow-hidden relative">
             <div className="fixed inset-0 pointer-events-none z-0">
                 <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-gold/5 rounded-full blur-[120px] animate-pulse-slow" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple/10 rounded-full blur-[120px] animate-pulse-slow" />
             </div>
-
-            <Header />
 
             <div className="relative z-10 pt-28 pb-20 px-6 max-w-7xl mx-auto">
                 {/* Page header */}
@@ -124,13 +121,13 @@ export default function DashboardPage() {
                             <Sparkles className="w-3.5 h-3.5" />
                             My Configs
                         </div>
-                        <h1 className="text-3xl md:text-4xl font-bold text-text-primary">
+                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
                             Token{' '}
                             <span className="bg-clip-text text-transparent bg-gradient-to-r from-gold to-purple-400">
                                 Dashboard
                             </span>
                         </h1>
-                        <p className="text-text-secondary mt-1">
+                        <p className="text-gray-600 mt-1">
                             {configs.length > 0
                                 ? `${configs.length} config${configs.length !== 1 ? 's' : ''} saved`
                                 : 'Your saved token configs appear here'}
@@ -149,15 +146,15 @@ export default function DashboardPage() {
 
                 {/* Recover by ID — always visible at top */}
                 <div className="glass-card rounded-2xl p-4 mb-6 flex flex-col sm:flex-row gap-3">
-                    <div className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10">
-                        <Search className="w-4 h-4 text-text-tertiary flex-shrink-0" />
+                    <div className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-gray-200">
+                        <Search className="w-4 h-4 text-gray-400 flex-shrink-0" />
                         <input
                             suppressHydrationWarning
                             value={recoverInput}
                             onChange={(e) => setRecoverInput(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleRecover()}
                             placeholder="Paste a config ID to recover it (e.g. b469416d-...)"
-                            className="flex-1 bg-transparent text-sm text-text-primary placeholder-text-tertiary outline-none"
+                            className="flex-1 bg-transparent text-sm text-gray-900 placeholder-text-tertiary outline-none"
                         />
                     </div>
                     <button
@@ -181,8 +178,8 @@ export default function DashboardPage() {
                 ) : configs.length === 0 ? (
                     <div className="glass-card-prominent rounded-2xl p-12 text-center">
                         <div className="text-5xl mb-4">🚀</div>
-                        <h3 className="text-xl font-semibold text-text-primary mb-2">No configs yet</h3>
-                        <p className="text-text-secondary mb-6">
+                        <h3 className="text-xl font-semibold text-gray-900 mb-2">No configs yet</h3>
+                        <p className="text-gray-600 mb-6">
                             Create a new token above, or paste a config ID in the recover box.
                         </p>
                         <Link

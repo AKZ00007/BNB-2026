@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Web3Provider } from "@/components/providers/web3-provider";
-import { Header } from "@/components/layout/header";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import "./globals.css";
 
 const inter = Inter({
@@ -28,14 +29,17 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className="dark scroll-smooth" suppressHydrationWarning>
+        <html lang="en" className="scroll-smooth" suppressHydrationWarning>
             <head>
 
             </head>
-            <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased selection:bg-cyan/30 selection:text-white`}>
+            <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased selection:bg-red-100 selection:text-red-900`}>
                 <Web3Provider>
-                    <Header />
-                    {children}
+                    <Navbar />
+                    <main className="min-h-screen pt-16">
+                        {children}
+                    </main>
+                    <Footer />
                 </Web3Provider>
             </body>
         </html>

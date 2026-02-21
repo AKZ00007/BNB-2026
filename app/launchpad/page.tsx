@@ -86,7 +86,7 @@ function StatusBadge({ status }: { status: ProjectStatus }) {
     const styles = {
         live: 'bg-green-400/10 text-green-400 border-green-400/20',
         upcoming: 'bg-gold/10 text-gold border-gold/20',
-        ended: 'bg-white/5 text-text-tertiary border-white/10',
+        ended: 'bg-white text-gray-400 border-gray-200',
     };
     return (
         <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${styles[status]}`}>
@@ -112,7 +112,7 @@ export default function LaunchpadPage() {
     };
 
     return (
-        <main className="min-h-screen bg-bg-base text-text-primary overflow-hidden relative">
+        <main className="min-h-screen bg-[#FAFAFA] text-gray-900 overflow-hidden relative">
             {/* Ambient background */}
             <div className="fixed inset-0 pointer-events-none z-0">
                 <div className="absolute top-[-15%] left-[-10%] w-[50%] h-[50%] bg-gold/6 rounded-full blur-[150px]" />
@@ -132,7 +132,7 @@ export default function LaunchpadPage() {
                                 AI-Powered Tokens
                             </span>
                         </h1>
-                        <p className="text-text-secondary max-w-2xl mx-auto">
+                        <p className="text-gray-600 max-w-2xl mx-auto">
                             Browse curated IDO launches with AI-verified tokenomics, PLU trust scores,
                             and milestone-based liquidity locks. Invest with confidence.
                         </p>
@@ -146,10 +146,10 @@ export default function LaunchpadPage() {
                             { label: 'Live Projects', value: stats.liveProjects.toString(), icon: '🟢', color: 'text-green-400' },
                             { label: 'Avg PLU Score', value: `${stats.avgPluScore}/10`, icon: '🛡️', color: 'text-cyan-400' },
                         ].map((s) => (
-                            <div key={s.label} className="rounded-xl border border-white/10 bg-white/[0.03] p-5 text-center">
+                            <div key={s.label} className="rounded-xl border border-gray-200 bg-white/[0.03] p-5 text-center">
                                 <div className="text-xl mb-2">{s.icon}</div>
                                 <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
-                                <div className="text-xs text-text-tertiary mt-1">{s.label}</div>
+                                <div className="text-xs text-gray-400 mt-1">{s.label}</div>
                             </div>
                         ))}
                     </div>
@@ -162,7 +162,7 @@ export default function LaunchpadPage() {
                                 onClick={() => setFilter(f)}
                                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${filter === f
                                         ? 'bg-gold/20 border border-gold/40 text-gold'
-                                        : 'bg-white/5 border border-white/10 text-text-secondary hover:bg-white/10'
+                                        : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-100'
                                     }`}
                             >
                                 {f === 'all' ? 'All Projects' : f.charAt(0).toUpperCase() + f.slice(1)}
@@ -182,31 +182,31 @@ export default function LaunchpadPage() {
                             return (
                                 <div
                                     key={project.id}
-                                    className="group rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden hover:border-gold/30 transition-all duration-300 hover:shadow-lg hover:shadow-gold/5 cursor-pointer"
+                                    className="group rounded-2xl border border-gray-200 bg-white/[0.03] overflow-hidden hover:border-gold/30 transition-all duration-300 hover:shadow-lg hover:shadow-gold/5 cursor-pointer"
                                     onClick={() => setSelectedProject(project)}
                                 >
                                     {/* Header */}
                                     <div className="p-6 pb-4">
                                         <div className="flex items-start justify-between mb-3">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-2xl">
+                                                <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-2xl">
                                                     {project.logo}
                                                 </div>
                                                 <div>
-                                                    <h3 className="font-bold text-text-primary group-hover:text-gold transition-colors">
+                                                    <h3 className="font-bold text-gray-900 group-hover:text-gold transition-colors">
                                                         {project.name}
                                                     </h3>
-                                                    <span className="text-xs text-text-tertiary">${project.symbol}</span>
+                                                    <span className="text-xs text-gray-400">${project.symbol}</span>
                                                 </div>
                                             </div>
                                             <StatusBadge status={project.status} />
                                         </div>
-                                        <p className="text-sm text-text-secondary mb-3">{project.tagline}</p>
+                                        <p className="text-sm text-gray-600 mb-3">{project.tagline}</p>
 
                                         {/* Highlights */}
                                         <div className="flex flex-wrap gap-1.5 mb-4">
                                             {project.highlights.map((h, i) => (
-                                                <span key={i} className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-text-tertiary">
+                                                <span key={i} className="text-xs px-2 py-0.5 rounded-full bg-white text-gray-400">
                                                     {h}
                                                 </span>
                                             ))}
@@ -214,16 +214,16 @@ export default function LaunchpadPage() {
 
                                         {/* Price & PLU */}
                                         <div className="grid grid-cols-3 gap-2 mb-4">
-                                            <div className="bg-white/5 rounded-lg p-2 text-center">
-                                                <div className="text-xs text-text-tertiary">Price</div>
+                                            <div className="bg-white rounded-lg p-2 text-center">
+                                                <div className="text-xs text-gray-400">Price</div>
                                                 <div className="text-xs font-bold text-gold">{project.price}</div>
                                             </div>
-                                            <div className="bg-white/5 rounded-lg p-2 text-center">
-                                                <div className="text-xs text-text-tertiary">PLU</div>
+                                            <div className="bg-white rounded-lg p-2 text-center">
+                                                <div className="text-xs text-gray-400">PLU</div>
                                                 <div className="text-xs font-bold text-cyan-400">{project.pluScore}/10</div>
                                             </div>
-                                            <div className="bg-white/5 rounded-lg p-2 text-center">
-                                                <div className="text-xs text-text-tertiary">Category</div>
+                                            <div className="bg-white rounded-lg p-2 text-center">
+                                                <div className="text-xs text-gray-400">Category</div>
                                                 <div className="text-xs font-bold text-purple">{project.category}</div>
                                             </div>
                                         </div>
@@ -231,12 +231,12 @@ export default function LaunchpadPage() {
                                         {/* Progress Bar */}
                                         <div>
                                             <div className="flex justify-between text-xs mb-1">
-                                                <span className="text-text-tertiary">
+                                                <span className="text-gray-400">
                                                     Raised: {project.raised} / {project.hardCap} BNB
                                                 </span>
                                                 <span className="text-gold">{progress.toFixed(0)}%</span>
                                             </div>
-                                            <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+                                            <div className="h-2 rounded-full bg-white overflow-hidden">
                                                 <div
                                                     className="h-full rounded-full bg-gradient-to-r from-gold to-amber-300 transition-all"
                                                     style={{ width: `${Math.min(progress, 100)}%` }}
@@ -246,7 +246,7 @@ export default function LaunchpadPage() {
                                     </div>
 
                                     {/* Footer */}
-                                    <div className="px-6 py-3 border-t border-white/5 flex items-center justify-between text-xs text-text-tertiary">
+                                    <div className="px-6 py-3 border-t border-white/5 flex items-center justify-between text-xs text-gray-400">
                                         <span>👥 {project.participants} participants</span>
                                         {project.status === 'live' && (
                                             <span className="text-green-400 animate-pulse">● Accepting Contributions</span>
@@ -263,7 +263,7 @@ export default function LaunchpadPage() {
                     <div className="mt-12 text-center">
                         <div className="rounded-2xl border border-gold/20 bg-gold/5 p-8 max-w-2xl mx-auto">
                             <h3 className="text-xl font-bold mb-2">🚀 Launch Your Token on LaunchPad AI</h3>
-                            <p className="text-sm text-text-secondary mb-4">
+                            <p className="text-sm text-gray-600 mb-4">
                                 Create AI-optimized tokenomics, configure your IDO, and reach hundreds of investors on BSC.
                             </p>
                             <a
@@ -284,13 +284,13 @@ export default function LaunchpadPage() {
                     onClick={() => setSelectedProject(null)}
                 >
                     <div
-                        className="relative w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-2xl border border-white/10 bg-bg-card shadow-2xl"
+                        className="relative w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-2xl border border-gray-200 bg-bg-card shadow-2xl"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="p-8">
                             {/* Header */}
                             <div className="flex items-center gap-4 mb-6">
-                                <div className="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center text-3xl">
+                                <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center text-3xl">
                                     {selectedProject.logo}
                                 </div>
                                 <div className="flex-1">
@@ -298,17 +298,17 @@ export default function LaunchpadPage() {
                                         <h2 className="text-xl font-bold">{selectedProject.name}</h2>
                                         <StatusBadge status={selectedProject.status} />
                                     </div>
-                                    <p className="text-text-secondary text-sm">${selectedProject.symbol} · {selectedProject.category}</p>
+                                    <p className="text-gray-600 text-sm">${selectedProject.symbol} · {selectedProject.category}</p>
                                 </div>
                                 <button
                                     onClick={() => setSelectedProject(null)}
-                                    className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-text-tertiary hover:text-text-primary"
+                                    className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-gray-400 hover:text-gray-900"
                                 >
                                     ✕
                                 </button>
                             </div>
 
-                            <p className="text-text-secondary text-sm mb-6">{selectedProject.tagline}</p>
+                            <p className="text-gray-600 text-sm mb-6">{selectedProject.tagline}</p>
 
                             {/* Key Info */}
                             <div className="grid grid-cols-2 gap-3 mb-6">
@@ -318,28 +318,28 @@ export default function LaunchpadPage() {
                                     { label: 'Raised', value: `${selectedProject.raised} BNB` },
                                     { label: 'PLU Score', value: `${selectedProject.pluScore}/10` },
                                 ].map((item) => (
-                                    <div key={item.label} className="bg-white/5 rounded-xl p-3 text-center">
-                                        <div className="text-xs text-text-tertiary mb-1">{item.label}</div>
+                                    <div key={item.label} className="bg-white rounded-xl p-3 text-center">
+                                        <div className="text-xs text-gray-400 mb-1">{item.label}</div>
                                         <div className="text-sm font-bold text-gold">{item.value}</div>
                                     </div>
                                 ))}
                             </div>
 
                             {/* Progress */}
-                            <div className="bg-white/5 rounded-xl p-4 mb-6">
+                            <div className="bg-white rounded-xl p-4 mb-6">
                                 <div className="flex justify-between text-sm mb-2">
-                                    <span className="text-text-secondary">Fundraise Progress</span>
+                                    <span className="text-gray-600">Fundraise Progress</span>
                                     <span className="text-gold font-bold">
                                         {((selectedProject.raised / selectedProject.hardCap) * 100).toFixed(0)}%
                                     </span>
                                 </div>
-                                <div className="h-3 rounded-full bg-white/10 overflow-hidden">
+                                <div className="h-3 rounded-full bg-gray-100 overflow-hidden">
                                     <div
                                         className="h-full rounded-full bg-gradient-to-r from-gold to-amber-300"
                                         style={{ width: `${Math.min((selectedProject.raised / selectedProject.hardCap) * 100, 100)}%` }}
                                     />
                                 </div>
-                                <div className="flex justify-between text-xs text-text-tertiary mt-2">
+                                <div className="flex justify-between text-xs text-gray-400 mt-2">
                                     <span>{selectedProject.raised} BNB raised</span>
                                     <span>Hard Cap: {selectedProject.hardCap} BNB</span>
                                 </div>
@@ -348,25 +348,25 @@ export default function LaunchpadPage() {
                             {/* Participate CTA */}
                             {selectedProject.status === 'live' && (
                                 <div className="bg-green-400/5 border border-green-400/10 rounded-xl p-4 mb-4">
-                                    <label className="text-xs text-text-secondary mb-1 block">Contribute BNB</label>
+                                    <label className="text-xs text-gray-600 mb-1 block">Contribute BNB</label>
                                     <div className="flex gap-2">
                                         <input
                                             type="number"
                                             placeholder="0.5"
-                                            className="flex-1 px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-green-400/30"
+                                            className="flex-1 px-3 py-2.5 rounded-lg bg-white border border-gray-200 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-green-400/30"
                                         />
                                         <button className="px-5 py-2.5 rounded-xl bg-green-400 text-bg-base font-semibold text-sm hover:bg-green-500 transition-colors">
                                             Participate
                                         </button>
                                     </div>
-                                    <p className="text-xs text-text-tertiary mt-2">Connect wallet to participate. Min: 0.1 BNB, Max: 5 BNB</p>
+                                    <p className="text-xs text-gray-400 mt-2">Connect wallet to participate. Min: 0.1 BNB, Max: 5 BNB</p>
                                 </div>
                             )}
 
                             {/* Highlights */}
                             <div className="flex flex-wrap gap-2">
                                 {selectedProject.highlights.map((h, i) => (
-                                    <span key={i} className="px-3 py-1 rounded-full text-xs bg-white/5 text-text-secondary border border-white/10">
+                                    <span key={i} className="px-3 py-1 rounded-full text-xs bg-white text-gray-600 border border-gray-200">
                                         {h}
                                     </span>
                                 ))}

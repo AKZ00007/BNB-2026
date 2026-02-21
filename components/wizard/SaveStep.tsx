@@ -56,11 +56,11 @@ export function SaveStep({ config, onCreateAnother }: SaveStepProps) {
                 </div>
 
                 <h2 className="text-3xl font-bold mb-2">Config Saved! 🎉</h2>
-                <p className="text-text-secondary mb-2">
+                <p className="text-gray-600 mb-2">
                     <strong className="text-gold">{config.tokenName}</strong> ({config.tokenSymbol}) tokenomics config
                     has been saved to your account.
                 </p>
-                <p className="text-text-tertiary text-sm font-mono mb-8">ID: {savedId}</p>
+                <p className="text-gray-400 text-sm font-mono mb-8">ID: {savedId}</p>
 
                 <div className="flex flex-col sm:flex-row gap-4">
                     <button
@@ -72,7 +72,7 @@ export function SaveStep({ config, onCreateAnother }: SaveStepProps) {
                     </button>
                     <button
                         onClick={onCreateAnother}
-                        className="flex-1 flex items-center justify-center gap-2 py-4 rounded-xl border border-white/20 text-text-secondary hover:text-text-primary hover:border-white/40 transition-all font-semibold"
+                        className="flex-1 flex items-center justify-center gap-2 py-4 rounded-xl border border-[var(--border-gray-300, #D1D5DB)] text-gray-600 hover:text-gray-900 hover:border-white/40 transition-all font-semibold"
                     >
                         <Plus className="w-4 h-4" /> Create Another
                     </button>
@@ -90,7 +90,7 @@ export function SaveStep({ config, onCreateAnother }: SaveStepProps) {
                     <span>Almost Done — Step 3 of 3</span>
                 </div>
                 <h2 className="text-3xl font-bold mb-2">Save Your Config</h2>
-                <p className="text-text-secondary">Your tokenomics are ready. Save them to your account.</p>
+                <p className="text-gray-600">Your tokenomics are ready. Save them to your account.</p>
             </div>
 
             {/* Config summary */}
@@ -98,14 +98,14 @@ export function SaveStep({ config, onCreateAnother }: SaveStepProps) {
                 <div className="flex items-center justify-between mb-4">
                     <div>
                         <div className="text-xl font-bold">{config.tokenName}</div>
-                        <div className="text-text-secondary font-mono text-sm">${config.tokenSymbol}</div>
+                        <div className="text-gray-600 font-mono text-sm">${config.tokenSymbol}</div>
                     </div>
                     <div className="text-right">
                         <div className="text-gold font-bold">Risk: {config.risk.score}/10</div>
-                        <div className="text-text-tertiary text-xs">{config.category}</div>
+                        <div className="text-gray-400 text-xs">{config.category}</div>
                     </div>
                 </div>
-                <p className="text-text-secondary text-sm">{config.aiSummary}</p>
+                <p className="text-gray-600 text-sm">{config.aiSummary}</p>
             </div>
 
             {/* Wallet note */}
@@ -114,7 +114,7 @@ export function SaveStep({ config, onCreateAnother }: SaveStepProps) {
                     <Wallet className="w-5 h-5 text-warning mt-0.5 shrink-0" />
                     <div>
                         <p className="text-warning text-sm font-medium">Wallet not connected</p>
-                        <p className="text-text-secondary text-xs mt-0.5">
+                        <p className="text-gray-600 text-xs mt-0.5">
                             Config will be saved as anonymous. Connect your wallet to link it to your account.
                         </p>
                     </div>

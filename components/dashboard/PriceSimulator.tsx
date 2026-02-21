@@ -29,8 +29,8 @@ const SCENARIO_META = [
 function CustomTooltip({ active, payload, label }: any) {
     if (!active || !payload?.length) return null;
     return (
-        <div className="glass-card-prominent rounded-xl p-3 text-sm border border-white/10">
-            <p className="text-text-secondary mb-1">Day {label}</p>
+        <div className="glass-card-prominent rounded-xl p-3 text-sm border border-gray-200">
+            <p className="text-gray-600 mb-1">Day {label}</p>
             {payload.map((p: any) => (
                 <p key={p.dataKey} style={{ color: p.color }} className="font-medium">
                     {p.name}: {p.value.toFixed(3)}x
@@ -64,8 +64,8 @@ export function PriceSimulator({ config }: PriceSimulatorProps) {
             {/* Header */}
             <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
                 <div>
-                    <h3 className="text-lg font-semibold text-text-primary">Price Simulation</h3>
-                    <p className="text-text-secondary text-sm mt-0.5">
+                    <h3 className="text-lg font-semibold text-gray-900">Price Simulation</h3>
+                    <p className="text-gray-600 text-sm mt-0.5">
                         Est. initial price:{' '}
                         <span className="text-gold font-medium">
                             ${initialPrice < 0.01 ? initialPrice.toFixed(6) : initialPrice.toFixed(4)}
@@ -74,14 +74,14 @@ export function PriceSimulator({ config }: PriceSimulatorProps) {
                 </div>
 
                 {/* Horizon toggle */}
-                <div className="flex gap-1 p-1 rounded-lg bg-white/5 border border-white/10">
+                <div className="flex gap-1 p-1 rounded-lg bg-white border border-gray-200">
                     {([30, 90] as const).map((h) => (
                         <button
                             key={h}
                             onClick={() => setHorizon(h)}
                             className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${horizon === h
                                     ? 'bg-gold text-bg-base'
-                                    : 'text-text-secondary hover:text-text-primary'
+                                    : 'text-gray-600 hover:text-gray-900'
                                 }`}
                         >
                             {h}d
@@ -141,8 +141,8 @@ export function PriceSimulator({ config }: PriceSimulatorProps) {
                         key={key}
                         onClick={() => toggleScenario(key)}
                         className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border transition-all ${hidden.has(key)
-                                ? 'border-white/10 text-text-tertiary bg-transparent opacity-40'
-                                : 'border-white/20 text-text-primary bg-white/5'
+                                ? 'border-gray-200 text-gray-400 bg-transparent opacity-40'
+                                : 'border-[var(--border-gray-300, #D1D5DB)] text-gray-900 bg-white'
                             }`}
                     >
                         <span className="w-3 h-0.5 rounded-full" style={{ background: color }} />

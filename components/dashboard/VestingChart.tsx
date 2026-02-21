@@ -52,8 +52,8 @@ export function VestingChart({ config }: VestingChartProps) {
 
     return (
         <div className="glass-card-prominent rounded-2xl p-6">
-            <h3 className="text-lg font-semibold text-text-primary mb-1">Vesting Timeline</h3>
-            <p className="text-text-secondary text-sm mb-6">Cumulative % unlocked per allocation</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">Vesting Timeline</h3>
+            <p className="text-gray-600 text-sm mb-6">Cumulative % unlocked per allocation</p>
 
             <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
@@ -90,7 +90,7 @@ export function VestingChart({ config }: VestingChartProps) {
                 {config.vesting.map((vest, i) => (
                     <span
                         key={vest.label}
-                        className="flex items-center gap-1.5 px-2 py-1 rounded-full text-xs text-text-secondary bg-white/5 border border-white/10"
+                        className="flex items-center gap-1.5 px-2 py-1 rounded-full text-xs text-gray-600 bg-white border border-gray-200"
                     >
                         <span
                             className="w-2 h-2 rounded-full"

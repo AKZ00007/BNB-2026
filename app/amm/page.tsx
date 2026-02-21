@@ -104,7 +104,7 @@ function SliderField({
     return (
         <div className="space-y-1.5">
             <div className="flex justify-between items-center">
-                <span className="text-sm text-text-secondary">{label}</span>
+                <span className="text-sm text-gray-600">{label}</span>
                 <span className={`text-sm font-bold ${color}`}>
                     {value}
                     {unit}
@@ -117,7 +117,7 @@ function SliderField({
                 step={step}
                 value={value}
                 onChange={(e) => onChange(+e.target.value)}
-                className="w-full h-1.5 rounded-full appearance-none cursor-pointer accent-gold bg-white/10"
+                className="w-full h-1.5 rounded-full appearance-none cursor-pointer accent-gold bg-gray-100"
             />
         </div>
     );
@@ -184,7 +184,7 @@ export default function AMMPage() {
     const taxTotal = settings.taxSplit.lp + settings.taxSplit.treasury + settings.taxSplit.burn + settings.taxSplit.holders;
 
     return (
-        <main className="min-h-screen bg-bg-base text-text-primary overflow-hidden relative">
+        <main className="min-h-screen bg-[#FAFAFA] text-gray-900 overflow-hidden relative">
             {/* Ambient background */}
             <div className="fixed inset-0 pointer-events-none z-0">
                 <div className="absolute top-[-15%] left-[-10%] w-[50%] h-[50%] bg-gold/4 rounded-full blur-[150px]" />
@@ -204,7 +204,7 @@ export default function AMMPage() {
                                 Trading Mechanics
                             </span>
                         </h1>
-                        <p className="text-text-secondary max-w-2xl mx-auto">
+                        <p className="text-gray-600 max-w-2xl mx-auto">
                             Configure bonding curves, fee structures, and anti-whale protections.
                             Preview how price reacts to buy/sell pressure before you deploy.
                         </p>
@@ -214,8 +214,8 @@ export default function AMMPage() {
                         {/* ── Left Column: Controls ── */}
                         <div className="space-y-6">
                             {/* Bonding Curve Selector */}
-                            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-                                <h3 className="text-sm font-semibold text-text-primary mb-4">📈 Bonding Curve</h3>
+                            <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
+                                <h3 className="text-sm font-semibold text-gray-900 mb-4">📈 Bonding Curve</h3>
                                 <div className="grid grid-cols-2 gap-2">
                                     {CURVES.map((c) => (
                                         <button
@@ -223,24 +223,24 @@ export default function AMMPage() {
                                             onClick={() => update('curveType', c.type)}
                                             className={`p-3 rounded-xl text-left transition-all ${settings.curveType === c.type
                                                     ? 'bg-gold/15 border border-gold/40 shadow-lg shadow-gold/5'
-                                                    : 'bg-white/5 border border-white/10 hover:bg-white/10'
+                                                    : 'bg-white border border-gray-200 hover:bg-gray-100'
                                                 }`}
                                         >
                                             <div className="text-lg mb-1">{c.icon}</div>
-                                            <div className="text-xs font-semibold capitalize text-text-primary">
+                                            <div className="text-xs font-semibold capitalize text-gray-900">
                                                 {c.type}
                                             </div>
                                         </button>
                                     ))}
                                 </div>
-                                <p className="text-xs text-text-tertiary mt-3">
+                                <p className="text-xs text-gray-400 mt-3">
                                     {CURVES.find((c) => c.type === settings.curveType)?.desc}
                                 </p>
                             </div>
 
                             {/* Tax Configuration */}
-                            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-4">
-                                <h3 className="text-sm font-semibold text-text-primary">💰 Tax Configuration</h3>
+                            <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6 space-y-4">
+                                <h3 className="text-sm font-semibold text-gray-900">💰 Tax Configuration</h3>
                                 <SliderField
                                     label="Buy Tax"
                                     value={settings.buyTax}
@@ -264,7 +264,7 @@ export default function AMMPage() {
 
                                 {/* Tax Split */}
                                 <div className="pt-3 border-t border-white/5">
-                                    <div className="text-xs text-text-tertiary mb-3">
+                                    <div className="text-xs text-gray-400 mb-3">
                                         Tax Allocation Split{' '}
                                         <span className={taxTotal !== 100 ? 'text-red-400' : 'text-green-400'}>
                                             ({taxTotal}%)
@@ -279,9 +279,9 @@ export default function AMMPage() {
                                                 { key: 'holders', label: '👥 Holders', color: 'text-purple' },
                                             ] as const
                                         ).map((item) => (
-                                            <div key={item.key} className="bg-white/5 rounded-lg p-2">
+                                            <div key={item.key} className="bg-white rounded-lg p-2">
                                                 <div className="flex justify-between mb-1">
-                                                    <span className="text-text-tertiary">{item.label}</span>
+                                                    <span className="text-gray-400">{item.label}</span>
                                                     <span className={item.color}>{settings.taxSplit[item.key]}%</span>
                                                 </div>
                                                 <input
@@ -291,7 +291,7 @@ export default function AMMPage() {
                                                     step={5}
                                                     value={settings.taxSplit[item.key]}
                                                     onChange={(e) => updateTaxSplit(item.key, +e.target.value)}
-                                                    className="w-full h-1 rounded-full appearance-none cursor-pointer accent-gold bg-white/10"
+                                                    className="w-full h-1 rounded-full appearance-none cursor-pointer accent-gold bg-gray-100"
                                                 />
                                             </div>
                                         ))}
@@ -300,8 +300,8 @@ export default function AMMPage() {
                             </div>
 
                             {/* Anti-Whale Controls */}
-                            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-4">
-                                <h3 className="text-sm font-semibold text-text-primary">🐋 Anti-Whale Protection</h3>
+                            <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6 space-y-4">
+                                <h3 className="text-sm font-semibold text-gray-900">🐋 Anti-Whale Protection</h3>
                                 <SliderField
                                     label="Max Wallet"
                                     value={settings.maxWalletPercent}
@@ -335,8 +335,8 @@ export default function AMMPage() {
                             </div>
 
                             {/* Liquidity Settings */}
-                            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-4">
-                                <h3 className="text-sm font-semibold text-text-primary">💧 Initial Liquidity</h3>
+                            <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6 space-y-4">
+                                <h3 className="text-sm font-semibold text-gray-900">💧 Initial Liquidity</h3>
                                 <SliderField
                                     label="Initial Price"
                                     value={settings.initialPrice}
@@ -357,7 +357,7 @@ export default function AMMPage() {
                                     color="text-gold"
                                     onChange={(v) => update('initialLiquidityBnb', v)}
                                 />
-                                <div className="bg-gold/5 border border-gold/10 rounded-lg p-3 text-xs text-text-secondary">
+                                <div className="bg-gold/5 border border-gold/10 rounded-lg p-3 text-xs text-gray-600">
                                     💡 Starting market cap:{' '}
                                     <strong className="text-gold">
                                         {(settings.initialPrice * settings.totalSupply).toLocaleString()} BNB
@@ -369,12 +369,12 @@ export default function AMMPage() {
                         {/* ── Right Column: Charts ── */}
                         <div className="lg:col-span-2 space-y-6">
                             {/* Bonding Curve Chart */}
-                            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+                            <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
                                 <div className="flex items-center justify-between mb-4">
-                                    <h3 className="text-sm font-semibold text-text-primary">
+                                    <h3 className="text-sm font-semibold text-gray-900">
                                         Price vs. Supply — {settings.curveType.charAt(0).toUpperCase() + settings.curveType.slice(1)} Curve
                                     </h3>
-                                    <div className="flex items-center gap-2 text-xs text-text-tertiary">
+                                    <div className="flex items-center gap-2 text-xs text-gray-400">
                                         <span className="w-3 h-3 rounded-full bg-gold" /> Price (BNB)
                                     </div>
                                 </div>
@@ -416,12 +416,12 @@ export default function AMMPage() {
                             </div>
 
                             {/* Buy/Sell Impact Simulation */}
-                            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+                            <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
                                 <div className="flex items-center justify-between mb-4">
-                                    <h3 className="text-sm font-semibold text-text-primary">
+                                    <h3 className="text-sm font-semibold text-gray-900">
                                         📊 Buy / Sell Price Impact
                                     </h3>
-                                    <div className="flex items-center gap-4 text-xs text-text-tertiary">
+                                    <div className="flex items-center gap-4 text-xs text-gray-400">
                                         <span className="flex items-center gap-1">
                                             <span className="w-3 h-3 rounded-full bg-green-400" /> Buy Impact
                                         </span>
@@ -492,10 +492,10 @@ export default function AMMPage() {
                                 ].map((card) => (
                                     <div
                                         key={card.label}
-                                        className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-center"
+                                        className="rounded-xl border border-gray-200 bg-white/[0.03] p-4 text-center"
                                     >
                                         <div className="text-xl mb-1">{card.icon}</div>
-                                        <div className="text-xs text-text-tertiary mb-1">{card.label}</div>
+                                        <div className="text-xs text-gray-400 mb-1">{card.label}</div>
                                         <div className={`text-sm font-bold capitalize ${card.color}`}>{card.value}</div>
                                     </div>
                                 ))}
@@ -509,11 +509,11 @@ export default function AMMPage() {
                                     </div>
                                     <div>
                                         <h4 className="text-sm font-semibold text-gold mb-2">AI Recommendation</h4>
-                                        <p className="text-sm text-text-secondary leading-relaxed">
+                                        <p className="text-sm text-gray-600 leading-relaxed">
                                             Based on similar BSC launches, we recommend a{' '}
-                                            <strong className="text-text-primary">linear bonding curve</strong> with{' '}
-                                            <strong className="text-text-primary">2% buy / 4% sell tax</strong> and a{' '}
-                                            <strong className="text-text-primary">2% max wallet limit</strong>. This
+                                            <strong className="text-gray-900">linear bonding curve</strong> with{' '}
+                                            <strong className="text-gray-900">2% buy / 4% sell tax</strong> and a{' '}
+                                            <strong className="text-gray-900">2% max wallet limit</strong>. This
                                             configuration provides moderate price stability while discouraging large dumps.
                                             The sell tax premium helps build the LP over time.
                                         </p>

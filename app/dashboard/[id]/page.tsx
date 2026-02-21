@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { Header } from '@/components/layout/header';
 import { PriceSimulator } from '@/components/dashboard/PriceSimulator';
 import { VestingChart } from '@/components/dashboard/VestingChart';
 import { TokenDistributionChart } from '@/components/dashboard/TokenDistributionChart';
@@ -31,8 +30,8 @@ function StatPill({ label, value, icon: Icon }: { label: string; value: string; 
                 <Icon className="w-4 h-4 text-gold" />
             </div>
             <div>
-                <p className="text-text-tertiary text-xs">{label}</p>
-                <p className="text-text-primary font-semibold text-sm">{value}</p>
+                <p className="text-gray-400 text-xs">{label}</p>
+                <p className="text-gray-900 font-semibold text-sm">{value}</p>
             </div>
         </div>
     );
@@ -58,18 +57,16 @@ export default function ConfigDetailPage() {
     }, [id]);
 
     return (
-        <main className="min-h-screen bg-bg-base text-text-primary overflow-hidden relative">
+        <main className="min-h-screen bg-[#FAFAFA] text-gray-900 overflow-hidden relative">
             <div className="fixed inset-0 pointer-events-none z-0">
                 <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-gold/5 rounded-full blur-[120px] animate-pulse-slow" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple/10 rounded-full blur-[120px] animate-pulse-slow" />
             </div>
 
-            <Header />
-
             <div className="relative z-10 pt-28 pb-20 px-6 max-w-7xl mx-auto">
                 <Link
                     href="/dashboard"
-                    className="inline-flex items-center gap-2 text-text-secondary hover:text-gold text-sm mb-8 transition-colors"
+                    className="inline-flex items-center gap-2 text-gray-600 hover:text-gold text-sm mb-8 transition-colors"
                 >
                     <ArrowLeft className="w-4 h-4" /> Back to Dashboard
                 </Link>
@@ -89,17 +86,17 @@ export default function ConfigDetailPage() {
                         <div className="glass-card-prominent rounded-2xl p-6 mb-8 flex items-start justify-between flex-wrap gap-4">
                             <div>
                                 <div className="flex items-center gap-3 mb-2">
-                                    <h1 className="text-2xl md:text-3xl font-bold text-text-primary">
+                                    <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
                                         {row.config.tokenName}
                                     </h1>
                                     <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-gold/10 border border-gold/20 text-gold">
                                         ${row.config.tokenSymbol}
                                     </span>
-                                    <span className="px-2 py-0.5 rounded-full text-xs capitalize bg-white/5 border border-white/10 text-text-secondary">
+                                    <span className="px-2 py-0.5 rounded-full text-xs capitalize bg-white border border-gray-200 text-gray-600">
                                         {row.config.category}
                                     </span>
                                 </div>
-                                <p className="text-text-secondary max-w-2xl">{row.config.aiSummary || row.config.description}</p>
+                                <p className="text-gray-600 max-w-2xl">{row.config.aiSummary || row.config.description}</p>
                             </div>
                             <div className="flex items-center gap-3">
                                 <ExportButton config={row.config} />
@@ -132,12 +129,12 @@ export default function ConfigDetailPage() {
                         {/* Deploy & Liquidity section */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <h2 className="text-lg font-semibold text-text-primary mb-4">
+                                <h2 className="text-lg font-semibold text-gray-900 mb-4">
                                     {row.status === 'testnet' ? '✅ Deployed to Testnet' : '🚀 Deploy to BSC Testnet'}
                                 </h2>
                                 {row.status === 'testnet' && row.testnet_address ? (
                                     <div className="glass-card-prominent rounded-2xl p-5 text-sm">
-                                        <p className="text-text-secondary mb-2">Contract Address:</p>
+                                        <p className="text-gray-600 mb-2">Contract Address:</p>
                                         <a
                                             href={`https://testnet.bscscan.com/address/${row.testnet_address}`}
                                             target="_blank"
@@ -159,7 +156,7 @@ export default function ConfigDetailPage() {
                             {/* PancakeSwap Liquidity — only shows after deploy */}
                             {row.status === 'testnet' && row.testnet_address && (
                                 <div>
-                                    <h2 className="text-lg font-semibold text-text-primary mb-4">
+                                    <h2 className="text-lg font-semibold text-gray-900 mb-4">
                                         💧 Add PancakeSwap Liquidity
                                     </h2>
                                     <LiquidityFlow

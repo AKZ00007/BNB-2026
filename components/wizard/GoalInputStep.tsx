@@ -40,7 +40,7 @@ export function GoalInputStep({ onSubmit }: GoalInputStepProps) {
                         Token Vision
                     </span>
                 </h1>
-                <p className="text-text-secondary text-lg">
+                <p className="text-gray-600 text-lg">
                     Write your goals in plain English. Our AI will generate crash-proof tokenomics.
                 </p>
             </div>
@@ -51,14 +51,14 @@ export function GoalInputStep({ onSubmit }: GoalInputStepProps) {
                     value={goal}
                     onChange={(e) => setGoal(e.target.value)}
                     placeholder="e.g. I want to launch a community meme token for dog lovers on BSC with strong anti-whale mechanics, 3-month team vesting, and a 10% sell tax that goes to a charity wallet..."
-                    className="w-full h-40 bg-transparent text-text-primary placeholder-text-tertiary text-base leading-relaxed resize-none outline-none"
+                    className="w-full h-40 bg-transparent text-gray-900 placeholder-text-tertiary text-base leading-relaxed resize-none outline-none"
                     maxLength={2000}
                 />
-                <div className="flex justify-between items-center mt-3 pt-3 border-t border-white/10">
-                    <span className="text-text-tertiary text-sm">
+                <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
+                    <span className="text-gray-400 text-sm">
                         {goal.length}/2000 characters
                     </span>
-                    <span className={`text-sm ${goal.length >= 10 ? 'text-success' : 'text-text-tertiary'}`}>
+                    <span className={`text-sm ${goal.length >= 10 ? 'text-success' : 'text-gray-400'}`}>
                         {goal.length >= 10 ? '✓ Ready' : `${Math.max(0, 10 - goal.length)} more characters needed`}
                     </span>
                 </div>
@@ -66,13 +66,13 @@ export function GoalInputStep({ onSubmit }: GoalInputStepProps) {
 
             {/* Suggestion pills */}
             <div className="mb-8">
-                <p className="text-text-tertiary text-sm mb-3">Quick starts:</p>
+                <p className="text-gray-400 text-sm mb-3">Quick starts:</p>
                 <div className="flex flex-wrap gap-2">
                     {SUGGESTION_PILLS.map((pill, i) => (
                         <button
                             key={i}
                             onClick={() => handlePill(pill.label)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm bg-white/5 border border-white/10 text-text-secondary hover:border-gold/40 hover:text-gold hover:bg-gold/5 transition-all"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm bg-white border border-gray-200 text-gray-600 hover:border-gold/40 hover:text-gold hover:bg-gold/5 transition-all"
                         >
                             {pill.icon}
                             {pill.label}

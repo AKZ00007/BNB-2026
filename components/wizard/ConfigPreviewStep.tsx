@@ -31,13 +31,13 @@ function Card({ title, icon, children }: { title: string; icon: React.ReactNode;
         <div className="glass-card rounded-xl overflow-hidden">
             <button
                 onClick={() => setOpen(o => !o)}
-                className="w-full flex items-center justify-between p-5 hover:bg-white/5 transition-colors"
+                className="w-full flex items-center justify-between p-5 hover:bg-white transition-colors"
             >
-                <div className="flex items-center gap-3 font-semibold text-text-primary">
+                <div className="flex items-center gap-3 font-semibold text-gray-900">
                     <span className="text-gold">{icon}</span>
                     {title}
                 </div>
-                {open ? <ChevronUp className="w-4 h-4 text-text-tertiary" /> : <ChevronDown className="w-4 h-4 text-text-tertiary" />}
+                {open ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
             </button>
             {open && <div className="px-5 pb-5 space-y-3">{children}</div>}
         </div>
@@ -47,8 +47,8 @@ function Card({ title, icon, children }: { title: string; icon: React.ReactNode;
 function Row({ label, value, highlight }: { label: string; value: string | number; highlight?: boolean }) {
     return (
         <div className="flex justify-between items-center py-1.5 border-b border-white/5 last:border-0">
-            <span className="text-text-secondary text-sm">{label}</span>
-            <span className={`text-sm font-mono font-medium ${highlight ? 'text-gold' : 'text-text-primary'}`}>
+            <span className="text-gray-600 text-sm">{label}</span>
+            <span className={`text-sm font-mono font-medium ${highlight ? 'text-gold' : 'text-gray-900'}`}>
                 {value}
             </span>
         </div>
@@ -74,7 +74,7 @@ export function ConfigPreviewStep({ config, onSave, onBack }: ConfigPreviewStepP
                         Tokenomics
                     </span>
                 </h2>
-                <p className="text-text-secondary">{editedConfig.aiSummary}</p>
+                <p className="text-gray-600">{editedConfig.aiSummary}</p>
             </div>
 
             {/* Risk + Identity */}
@@ -82,7 +82,7 @@ export function ConfigPreviewStep({ config, onSave, onBack }: ConfigPreviewStepP
                 <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
                     <div>
                         <div className="text-2xl font-bold">{editedConfig.tokenName}</div>
-                        <div className="text-text-secondary font-mono">${editedConfig.tokenSymbol}</div>
+                        <div className="text-gray-600 font-mono">${editedConfig.tokenSymbol}</div>
                     </div>
                     <RiskBadge score={editedConfig.risk.score} />
                 </div>
@@ -98,10 +98,10 @@ export function ConfigPreviewStep({ config, onSave, onBack }: ConfigPreviewStepP
                 {editedConfig.vesting.map((v: VestingEntry, i: number) => (
                     <div key={i} className="py-2 border-b border-white/5 last:border-0">
                         <div className="flex justify-between mb-1">
-                            <span className="text-text-primary font-medium">{v.label}</span>
+                            <span className="text-gray-900 font-medium">{v.label}</span>
                             <span className="text-gold font-mono font-medium">{v.percent}%</span>
                         </div>
-                        <div className="text-text-tertiary text-xs space-x-3">
+                        <div className="text-gray-400 text-xs space-x-3">
                             <span>TGE: {v.tgePercent}%</span>
                             <span>Cliff: {v.cliffMonths}mo</span>
                             <span>Vesting: {v.vestingMonths}mo</span>
@@ -127,10 +127,10 @@ export function ConfigPreviewStep({ config, onSave, onBack }: ConfigPreviewStepP
                 {editedConfig.plu.milestones.map((m: PLUMilestone, i: number) => (
                     <div key={i} className="py-2 border-b border-white/5 last:border-0">
                         <div className="flex justify-between mb-0.5">
-                            <span className="text-text-secondary text-sm">Unlock {m.percent}%</span>
-                            <span className="text-text-tertiary font-mono text-xs">Day {m.afterDays}</span>
+                            <span className="text-gray-600 text-sm">Unlock {m.percent}%</span>
+                            <span className="text-gray-400 font-mono text-xs">Day {m.afterDays}</span>
                         </div>
-                        <p className="text-text-tertiary text-xs">{m.condition}</p>
+                        <p className="text-gray-400 text-xs">{m.condition}</p>
                     </div>
                 ))}
             </Card>
@@ -145,7 +145,7 @@ export function ConfigPreviewStep({ config, onSave, onBack }: ConfigPreviewStepP
                             </p>
                             <ul className="space-y-1">
                                 {editedConfig.risk.flags.map((f: string, i: number) => (
-                                    <li key={i} className="text-text-secondary text-sm">• {f}</li>
+                                    <li key={i} className="text-gray-600 text-sm">• {f}</li>
                                 ))}
                             </ul>
                         </div>
@@ -157,7 +157,7 @@ export function ConfigPreviewStep({ config, onSave, onBack }: ConfigPreviewStepP
                             </p>
                             <ul className="space-y-1">
                                 {editedConfig.risk.suggestions.map((s: string, i: number) => (
-                                    <li key={i} className="text-text-secondary text-sm">• {s}</li>
+                                    <li key={i} className="text-gray-600 text-sm">• {s}</li>
                                 ))}
                             </ul>
                         </div>
@@ -169,7 +169,7 @@ export function ConfigPreviewStep({ config, onSave, onBack }: ConfigPreviewStepP
             <div className="flex gap-4 mt-8">
                 <button
                     onClick={onBack}
-                    className="flex-1 py-4 rounded-xl border border-white/20 text-text-secondary hover:text-text-primary hover:border-white/40 transition-all font-semibold"
+                    className="flex-1 py-4 rounded-xl border border-[var(--border-gray-300, #D1D5DB)] text-gray-600 hover:text-gray-900 hover:border-white/40 transition-all font-semibold"
                 >
                     ← Regenerate
                 </button>

@@ -12,7 +12,7 @@ type Step = 'input' | 'loading' | 'preview' | 'save';
 
 export default function CreateTokenPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen bg-bg-base" />}>
+        <Suspense fallback={<div className="min-h-screen bg-[#FAFAFA]" />}>
             <CreateTokenInner />
         </Suspense>
     );
@@ -80,7 +80,7 @@ function CreateTokenInner() {
     };
 
     return (
-        <main className="min-h-screen bg-bg-base text-text-primary overflow-hidden relative">
+        <main className="min-h-screen bg-[#FAFAFA] text-gray-900 overflow-hidden relative">
             {/* Ambient background */}
             <div className="fixed inset-0 pointer-events-none z-0">
                 <div className="absolute top-[-15%] left-[-10%] w-[50%] h-[50%] bg-gold/4 rounded-full blur-[150px]" />
@@ -106,19 +106,19 @@ function CreateTokenInner() {
                                             ? 'bg-gold text-bg-base'
                                             : isCurrent
                                                 ? 'bg-gold/20 border-2 border-gold text-gold'
-                                                : 'bg-white/5 border border-white/20 text-text-tertiary'
+                                                : 'bg-white border border-[var(--border-gray-300, #D1D5DB)] text-gray-400'
                                             }`}
                                     >
                                         {isCompleted ? '✓' : stepNum}
                                     </div>
                                     <span
-                                        className={`text-sm font-medium hidden sm:block ${isCurrent ? 'text-gold' : isCompleted ? 'text-text-secondary' : 'text-text-tertiary'
+                                        className={`text-sm font-medium hidden sm:block ${isCurrent ? 'text-gold' : isCompleted ? 'text-gray-600' : 'text-gray-400'
                                             }`}
                                     >
                                         {s === 'input' ? 'Your Vision' : s === 'preview' ? 'Review Config' : 'Save'}
                                     </span>
                                     {i < 2 && (
-                                        <div className={`w-10 h-px sm:w-16 lg:w-24 ${isCompleted ? 'bg-gold' : 'bg-white/10'}`} />
+                                        <div className={`w-10 h-px sm:w-16 lg:w-24 ${isCompleted ? 'bg-gold' : 'bg-gray-100'}`} />
                                     )}
                                 </div>
                             );
@@ -129,7 +129,7 @@ function CreateTokenInner() {
                     {templateName && (
                         <div className="mb-6 p-4 rounded-xl bg-purple/10 border border-purple/20 text-sm flex items-center gap-3">
                             <span className="text-lg">✨</span>
-                            <span className="text-text-secondary">
+                            <span className="text-gray-600">
                                 Template applied: <strong className="text-purple">{templateName}</strong> — review and customize below, then save.
                             </span>
                         </div>

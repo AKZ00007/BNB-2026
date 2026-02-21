@@ -79,14 +79,14 @@ function StatCard({
     changePositive: boolean;
 }) {
     return (
-        <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
+        <div className="rounded-xl border border-gray-200 bg-white/[0.03] p-5">
             <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-xl">
+                <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-xl">
                     {icon}
                 </div>
-                <div className="text-xs text-text-tertiary uppercase tracking-wide">{label}</div>
+                <div className="text-xs text-gray-400 uppercase tracking-wide">{label}</div>
             </div>
-            <div className="text-2xl font-bold text-text-primary mb-1">{value}</div>
+            <div className="text-2xl font-bold text-gray-900 mb-1">{value}</div>
             <div className={`text-xs font-medium ${changePositive ? 'text-green-400' : 'text-red-400'}`}>
                 {changePositive ? '↑' : '↓'} {change}
             </div>
@@ -112,20 +112,20 @@ function SchedulerCard({
     buttonColor: string;
 }) {
     return (
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+        <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
             <div className="flex items-center gap-3 mb-3">
                 <span className="text-xl">{icon}</span>
-                <h3 className="text-sm font-semibold text-text-primary">{title}</h3>
+                <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
             </div>
-            <p className="text-xs text-text-tertiary mb-4">{description}</p>
+            <p className="text-xs text-gray-400 mb-4">{description}</p>
             <div className="space-y-3">
                 {fields.map((f) => (
                     <div key={f.label}>
-                        <label className="text-xs text-text-secondary mb-1 block">{f.label}</label>
+                        <label className="text-xs text-gray-600 mb-1 block">{f.label}</label>
                         <input
                             type={f.type || 'text'}
                             placeholder={f.placeholder}
-                            className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-gold/30 transition-colors"
+                            className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-gold/30 transition-colors"
                         />
                     </div>
                 ))}
@@ -155,12 +155,12 @@ function AlertItem({
     return (
         <div className="flex items-center justify-between py-2.5 border-b border-white/5 last:border-0">
             <div>
-                <div className="text-sm text-text-primary">{label}</div>
-                <div className="text-xs text-text-tertiary">{condition}</div>
+                <div className="text-sm text-gray-900">{label}</div>
+                <div className="text-xs text-gray-400">{condition}</div>
             </div>
             <button
                 onClick={onToggle}
-                className={`w-10 h-5 rounded-full transition-colors relative ${active ? 'bg-gold' : 'bg-white/10'
+                className={`w-10 h-5 rounded-full transition-colors relative ${active ? 'bg-gold' : 'bg-gray-100'
                     }`}
             >
                 <div
@@ -190,7 +190,7 @@ export default function GrowthPage() {
         setAlerts((a) => ({ ...a, [key]: !a[key] }));
 
     return (
-        <main className="min-h-screen bg-bg-base text-text-primary overflow-hidden relative">
+        <main className="min-h-screen bg-[#FAFAFA] text-gray-900 overflow-hidden relative">
             {/* Ambient background */}
             <div className="fixed inset-0 pointer-events-none z-0">
                 <div className="absolute top-[-15%] left-[-10%] w-[50%] h-[50%] bg-green-500/3 rounded-full blur-[150px]" />
@@ -210,7 +210,7 @@ export default function GrowthPage() {
                                 After Launch
                             </span>
                         </h1>
-                        <p className="text-text-secondary max-w-2xl mx-auto">
+                        <p className="text-gray-600 max-w-2xl mx-auto">
                             Real-time analytics, holder growth tools, automated buyback mechanisms,
                             and community incentive programs — all in one dashboard.
                         </p>
@@ -224,7 +224,7 @@ export default function GrowthPage() {
                                 onClick={() => setTimeRange(d)}
                                 className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${timeRange === d
                                         ? 'bg-gold/20 border border-gold/40 text-gold'
-                                        : 'bg-white/5 border border-white/10 text-text-secondary hover:bg-white/10'
+                                        : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-100'
                                     }`}
                             >
                                 {d}D
@@ -243,8 +243,8 @@ export default function GrowthPage() {
                     {/* Charts Row */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                         {/* Price Chart */}
-                        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-                            <h3 className="text-sm font-semibold text-text-primary mb-4">💰 Price History</h3>
+                        <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
+                            <h3 className="text-sm font-semibold text-gray-900 mb-4">💰 Price History</h3>
                             <ResponsiveContainer width="100%" height={280}>
                                 <AreaChart data={priceData}>
                                     <defs>
@@ -266,8 +266,8 @@ export default function GrowthPage() {
                         </div>
 
                         {/* Holder Growth Chart */}
-                        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-                            <h3 className="text-sm font-semibold text-text-primary mb-4">👥 Holder Growth</h3>
+                        <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
+                            <h3 className="text-sm font-semibold text-gray-900 mb-4">👥 Holder Growth</h3>
                             <ResponsiveContainer width="100%" height={280}>
                                 <LineChart data={holderData}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
@@ -286,8 +286,8 @@ export default function GrowthPage() {
                     {/* Holder Analytics Row */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                         {/* Wallet Distribution Pie */}
-                        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-                            <h3 className="text-sm font-semibold text-text-primary mb-4">🥧 Wallet Distribution</h3>
+                        <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
+                            <h3 className="text-sm font-semibold text-gray-900 mb-4">🥧 Wallet Distribution</h3>
                             <ResponsiveContainer width="100%" height={220}>
                                 <PieChart>
                                     <Pie
@@ -311,7 +311,7 @@ export default function GrowthPage() {
                             </ResponsiveContainer>
                             <div className="flex flex-wrap gap-2 mt-2">
                                 {HOLDER_DISTRIBUTION.map((d) => (
-                                    <span key={d.name} className="text-xs flex items-center gap-1 text-text-tertiary">
+                                    <span key={d.name} className="text-xs flex items-center gap-1 text-gray-400">
                                         <span className="w-2 h-2 rounded-full" style={{ background: d.color }} />
                                         {d.name}
                                     </span>
@@ -320,12 +320,12 @@ export default function GrowthPage() {
                         </div>
 
                         {/* Top Holders Table */}
-                        <div className="lg:col-span-2 rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-                            <h3 className="text-sm font-semibold text-text-primary mb-4">🏆 Top 10 Holders</h3>
+                        <div className="lg:col-span-2 rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
+                            <h3 className="text-sm font-semibold text-gray-900 mb-4">🏆 Top 10 Holders</h3>
                             <div className="overflow-x-auto">
                                 <table className="w-full text-sm">
                                     <thead>
-                                        <tr className="text-text-tertiary text-xs border-b border-white/5">
+                                        <tr className="text-gray-400 text-xs border-b border-white/5">
                                             <th className="text-left py-2 font-medium">#</th>
                                             <th className="text-left py-2 font-medium">Address</th>
                                             <th className="text-right py-2 font-medium">Balance</th>
@@ -336,13 +336,13 @@ export default function GrowthPage() {
                                     <tbody>
                                         {TOP_HOLDERS.map((h) => (
                                             <tr key={h.rank} className="border-b border-white/5 last:border-0 hover:bg-white/[0.02]">
-                                                <td className="py-2.5 text-text-tertiary">{h.rank}</td>
-                                                <td className="py-2.5 font-mono text-text-primary">{h.address}</td>
-                                                <td className="py-2.5 text-right text-text-secondary">{h.balance}</td>
+                                                <td className="py-2.5 text-gray-400">{h.rank}</td>
+                                                <td className="py-2.5 font-mono text-gray-900">{h.address}</td>
+                                                <td className="py-2.5 text-right text-gray-600">{h.balance}</td>
                                                 <td className="py-2.5 text-right text-gold">{h.percent}%</td>
                                                 <td className="py-2.5 text-right">
                                                     {h.tag && (
-                                                        <span className="px-2 py-0.5 rounded-full text-xs bg-white/5 text-text-tertiary">
+                                                        <span className="px-2 py-0.5 rounded-full text-xs bg-white text-gray-400">
                                                             {h.tag}
                                                         </span>
                                                     )}
@@ -396,10 +396,10 @@ export default function GrowthPage() {
                     </div>
 
                     {/* Growth Alerts */}
-                    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+                    <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-sm font-semibold text-text-primary">🔔 Growth Alerts</h3>
-                            <span className="text-xs text-text-tertiary">
+                            <h3 className="text-sm font-semibold text-gray-900">🔔 Growth Alerts</h3>
+                            <span className="text-xs text-gray-400">
                                 {Object.values(alerts).filter(Boolean).length} active
                             </span>
                         </div>

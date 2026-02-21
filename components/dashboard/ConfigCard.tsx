@@ -12,7 +12,7 @@ interface ConfigCardProps {
 }
 
 const STATUS_STYLES = {
-    saved: 'bg-white/5 border-white/10 text-text-secondary',
+    saved: 'bg-white border-gray-200 text-gray-600',
     testnet: 'bg-info/10 border-info/20 text-info',
     mainnet: 'bg-success/10 border-success/20 text-success',
 };
@@ -46,25 +46,25 @@ export function ConfigCard({ id, config, status, createdAt }: ConfigCardProps) {
 
     return (
         <Link href={`/dashboard/${id}`}>
-            <div className="glass-card rounded-2xl p-5 border border-white/10 hover:border-gold/30 hover:bg-white/5 transition-all group cursor-pointer">
+            <div className="glass-card rounded-2xl p-5 border border-gray-200 hover:border-gold/30 hover:bg-white transition-all group cursor-pointer">
                 {/* Top row */}
                 <div className="flex items-start justify-between mb-3">
                     <div>
-                        <h3 className="font-semibold text-text-primary group-hover:text-gold transition-colors">
+                        <h3 className="font-semibold text-gray-900 group-hover:text-gold transition-colors">
                             {config.tokenName}
                         </h3>
-                        <p className="text-text-tertiary text-sm">${config.tokenSymbol}</p>
+                        <p className="text-gray-400 text-sm">${config.tokenSymbol}</p>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-text-tertiary group-hover:text-gold group-hover:translate-x-0.5 transition-all mt-1" />
+                    <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gold group-hover:translate-x-0.5 transition-all mt-1" />
                 </div>
 
                 {/* Description */}
-                <p className="text-text-secondary text-sm line-clamp-2 mb-4 leading-relaxed">
+                <p className="text-gray-600 text-sm line-clamp-2 mb-4 leading-relaxed">
                     {config.aiSummary || config.description}
                 </p>
 
                 {/* Stats row */}
-                <div className="flex flex-wrap gap-3 text-sm text-text-secondary mb-4">
+                <div className="flex flex-wrap gap-3 text-sm text-gray-600 mb-4">
                     <span className="flex items-center gap-1">
                         <TrendingUp className="w-3.5 h-3.5 text-gold" />
                         TGE {config.tgePercent}%
@@ -86,7 +86,7 @@ export function ConfigCard({ id, config, status, createdAt }: ConfigCardProps) {
                         <span className={`px-2 py-0.5 rounded-full text-xs border font-medium ${STATUS_STYLES[status]}`}>
                             {STATUS_LABELS[status]}
                         </span>
-                        <span className="flex items-center gap-1 text-xs text-text-tertiary">
+                        <span className="flex items-center gap-1 text-xs text-gray-400">
                             <Clock className="w-3 h-3" />
                             {date}
                         </span>
