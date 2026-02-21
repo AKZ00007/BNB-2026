@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { GoalInputStep } from '@/components/wizard/GoalInputStep';
 import { AILoadingStep } from '@/components/wizard/AILoadingStep';
@@ -11,6 +11,14 @@ import type { TokenConfig } from '@/types/config';
 type Step = 'input' | 'loading' | 'preview' | 'save';
 
 export default function CreateTokenPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-bg-base" />}>
+            <CreateTokenInner />
+        </Suspense>
+    );
+}
+
+function CreateTokenInner() {
     const [step, setStep] = useState<Step>('input');
     const [config, setConfig] = useState<TokenConfig | null>(null);
     const [error, setError] = useState<string | null>(null);

@@ -28,11 +28,11 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className="dark" suppressHydrationWarning>
+        <html lang="en" className="dark scroll-smooth" suppressHydrationWarning>
             <head>
 
             </head>
-            <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}>
+            <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased selection:bg-cyan/30 selection:text-white`}>
                 <Web3Provider>
                     <Header />
                     {children}

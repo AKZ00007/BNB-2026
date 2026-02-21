@@ -70,6 +70,26 @@ module.exports = {
                     800: '#5B21B6',
                     900: '#4C1D95',
                 },
+                // Source brand tokens
+                brand: {
+                    charcoal: '#050505',
+                    navy: '#0A0A0C',
+                    gold: '#F3BA2F',
+                    cyan: '#00D6FF',
+                },
+                cyan: {
+                    DEFAULT: '#00D6FF',
+                    50: '#E6FBFF',
+                    100: '#B3F3FF',
+                    200: '#80EBFF',
+                    300: '#4DE3FF',
+                    400: '#1ADBFF',
+                    500: '#00D6FF',
+                    600: '#00ABCC',
+                    700: '#008099',
+                    800: '#005566',
+                    900: '#002B33',
+                },
                 bg: {
                     base: '#0A0A0F',
                     surface: '#121218',
