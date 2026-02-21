@@ -173,8 +173,7 @@ export async function getContractCreationDate(contractAddress: string): Promise<
                 action: 'eth_getTransactionByHash',
                 txhash: creations[0].txHash,
             });
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const tx = txResult as any;
+            const tx = txResult as Record<string, string>;
             if (tx?.blockNumber) {
                 const blockResult = await bscScanRequest({
                     module: 'proxy',
@@ -182,8 +181,7 @@ export async function getContractCreationDate(contractAddress: string): Promise<
                     tag: tx.blockNumber,
                     boolean: 'false',
                 });
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const block = blockResult as any;
+                const block = blockResult as Record<string, string>;
                 if (block?.timestamp) {
                     return new Date(parseInt(block.timestamp, 16) * 1000);
                 }
@@ -221,8 +219,7 @@ export async function getBnbPrice(): Promise<number> {
             module: 'stats',
             action: 'bnbprice',
         });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return parseFloat((result as any)?.ethusd || '0');
+        return parseFloat((result as Record<string, string>)?.ethusd || '0');
     } catch {
         return 0;
     }
