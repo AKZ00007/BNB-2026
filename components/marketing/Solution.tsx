@@ -29,29 +29,29 @@ const features = [
 
 export function Solution() {
     return (
-        <section className="py-24 bg-[#F9FAFB] border-t border-[#E5E7EB]">
+        <section className="py-24 bg-[#F9FAFB] dark:bg-[#0a0a0c] border-t border-[#E5E7EB] dark:border-gray-800 transition-colors duration-300">
             <div className="max-w-[1200px] mx-auto px-8 relative">
                 <div className="grid lg:grid-cols-2 gap-16 items-center">
 
                     {/* Left Text */}
                     <div>
                         <SectionLabel className="!text-left">The Solution</SectionLabel>
-                        <h2 className="text-4xl md:text-5xl font-extrabold text-[#111827] mb-6 tracking-tight leading-tight">
+                        <h2 className="text-4xl md:text-5xl font-extrabold text-[#111827] dark:text-gray-100 mb-6 tracking-tight leading-tight transition-colors">
                             An enterprise-grade launchpad powered by AI.
                         </h2>
-                        <p className="text-lg text-[#6B7280] mb-8">
+                        <p className="text-lg text-[#6B7280] dark:text-gray-400 mb-8 transition-colors">
                             We took the $10,000 auditing process and compressed it into a single AI prompt. Generate, simulate, and deploy battle-tested tokenomics without writing a single line of Solidity.
                         </p>
 
                         <div className="grid sm:grid-cols-2 gap-6">
                             {features.map((feature, i) => (
                                 <BlurFade key={i} delay={0.1 * i} inView className="flex gap-4">
-                                    <div className="w-10 h-10 rounded-full bg-[#FEE2E2] flex items-center justify-center shrink-0">
+                                    <div className="w-10 h-10 rounded-full bg-[#FEE2E2] dark:bg-primary/20 flex items-center justify-center shrink-0 transition-colors">
                                         {feature.icon}
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-[#111827] mb-1 text-[15px]">{feature.title}</h4>
-                                        <p className="text-[14px] text-[#6B7280] leading-snug">{feature.desc}</p>
+                                        <h4 className="font-bold text-[#111827] dark:text-gray-100 mb-1 text-[15px] transition-colors">{feature.title}</h4>
+                                        <p className="text-[14px] text-[#6B7280] dark:text-gray-400 leading-snug transition-colors">{feature.desc}</p>
                                     </div>
                                 </BlurFade>
                             ))}
@@ -60,13 +60,20 @@ export function Solution() {
 
                     {/* Right Hero Video Graphic */}
                     <BlurFade delay={0.4} inView className="relative hidden lg:block">
-                        <div className="absolute inset-0 bg-primary/5 blur-3xl rounded-full translate-x-10 translate-y-10" />
+                        <div className="absolute inset-0 bg-primary/5 dark:bg-primary/20 blur-3xl rounded-full translate-x-10 translate-y-10 transition-colors" />
                         <div className="relative">
                             <HeroVideoDialog
-                                className="block"
+                                className="block dark:hidden"
                                 animationStyle="from-center"
                                 videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
                                 thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
+                                thumbnailAlt="BNB Launchpad Hero Video"
+                            />
+                            <HeroVideoDialog
+                                className="hidden dark:block"
+                                animationStyle="from-center"
+                                videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
+                                thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
                                 thumbnailAlt="BNB Launchpad Hero Video"
                             />
                         </div>

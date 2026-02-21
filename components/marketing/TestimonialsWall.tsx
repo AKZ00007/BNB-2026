@@ -14,7 +14,7 @@ const testimonials = [
 
 function ReviewCard({ name, title, text }: { name: string, title: string, text: React.ReactNode }) {
     return (
-        <div className="w-[380px] bg-white rounded-3xl p-8 border border-[#E5E7EB] shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div className="w-[380px] bg-white dark:bg-gray-900 rounded-3xl p-8 border border-[#E5E7EB] dark:border-gray-800 shadow-sm flex flex-col justify-between hover:shadow-md dark:hover:shadow-primary/5 transition-shadow">
             <div className="flex gap-1 mb-6">
                 {[...Array(5)].map((_, i) => (
                     <svg key={i} className="w-5 h-5 text-[#F59E0B] fill-[#F59E0B]" viewBox="0 0 20 20">
@@ -22,14 +22,14 @@ function ReviewCard({ name, title, text }: { name: string, title: string, text: 
                     </svg>
                 ))}
             </div>
-            <div className="text-[16px] text-[#374151] leading-relaxed mb-6 font-medium">{text}</div>
+            <div className="text-[16px] text-[#374151] dark:text-gray-300 leading-relaxed mb-6 font-medium transition-colors">{text}</div>
             <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FEE2E2] to-[#F1F5F9] border border-[#E5E7EB] flex items-center justify-center font-bold text-primary">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FEE2E2] dark:from-primary/20 to-[#F1F5F9] dark:to-gray-800 border border-[#E5E7EB] dark:border-gray-700 flex items-center justify-center font-bold text-primary transition-colors">
                     {name[0]}
                 </div>
                 <div>
-                    <h4 className="font-bold text-[#111827] text-sm">{name}</h4>
-                    <p className="text-xs text-[#6B7280]">{title}</p>
+                    <h4 className="font-bold text-[#111827] dark:text-gray-100 text-sm transition-colors">{name}</h4>
+                    <p className="text-xs text-[#6B7280] dark:text-gray-400 transition-colors">{title}</p>
                 </div>
             </div>
         </div>
@@ -42,11 +42,11 @@ export function TestimonialsWall() {
     const row3 = [...testimonials.slice(1, 4)]
 
     return (
-        <section className="py-24 bg-white overflow-hidden">
+        <section className="py-24 bg-white dark:bg-gray-950 overflow-hidden transition-colors duration-300">
             <div className="text-center mb-16 px-8">
                 <SectionLabel>Wall of Love</SectionLabel>
-                <h2 className="text-4xl md:text-5xl font-extrabold text-[#111827] mb-6">Built for builders.</h2>
-                <p className="text-lg text-[#6B7280]">Join hundreds of founders who launched their tokens safely on BSC.</p>
+                <h2 className="text-4xl md:text-5xl font-extrabold text-[#111827] dark:text-gray-100 mb-6 transition-colors">Built for builders.</h2>
+                <p className="text-lg text-[#6B7280] dark:text-gray-400 transition-colors">Join hundreds of founders who launched their tokens safely on BSC.</p>
             </div>
 
             <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
@@ -62,8 +62,8 @@ export function TestimonialsWall() {
                     ))}
                 </Marquee>
 
-                <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-bg-surface to-transparent" />
-                <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-bg-surface to-transparent" />
+                <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-white dark:from-gray-950 to-transparent transition-colors duration-300" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-white dark:from-gray-950 to-transparent transition-colors duration-300" />
             </div>
         </section>
     )

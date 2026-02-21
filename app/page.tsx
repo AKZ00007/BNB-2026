@@ -42,10 +42,10 @@ export default function Home() {
             </div>
 
             {/* ─── Hero to SaaS Transition layer ─────── */}
-            <div className="h-48 bg-gradient-to-b from-brand-charcoal to-[#FAFAFA] relative z-20 pointer-events-none" />
+            <div className="h-48 bg-gradient-to-b from-brand-charcoal to-[#FAFAFA] dark:to-gray-950 relative z-20 pointer-events-none transition-colors duration-300" />
 
             {/* ─── Content sections that appear AFTER the scroll experience ─────── */}
-            <div className="relative z-20 bg-white text-gray-900">
+            <div className="relative z-20 bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
                 <LogoTicker />
                 <Problem />
                 <Solution />
