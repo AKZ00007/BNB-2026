@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { ConfigCard } from '@/components/dashboard/ConfigCard';
-import { Sparkles, Plus, Loader2, Search } from 'lucide-react';
+import { Sparkles, Plus, Loader2, Search, Rocket } from 'lucide-react';
 import Link from 'next/link';
 import type { TokenConfig } from '@/types/config';
 
@@ -107,7 +107,7 @@ export default function DashboardPage() {
     }
 
     return (
-        <main className="min-h-screen bg-[#FAFAFA] text-gray-900 overflow-hidden relative">
+        <main className="min-h-screen bg-[#FAFAFA] dark:bg-gray-950 text-gray-900 dark:text-gray-100 overflow-hidden relative transition-colors duration-300">
             <div className="fixed inset-0 pointer-events-none z-0">
                 <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-gold/5 rounded-full blur-[120px] animate-pulse-slow" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple/10 rounded-full blur-[120px] animate-pulse-slow" />
@@ -121,13 +121,13 @@ export default function DashboardPage() {
                             <Sparkles className="w-3.5 h-3.5" />
                             My Configs
                         </div>
-                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
+                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 transition-colors">
                             Token{' '}
                             <span className="bg-clip-text text-transparent bg-gradient-to-r from-gold to-purple-400">
                                 Dashboard
                             </span>
                         </h1>
-                        <p className="text-gray-600 mt-1">
+                        <p className="text-gray-600 dark:text-gray-400 mt-1 transition-colors">
                             {configs.length > 0
                                 ? `${configs.length} config${configs.length !== 1 ? 's' : ''} saved`
                                 : 'Your saved token configs appear here'}
@@ -146,15 +146,15 @@ export default function DashboardPage() {
 
                 {/* Recover by ID — always visible at top */}
                 <div className="glass-card rounded-2xl p-4 mb-6 flex flex-col sm:flex-row gap-3">
-                    <div className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-gray-200">
-                        <Search className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                    <div className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 transition-colors">
+                        <Search className="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0 transition-colors" />
                         <input
                             suppressHydrationWarning
                             value={recoverInput}
                             onChange={(e) => setRecoverInput(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleRecover()}
                             placeholder="Paste a config ID to recover it (e.g. b469416d-...)"
-                            className="flex-1 bg-transparent text-sm text-gray-900 placeholder-text-tertiary outline-none"
+                            className="flex-1 bg-transparent text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 outline-none transition-colors"
                         />
                     </div>
                     <button
@@ -176,10 +176,12 @@ export default function DashboardPage() {
                         <Loader2 className="w-8 h-8 text-gold animate-spin" />
                     </div>
                 ) : configs.length === 0 ? (
-                    <div className="glass-card-prominent rounded-2xl p-12 text-center">
-                        <div className="text-5xl mb-4">🚀</div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">No configs yet</h3>
-                        <p className="text-gray-600 mb-6">
+                    <div className="glass-card-prominent rounded-2xl p-12 text-center flex flex-col items-center">
+                        <div className="w-16 h-16 bg-gold/10 rounded-2xl flex items-center justify-center mb-5 animate-pulse-glow">
+                            <Rocket className="w-8 h-8 text-gold" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 transition-colors">No configs yet</h3>
+                        <p className="text-gray-600 dark:text-gray-400 mb-6 transition-colors">
                             Create a new token above, or paste a config ID in the recover box.
                         </p>
                         <Link

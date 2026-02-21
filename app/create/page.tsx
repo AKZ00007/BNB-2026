@@ -12,7 +12,7 @@ type Step = 'input' | 'loading' | 'preview' | 'save';
 
 export default function CreateTokenPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen bg-[#FAFAFA]" />}>
+        <Suspense fallback={<div className="min-h-screen bg-[#FAFAFA] dark:bg-gray-950 transition-colors duration-300" />}>
             <CreateTokenInner />
         </Suspense>
     );
@@ -80,7 +80,7 @@ function CreateTokenInner() {
     };
 
     return (
-        <main className="min-h-screen bg-[#FAFAFA] text-gray-900 overflow-hidden relative">
+        <main className="min-h-screen bg-[#FAFAFA] dark:bg-gray-950 text-gray-900 dark:text-gray-100 overflow-hidden relative transition-colors duration-300">
             {/* Ambient background */}
             <div className="fixed inset-0 pointer-events-none z-0">
                 <div className="absolute top-[-15%] left-[-10%] w-[50%] h-[50%] bg-gold/4 rounded-full blur-[150px]" />
@@ -103,22 +103,22 @@ function CreateTokenInner() {
                                 <div key={s} className="flex items-center gap-3">
                                     <div
                                         className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${isCompleted
-                                            ? 'bg-gold text-bg-base'
-                                            : isCurrent
-                                                ? 'bg-gold/20 border-2 border-gold text-gold'
-                                                : 'bg-white border border-[var(--border-gray-300, #D1D5DB)] text-gray-400'
+                                                ? 'bg-gold text-bg-base dark:text-gray-900'
+                                                : isCurrent
+                                                    ? 'bg-gold/20 border-2 border-gold text-gold'
+                                                    : 'bg-white dark:bg-gray-900 border border-[var(--border-gray-300, #D1D5DB)] dark:border-gray-800 text-gray-400 dark:text-gray-500'
                                             }`}
                                     >
                                         {isCompleted ? '✓' : stepNum}
                                     </div>
                                     <span
-                                        className={`text-sm font-medium hidden sm:block ${isCurrent ? 'text-gold' : isCompleted ? 'text-gray-600' : 'text-gray-400'
+                                        className={`text-sm font-medium hidden sm:block transition-colors ${isCurrent ? 'text-gold' : isCompleted ? 'text-gray-600 dark:text-gray-300' : 'text-gray-400 dark:text-gray-600'
                                             }`}
                                     >
                                         {s === 'input' ? 'Your Vision' : s === 'preview' ? 'Review Config' : 'Save'}
                                     </span>
                                     {i < 2 && (
-                                        <div className={`w-10 h-px sm:w-16 lg:w-24 ${isCompleted ? 'bg-gold' : 'bg-gray-100'}`} />
+                                        <div className={`w-10 h-px sm:w-16 lg:w-24 transition-colors ${isCompleted ? 'bg-gold' : 'bg-gray-100 dark:bg-gray-800'}`} />
                                     )}
                                 </div>
                             );
@@ -127,10 +127,10 @@ function CreateTokenInner() {
 
                     {/* Template Banner */}
                     {templateName && (
-                        <div className="mb-6 p-4 rounded-xl bg-purple/10 border border-purple/20 text-sm flex items-center gap-3">
+                        <div className="mb-6 p-4 rounded-xl bg-purple/10 dark:bg-purple/20 border border-purple/20 text-sm flex items-center gap-3 transition-colors">
                             <span className="text-lg">✨</span>
-                            <span className="text-gray-600">
-                                Template applied: <strong className="text-purple">{templateName}</strong> — review and customize below, then save.
+                            <span className="text-gray-600 dark:text-gray-300 transition-colors">
+                                Template applied: <strong className="text-purple dark:text-purple/80">{templateName}</strong> — review and customize below, then save.
                             </span>
                         </div>
                     )}

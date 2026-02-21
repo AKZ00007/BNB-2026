@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
+import { Lock, Unlock, Hourglass, CheckCircle2, BarChart2, Target, PieChart as PieChartIcon, Calendar } from 'lucide-react';
 import {
     BarChart,
     Bar,
@@ -43,6 +45,11 @@ const UNLOCK_SCHEDULE = [
 /* ── Main Component ──────────────────────────────────────────────────────── */
 
 export default function PLUPage() {
+    const { resolvedTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+    const isDark = mounted ? resolvedTheme === 'dark' : false;
+
     const [selectedMilestone, setSelectedMilestone] = useState<number | null>(null);
 
     const totalLockPercent = 60;
@@ -50,7 +57,7 @@ export default function PLUPage() {
     const remainingLocked = totalLockPercent - totalUnlocked;
 
     return (
-        <main className="min-h-screen bg-[#FAFAFA] text-gray-900 overflow-hidden relative">
+        <main className="min-h-screen bg-[#FAFAFA] dark:bg-gray-950 text-gray-900 dark:text-gray-100 overflow-hidden relative transition-colors duration-300">
             {/* Ambient background */}
             <div className="fixed inset-0 pointer-events-none z-0">
                 <div className="absolute top-[-15%] left-[-10%] w-[50%] h-[50%] bg-cyan-500/4 rounded-full blur-[150px]" />
@@ -61,16 +68,16 @@ export default function PLUPage() {
                 <div className="max-w-6xl mx-auto">
                     {/* Hero */}
                     <div className="text-center mb-10">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-400/10 border border-cyan-400/20 text-sm text-cyan-400 mb-4">
-                            🔒 Proof of Liquidity Utility
+                        <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-sm text-cyan-400 mb-4">
+                            <Lock className="w-4 h-4" /> Proof of Liquidity Utility
                         </div>
-                        <h1 className="text-3xl md:text-4xl font-bold mb-3">
+                        <h1 className="text-3xl md:text-4xl font-bold mb-3 transition-colors">
                             PLU{' '}
                             <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-400">
                                 Dashboard
                             </span>
                         </h1>
-                        <p className="text-gray-600 max-w-2xl mx-auto">
+                        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto transition-colors">
                             Track milestone-based liquidity unlocks. PLU ensures tokens are only released
                             when real project milestones are achieved — building trust with holders.
                         </p>
@@ -79,23 +86,27 @@ export default function PLUPage() {
                     {/* Key Metrics */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                         {[
-                            { label: 'Total Locked', value: `${totalLockPercent}%`, icon: '🔒', color: 'text-cyan-400' },
-                            { label: 'Unlocked', value: `${totalUnlocked}%`, icon: '🔓', color: 'text-green-400' },
-                            { label: 'Remaining', value: `${remainingLocked}%`, icon: '⏳', color: 'text-gold' },
-                            { label: 'Milestones Met', value: `${PLU_MILESTONES.filter((m) => m.status === 'completed').length}/${PLU_MILESTONES.length}`, icon: '✅', color: 'text-purple' },
-                        ].map((m) => (
-                            <div key={m.label} className="rounded-xl border border-gray-200 bg-white/[0.03] p-5 text-center">
-                                <div className="text-xl mb-2">{m.icon}</div>
-                                <div className={`text-2xl font-bold ${m.color}`}>{m.value}</div>
-                                <div className="text-xs text-gray-400 mt-1">{m.label}</div>
+                            { label: 'Total Locked', value: `${totalLockPercent}%`, icon: <Lock className="w-5 h-5" />, color: 'text-cyan-400' },
+                            { label: 'Unlocked', value: `${totalUnlocked}%`, icon: <Unlock className="w-5 h-5" />, color: 'text-green-400' },
+                            { label: 'Remaining', value: `${remainingLocked}%`, icon: <Hourglass className="w-5 h-5" />, color: 'text-gold' },
+                            { label: 'Milestones Met', value: `${PLU_MILESTONES.filter((m) => m.status === 'completed').length}/${PLU_MILESTONES.length}`, icon: <CheckCircle2 className="w-5 h-5" />, color: 'text-purple' },
+                        ].map((stat, i) => (
+                            <div key={i} className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-5 flex items-center gap-4 transition-colors">
+                                <div className={`w-12 h-12 rounded-xl bg-gray-50 dark:bg-gray-800/50 flex items-center justify-center ${stat.color} transition-colors`}>
+                                    {stat.icon}
+                                </div>
+                                <div>
+                                    <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
+                                    <div className="text-xs text-gray-400 dark:text-gray-500 mt-1 transition-colors">{stat.label}</div>
+                                </div>
                             </div>
                         ))}
                     </div>
 
-                    {/* Lock Progress Bar */}
-                    <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6 mb-8">
-                        <h3 className="text-sm font-semibold text-gray-900 mb-4">📊 Unlock Progress</h3>
-                        <div className="h-6 rounded-full bg-white overflow-hidden flex">
+                    {/* Hero Graphic & Main Progress */}
+                    <div className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-8 mb-8 transition-colors">
+                        <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 transition-colors flex items-center gap-2"><BarChart2 className="w-4 h-4 text-cyan-400" /> Unlock Progress</h3>
+                        <div className="relative h-12 rounded-2xl bg-gray-100 dark:bg-gray-800/50 overflow-hidden flex transition-colors">
                             <div
                                 className="h-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all duration-700"
                                 style={{ width: `${(totalUnlocked / totalLockPercent) * 100}%` }}
@@ -112,10 +123,10 @@ export default function PLUPage() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
-                        {/* Milestones Timeline */}
-                        <div className="lg:col-span-3 rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
-                            <h3 className="text-sm font-semibold text-gray-900 mb-6">🎯 Milestone Tracker</h3>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        {/* Milestones */}
+                        <div className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-8 transition-colors">
+                            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-6 transition-colors flex items-center gap-2"><Target className="w-4 h-4 text-red-500" /> Milestone Tracker</h3>
                             <div className="space-y-1">
                                 {PLU_MILESTONES.map((m, i) => (
                                     <div
@@ -126,27 +137,27 @@ export default function PLUPage() {
                                     >
                                         {/* Vertical line */}
                                         {i < PLU_MILESTONES.length - 1 && (
-                                            <div className={`absolute left-[14px] top-8 bottom-0 w-px ${m.status === 'completed' ? 'bg-green-400/30' : 'bg-gray-100'
+                                            <div className={`absolute left-[14px] top-8 bottom-0 w-px transition-colors ${m.status === 'completed' ? 'bg-green-400/30' : 'bg-gray-200 dark:bg-gray-800'
                                                 }`} />
                                         )}
 
                                         {/* Dot */}
-                                        <div className={`absolute left-0 top-1 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${m.status === 'completed'
-                                                ? 'bg-green-400/20 text-green-400 border-2 border-green-400'
-                                                : m.status === 'active'
-                                                    ? 'bg-gold/20 text-gold border-2 border-gold animate-pulse'
-                                                    : 'bg-white text-gray-400 border-2 border-[var(--border-gray-300, #D1D5DB)]'
+                                        <div className={`absolute left-0 top-1 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${m.status === 'completed'
+                                            ? 'bg-green-400/20 text-green-400 border-2 border-green-400'
+                                            : m.status === 'active'
+                                                ? 'bg-gold/20 text-gold border-2 border-gold animate-pulse'
+                                                : 'bg-white dark:bg-gray-900 text-gray-400 dark:text-gray-600 border-2 border-gray-300 dark:border-gray-700'
                                             }`}>
                                             {m.status === 'completed' ? '✓' : m.id}
                                         </div>
 
                                         {/* Content */}
                                         <div className={`rounded-xl p-4 transition-all ${selectedMilestone === m.id
-                                                ? 'bg-white/[0.06] border border-gray-200'
-                                                : 'group-hover:bg-white/[0.03]'
+                                            ? 'bg-gray-50 dark:bg-white/[0.06] border border-gray-200 dark:border-gray-700'
+                                            : 'group-hover:bg-gray-50 dark:group-hover:bg-white/[0.03] border border-transparent'
                                             }`}>
                                             <div className="flex items-center justify-between mb-1">
-                                                <span className={`text-sm font-medium ${m.status === 'completed' ? 'text-green-400' : m.status === 'active' ? 'text-gold' : 'text-gray-600'
+                                                <span className={`text-sm font-medium transition-colors ${m.status === 'completed' ? 'text-green-400' : m.status === 'active' ? 'text-gold' : 'text-gray-600 dark:text-gray-300'
                                                     }`}>
                                                     {m.condition}
                                                 </span>
@@ -169,9 +180,9 @@ export default function PLUPage() {
                             </div>
                         </div>
 
-                        {/* Pie Chart */}
-                        <div className="lg:col-span-2 rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
-                            <h3 className="text-sm font-semibold text-gray-900 mb-4">🥧 Lock Distribution</h3>
+                        {/* Allocation Pie */}
+                        <div className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-8 min-h-[400px] flex flex-col transition-colors">
+                            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 transition-colors flex items-center gap-2"><PieChartIcon className="w-4 h-4 text-purple" /> Lock Distribution</h3>
                             <ResponsiveContainer width="100%" height={220}>
                                 <PieChart>
                                     <Pie
@@ -188,7 +199,13 @@ export default function PLUPage() {
                                         ))}
                                     </Pie>
                                     <Tooltip
-                                        contentStyle={{ background: 'rgba(15,15,30,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '12px' }}
+                                        contentStyle={{
+                                            background: isDark ? 'rgba(15,15,30,0.95)' : 'rgba(255,255,255,0.95)',
+                                            border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+                                            borderRadius: '12px',
+                                            fontSize: '12px',
+                                            color: isDark ? '#fff' : '#000'
+                                        }}
                                         formatter={(v: number) => [`${v}%`, 'Share']}
                                     />
                                 </PieChart>
@@ -198,9 +215,9 @@ export default function PLUPage() {
                                     <div key={d.name} className="flex items-center justify-between text-xs">
                                         <span className="flex items-center gap-2">
                                             <span className="w-2.5 h-2.5 rounded-full" style={{ background: d.color }} />
-                                            <span className="text-gray-600">{d.name}</span>
+                                            <span className="text-gray-600 dark:text-gray-400 transition-colors">{d.name}</span>
                                         </span>
-                                        <span className="text-gray-900 font-medium">{d.value}%</span>
+                                        <span className="text-gray-900 dark:text-gray-100 font-medium transition-colors">{d.value}%</span>
                                     </div>
                                 ))}
                             </div>
@@ -208,15 +225,25 @@ export default function PLUPage() {
                     </div>
 
                     {/* Unlock Schedule Chart */}
-                    <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6 mb-8">
-                        <h3 className="text-sm font-semibold text-gray-900 mb-4">📅 Unlock Schedule</h3>
+                    <div className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-8 transition-colors">
+                        <div className="flex items-center justify-between mb-8">
+                            <div>
+                                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 transition-colors flex items-center gap-2"><Calendar className="w-4 h-4 text-gold" /> Unlock Schedule</h3>
+                            </div>
+                        </div>
                         <ResponsiveContainer width="100%" height={300}>
                             <BarChart data={UNLOCK_SCHEDULE}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                                <XAxis dataKey="month" stroke="rgba(255,255,255,0.3)" fontSize={12} />
-                                <YAxis stroke="rgba(255,255,255,0.3)" fontSize={11} tickFormatter={(v) => `${v}%`} />
+                                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} />
+                                <XAxis dataKey="month" stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"} fontSize={12} />
+                                <YAxis stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"} fontSize={11} tickFormatter={(v) => `${v}%`} />
                                 <Tooltip
-                                    contentStyle={{ background: 'rgba(15,15,30,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '12px' }}
+                                    contentStyle={{
+                                        background: isDark ? 'rgba(15,15,30,0.95)' : 'rgba(255,255,255,0.95)',
+                                        border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+                                        borderRadius: '12px',
+                                        fontSize: '12px',
+                                        color: isDark ? '#fff' : '#000'
+                                    }}
                                     formatter={(v: number) => [`${v}%`, '']}
                                 />
                                 <Bar dataKey="unlocked" name="Unlocked" fill="#4ade80" radius={[4, 4, 0, 0]} stackId="a" />
@@ -226,15 +253,15 @@ export default function PLUPage() {
                     </div>
 
                     {/* PLU Trust Score */}
-                    <div className="rounded-2xl border border-gold/20 bg-gold/5 p-6">
+                    <div className="rounded-2xl border border-gold/20 bg-gold/5 p-6 transition-colors">
                         <div className="flex items-start gap-4">
                             <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-2xl flex-shrink-0">
                                 🛡️
                             </div>
                             <div>
                                 <h4 className="text-sm font-semibold text-gold mb-2">PLU Trust Score: 8.5 / 10</h4>
-                                <p className="text-sm text-gray-600 leading-relaxed">
-                                    This project has a <strong className="text-gray-900">high PLU trust score</strong>.
+                                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed transition-colors">
+                                    This project has a <strong className="text-gray-900 dark:text-gray-100 transition-colors">high PLU trust score</strong>.
                                     60% of the supply is locked with milestone-based releases, 2 of 5 milestones have been
                                     completed on schedule, and 1 milestone is currently in progress. The gradual unlock
                                     schedule spanning 12 months demonstrates strong commitment to long-term value.

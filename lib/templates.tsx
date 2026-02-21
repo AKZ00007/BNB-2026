@@ -5,6 +5,7 @@
  */
 
 import type { TokenConfig } from '@/types/config';
+import { Bot, Cpu, Zap, BarChart3, Smile, Building2, Sparkles, PieChart, Settings, Lock, Lightbulb, Rocket } from 'lucide-react';
 
 export interface TokenTemplate {
     id: string;
@@ -12,7 +13,7 @@ export interface TokenTemplate {
     category: 'chatbot' | 'agent' | 'compute' | 'data' | 'defi' | 'meme' | 'dao' | 'gaming';
     tagline: string;
     description: string;
-    icon: string; // emoji
+    icon: React.ReactNode;
     gradient: string; // tailwind gradient classes
     examples: string[]; // real-world examples for reference
     config: TokenConfig;
@@ -27,7 +28,7 @@ export const TOKEN_TEMPLATES: TokenTemplate[] = [
         tagline: 'Pay-per-query token for AI chatbot services',
         description:
             'Optimized for AI chatbot platforms where users spend tokens to access conversational AI. Features low TGE to prevent dumps, staking-friendly vesting, and moderate anti-whale protection.',
-        icon: '🤖',
+        icon: <Bot />,
         gradient: 'from-blue-500 to-cyan-400',
         examples: ['ChatGPT-style services', 'Customer support bots', 'AI writing assistants'],
         config: {
@@ -82,7 +83,7 @@ export const TOKEN_TEMPLATES: TokenTemplate[] = [
         tagline: 'Stake-to-access token for autonomous AI agents',
         description:
             'Designed for AI agent platforms where token holders stake to deploy autonomous agents. Higher staking allocation, longer cliffs for team, and milestone-based PLU tied to agent activity metrics.',
-        icon: '🕵️',
+        icon: <Cpu />,
         gradient: 'from-purple-500 to-pink-400',
         examples: ['Auto-GPT ecosystems', 'Trading agents', 'Research assistants'],
         config: {
@@ -137,7 +138,7 @@ export const TOKEN_TEMPLATES: TokenTemplate[] = [
         tagline: 'Pay-per-compute GPU marketplace token',
         description:
             'For decentralized GPU/compute networks. Token is spent to rent compute and earned by node operators. Features balanced distribution between compute providers and users.',
-        icon: '⚡',
+        icon: <Zap />,
         gradient: 'from-amber-500 to-orange-400',
         examples: ['Render Network', 'Akash', 'GPU rental markets'],
         config: {
@@ -192,7 +193,7 @@ export const TOKEN_TEMPLATES: TokenTemplate[] = [
         tagline: 'Token for buying & selling training data',
         description:
             'Powers an AI data marketplace where datasets are tokenized. Data providers earn tokens, AI companies spend tokens to access curated training data.',
-        icon: '📊',
+        icon: <BarChart3 />,
         gradient: 'from-emerald-500 to-teal-400',
         examples: ['Ocean Protocol', 'SingularityNET', 'Data DAOs'],
         config: {
@@ -247,7 +248,7 @@ export const TOKEN_TEMPLATES: TokenTemplate[] = [
         tagline: 'Fair-launch meme token with anti-rug protections',
         description:
             'A meme coin template with crash-proof defaults: high LP allocation, strong anti-whale limits, and aggressive PLU to build community trust. Designed to avoid the 80% failure rate of typical meme launches.',
-        icon: '🐸',
+        icon: <Smile />,
         gradient: 'from-green-400 to-lime-400',
         examples: ['DOGE-style community tokens', 'Viral meme projects', 'Charity memes'],
         config: {
@@ -301,7 +302,7 @@ export const TOKEN_TEMPLATES: TokenTemplate[] = [
         tagline: 'Governance token for DeFi protocol DAOs',
         description:
             'DAO governance token with voting power proportional to staked holdings. Long vesting ensures committed governance participants. Revenue-sharing built into smart contract.',
-        icon: '🏛️',
+        icon: <Building2 />,
         gradient: 'from-indigo-500 to-violet-400',
         examples: ['Uniswap-style governance', 'Compound DAO', 'Protocol treasuries'],
         config: {
@@ -349,12 +350,12 @@ export const TOKEN_TEMPLATES: TokenTemplate[] = [
     },
 ];
 
-export const TEMPLATE_CATEGORIES = [
-    { id: 'all', label: 'All Templates', icon: '✨' },
-    { id: 'chatbot', label: 'AI Chatbot', icon: '🤖' },
-    { id: 'agent', label: 'AI Agent', icon: '🕵️' },
-    { id: 'compute', label: 'Compute', icon: '⚡' },
-    { id: 'data', label: 'Data Market', icon: '📊' },
-    { id: 'meme', label: 'Meme', icon: '🐸' },
-    { id: 'dao', label: 'DAO', icon: '🏛️' },
-] as const;
+export const TEMPLATE_CATEGORIES: { id: string; label: string; icon: React.ReactNode }[] = [
+    { id: 'all', label: 'All Templates', icon: <Sparkles className="w-4 h-4" /> },
+    { id: 'chatbot', label: 'AI Chatbot', icon: <Bot className="w-4 h-4" /> },
+    { id: 'agent', label: 'AI Agent', icon: <Cpu className="w-4 h-4" /> },
+    { id: 'compute', label: 'Compute', icon: <Zap className="w-4 h-4" /> },
+    { id: 'data', label: 'Data Market', icon: <BarChart3 className="w-4 h-4" /> },
+    { id: 'meme', label: 'Meme', icon: <Smile className="w-4 h-4" /> },
+    { id: 'dao', label: 'DAO', icon: <Building2 className="w-4 h-4" /> },
+];

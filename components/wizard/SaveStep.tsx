@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { CheckCircle, Loader2, Wallet, ArrowRight, Plus } from 'lucide-react';
+import { CheckCircle, Loader2, Wallet, ArrowRight, Plus, Sparkles } from 'lucide-react';
 import { useAccount } from 'wagmi';
 import type { TokenConfig } from '@/types/config';
 
@@ -55,7 +55,7 @@ export function SaveStep({ config, onCreateAnother }: SaveStepProps) {
                     <CheckCircle className="w-10 h-10 text-success" />
                 </div>
 
-                <h2 className="text-3xl font-bold mb-2">Config Saved! 🎉</h2>
+                <h2 className="text-3xl font-bold mb-2 flex items-center justify-center gap-2">Config Saved! <Sparkles className="w-8 h-8 text-gold animate-pulse-glow" /></h2>
                 <p className="text-gray-600 mb-2">
                     <strong className="text-gold">{config.tokenName}</strong> ({config.tokenSymbol}) tokenomics config
                     has been saved to your account.

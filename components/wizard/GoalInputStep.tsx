@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Sparkles, Rocket, Zap, Users, Coins, Bot } from 'lucide-react';
+import { Sparkles, Rocket, Zap, Users, Coins, Bot, Check } from 'lucide-react';
 
 const SUGGESTION_PILLS = [
     { icon: <Zap className="w-3 h-3" />, label: 'Meme token with anti-dump protection' },
@@ -58,8 +58,8 @@ export function GoalInputStep({ onSubmit }: GoalInputStepProps) {
                     <span className="text-gray-400 text-sm">
                         {goal.length}/2000 characters
                     </span>
-                    <span className={`text-sm ${goal.length >= 10 ? 'text-success' : 'text-gray-400'}`}>
-                        {goal.length >= 10 ? '✓ Ready' : `${Math.max(0, 10 - goal.length)} more characters needed`}
+                    <span className={`text-sm flex items-center gap-1 ${goal.length >= 10 ? 'text-success' : 'text-gray-400'}`}>
+                        {goal.length >= 10 ? <><Check className="w-4 h-4" /> Ready</> : `${Math.max(0, 10 - goal.length)} more characters needed`}
                     </span>
                 </div>
             </div>

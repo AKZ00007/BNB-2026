@@ -8,7 +8,7 @@ import {
     useDeployContract,
     useWaitForTransactionReceipt,
 } from 'wagmi';
-import { AlertTriangle, CheckCircle2, ExternalLink, Loader2, Rocket, Wallet } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, ExternalLink, Loader2, Rocket, Wallet, Sparkles } from 'lucide-react';
 import type { TokenConfig } from '@/types/config';
 import { SIMPLE_TOKEN_ABI, SIMPLE_TOKEN_BYTECODE } from '@/lib/contracts/SimpleToken';
 
@@ -118,7 +118,7 @@ export function DeployFlow({ configId, config, onDeployed }: DeployFlowProps) {
                 <div className="w-14 h-14 rounded-full bg-success/15 border border-success/30 flex items-center justify-center mx-auto mb-4">
                     <CheckCircle2 className="w-7 h-7 text-success" />
                 </div>
-                <h3 className="font-bold text-xl text-text-primary mb-1">Deployed! 🎉</h3>
+                <h3 className="font-bold text-xl text-text-primary mb-1 flex items-center justify-center gap-2">Deployed! <Sparkles className="w-5 h-5 text-gold animate-pulse-glow" /></h3>
                 <p className="text-text-secondary text-sm mb-5">
                     {config.tokenName} (${config.tokenSymbol}) is live on BSC Testnet.
                 </p>

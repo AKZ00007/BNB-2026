@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 import {
     LineChart,
     Line,
@@ -13,6 +14,7 @@ import {
     Bar,
     Legend,
 } from 'recharts';
+import { Settings, TrendingUp, Rocket, Activity, Minus, DollarSign, RefreshCw, Landmark, Flame, Users, Shield, Droplet, Lightbulb, BarChart2, Coins, Bot, Sparkles } from 'lucide-react';
 
 /* ── Types ────────────────────────────────────────────────────────────────── */
 
@@ -103,9 +105,9 @@ function SliderField({
 }) {
     return (
         <div className="space-y-1.5">
-            <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">{label}</span>
-                <span className={`text-sm font-bold ${color}`}>
+            <div className="flex justify-between items-center transition-colors">
+                <span className="text-sm text-gray-600 dark:text-gray-400 transition-colors">{label}</span>
+                <span className={`text-sm font-bold transition-colors ${color}`}>
                     {value}
                     {unit}
                 </span>
@@ -117,7 +119,7 @@ function SliderField({
                 step={step}
                 value={value}
                 onChange={(e) => onChange(+e.target.value)}
-                className="w-full h-1.5 rounded-full appearance-none cursor-pointer accent-gold bg-gray-100"
+                className="w-full h-1.5 rounded-full appearance-none cursor-pointer accent-gold bg-gray-100 dark:bg-gray-800 transition-colors"
             />
         </div>
     );
@@ -125,16 +127,21 @@ function SliderField({
 
 /* ── Curve Selector ──────────────────────────────────────────────────────── */
 
-const CURVES: { type: CurveType; icon: string; desc: string }[] = [
-    { type: 'linear', icon: '📈', desc: 'Steady price increase proportional to supply sold' },
-    { type: 'exponential', icon: '🚀', desc: 'Rapid price acceleration as supply sells out' },
-    { type: 'sigmoid', icon: '📐', desc: 'Slow start, fast middle, plateaus at high supply' },
-    { type: 'flat', icon: '➡️', desc: 'Nearly stable price, minimal supply impact' },
+const CURVES: { type: CurveType; icon: React.ReactNode; desc: string }[] = [
+    { type: 'linear', icon: <TrendingUp className="w-5 h-5 text-green-400" />, desc: 'Steady price increase proportional to supply sold' },
+    { type: 'exponential', icon: <Rocket className="w-5 h-5 text-purple" />, desc: 'Rapid price acceleration as supply sells out' },
+    { type: 'sigmoid', icon: <Activity className="w-5 h-5 text-cyan-400" />, desc: 'Slow start, fast middle, plateaus at high supply' },
+    { type: 'flat', icon: <Minus className="w-5 h-5 text-gray-400" />, desc: 'Nearly stable price, minimal supply impact' },
 ];
 
 /* ── Main Component ──────────────────────────────────────────────────────── */
 
 export default function AMMPage() {
+    const { resolvedTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+    const isDark = mounted ? resolvedTheme === 'dark' : false;
+
     const [settings, setSettings] = useState<AMMSettings>({
         curveType: 'linear',
         initialPrice: 0.001,
@@ -184,7 +191,7 @@ export default function AMMPage() {
     const taxTotal = settings.taxSplit.lp + settings.taxSplit.treasury + settings.taxSplit.burn + settings.taxSplit.holders;
 
     return (
-        <main className="min-h-screen bg-[#FAFAFA] text-gray-900 overflow-hidden relative">
+        <main className="min-h-screen bg-[#FAFAFA] dark:bg-gray-950 text-gray-900 dark:text-gray-100 overflow-hidden relative transition-colors duration-300">
             {/* Ambient background */}
             <div className="fixed inset-0 pointer-events-none z-0">
                 <div className="absolute top-[-15%] left-[-10%] w-[50%] h-[50%] bg-gold/4 rounded-full blur-[150px]" />
@@ -195,16 +202,16 @@ export default function AMMPage() {
                 <div className="max-w-7xl mx-auto">
                     {/* Hero */}
                     <div className="text-center mb-10">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold/10 border border-gold/20 text-sm text-gold mb-4">
-                            ⚙️ AMM Customization
+                        <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gold/10 border border-gold/20 text-sm text-gold mb-4">
+                            <Settings className="w-4 h-4" /> AMM Customization
                         </div>
-                        <h1 className="text-3xl md:text-4xl font-bold mb-3">
+                        <h1 className="text-3xl md:text-4xl font-bold mb-3 transition-colors">
                             Design Your Token&apos;s{' '}
                             <span className="bg-clip-text text-transparent bg-gradient-to-r from-gold to-purple">
                                 Trading Mechanics
                             </span>
                         </h1>
-                        <p className="text-gray-600 max-w-2xl mx-auto">
+                        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto transition-colors">
                             Configure bonding curves, fee structures, and anti-whale protections.
                             Preview how price reacts to buy/sell pressure before you deploy.
                         </p>
@@ -214,33 +221,33 @@ export default function AMMPage() {
                         {/* ── Left Column: Controls ── */}
                         <div className="space-y-6">
                             {/* Bonding Curve Selector */}
-                            <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
-                                <h3 className="text-sm font-semibold text-gray-900 mb-4">📈 Bonding Curve</h3>
+                            <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-6 transition-colors">
+                                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 transition-colors flex items-center gap-2"><TrendingUp className="w-4 h-4 text-green-400" /> Bonding Curve</h3>
                                 <div className="grid grid-cols-2 gap-2">
                                     {CURVES.map((c) => (
                                         <button
                                             key={c.type}
                                             onClick={() => update('curveType', c.type)}
                                             className={`p-3 rounded-xl text-left transition-all ${settings.curveType === c.type
-                                                    ? 'bg-gold/15 border border-gold/40 shadow-lg shadow-gold/5'
-                                                    : 'bg-white border border-gray-200 hover:bg-gray-100'
+                                                ? 'bg-gold/15 border border-gold/40 shadow-lg shadow-gold/5'
+                                                : 'bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800'
                                                 }`}
                                         >
                                             <div className="text-lg mb-1">{c.icon}</div>
-                                            <div className="text-xs font-semibold capitalize text-gray-900">
+                                            <div className="text-xs font-semibold capitalize text-gray-900 dark:text-gray-100 transition-colors">
                                                 {c.type}
                                             </div>
                                         </button>
                                     ))}
                                 </div>
-                                <p className="text-xs text-gray-400 mt-3">
+                                <p className="text-xs text-gray-400 dark:text-gray-500 mt-3 transition-colors">
                                     {CURVES.find((c) => c.type === settings.curveType)?.desc}
                                 </p>
                             </div>
 
                             {/* Tax Configuration */}
-                            <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6 space-y-4">
-                                <h3 className="text-sm font-semibold text-gray-900">💰 Tax Configuration</h3>
+                            <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-6 space-y-4 transition-colors">
+                                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 transition-colors flex items-center gap-2"><DollarSign className="w-4 h-4 text-gold" /> Tax Configuration</h3>
                                 <SliderField
                                     label="Buy Tax"
                                     value={settings.buyTax}
@@ -273,15 +280,15 @@ export default function AMMPage() {
                                     <div className="grid grid-cols-2 gap-3 text-xs">
                                         {(
                                             [
-                                                { key: 'lp', label: '🔄 LP', color: 'text-blue-400' },
-                                                { key: 'treasury', label: '🏦 Treasury', color: 'text-gold' },
-                                                { key: 'burn', label: '🔥 Burn', color: 'text-orange-400' },
-                                                { key: 'holders', label: '👥 Holders', color: 'text-purple' },
+                                                { key: 'lp', label: <span className="flex items-center gap-1"><RefreshCw className="w-3 h-3 text-blue-400" /> LP</span>, color: 'text-blue-400' },
+                                                { key: 'treasury', label: <span className="flex items-center gap-1"><Landmark className="w-3 h-3 text-gold" /> Treasury</span>, color: 'text-gold' },
+                                                { key: 'burn', label: <span className="flex items-center gap-1"><Flame className="w-3 h-3 text-orange-400" /> Burn</span>, color: 'text-orange-400' },
+                                                { key: 'holders', label: <span className="flex items-center gap-1"><Users className="w-3 h-3 text-purple" /> Holders</span>, color: 'text-purple' },
                                             ] as const
                                         ).map((item) => (
-                                            <div key={item.key} className="bg-white rounded-lg p-2">
+                                            <div key={item.key} className="bg-white dark:bg-gray-900 rounded-lg p-2 transition-colors border border-transparent dark:border-gray-800">
                                                 <div className="flex justify-between mb-1">
-                                                    <span className="text-gray-400">{item.label}</span>
+                                                    <span className="text-gray-400 dark:text-gray-500 transition-colors">{item.label}</span>
                                                     <span className={item.color}>{settings.taxSplit[item.key]}%</span>
                                                 </div>
                                                 <input
@@ -291,7 +298,7 @@ export default function AMMPage() {
                                                     step={5}
                                                     value={settings.taxSplit[item.key]}
                                                     onChange={(e) => updateTaxSplit(item.key, +e.target.value)}
-                                                    className="w-full h-1 rounded-full appearance-none cursor-pointer accent-gold bg-gray-100"
+                                                    className="w-full h-1 rounded-full appearance-none cursor-pointer accent-gold bg-gray-100 dark:bg-gray-800 transition-colors"
                                                 />
                                             </div>
                                         ))}
@@ -300,8 +307,8 @@ export default function AMMPage() {
                             </div>
 
                             {/* Anti-Whale Controls */}
-                            <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6 space-y-4">
-                                <h3 className="text-sm font-semibold text-gray-900">🐋 Anti-Whale Protection</h3>
+                            <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-6 space-y-4 transition-colors">
+                                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 transition-colors flex items-center gap-2"><Shield className="w-4 h-4 text-cyan-400" /> Anti-Whale Protection</h3>
                                 <SliderField
                                     label="Max Wallet"
                                     value={settings.maxWalletPercent}
@@ -335,8 +342,8 @@ export default function AMMPage() {
                             </div>
 
                             {/* Liquidity Settings */}
-                            <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6 space-y-4">
-                                <h3 className="text-sm font-semibold text-gray-900">💧 Initial Liquidity</h3>
+                            <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-6 space-y-4 transition-colors">
+                                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 transition-colors flex items-center gap-2"><Droplet className="w-4 h-4 text-blue-400" /> Initial Liquidity</h3>
                                 <SliderField
                                     label="Initial Price"
                                     value={settings.initialPrice}
@@ -357,8 +364,8 @@ export default function AMMPage() {
                                     color="text-gold"
                                     onChange={(v) => update('initialLiquidityBnb', v)}
                                 />
-                                <div className="bg-gold/5 border border-gold/10 rounded-lg p-3 text-xs text-gray-600">
-                                    💡 Starting market cap:{' '}
+                                <div className="bg-gold/5 border border-gold/10 rounded-lg p-3 text-xs text-gray-600 dark:text-gray-400 transition-colors flex items-center gap-1.5">
+                                    <Lightbulb className="w-3.5 h-3.5 text-gold" /> Starting market cap:{' '}
                                     <strong className="text-gold">
                                         {(settings.initialPrice * settings.totalSupply).toLocaleString()} BNB
                                     </strong>
@@ -369,9 +376,9 @@ export default function AMMPage() {
                         {/* ── Right Column: Charts ── */}
                         <div className="lg:col-span-2 space-y-6">
                             {/* Bonding Curve Chart */}
-                            <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
+                            <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-6 transition-colors">
                                 <div className="flex items-center justify-between mb-4">
-                                    <h3 className="text-sm font-semibold text-gray-900">
+                                    <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 transition-colors">
                                         Price vs. Supply — {settings.curveType.charAt(0).toUpperCase() + settings.curveType.slice(1)} Curve
                                     </h3>
                                     <div className="flex items-center gap-2 text-xs text-gray-400">
@@ -380,25 +387,26 @@ export default function AMMPage() {
                                 </div>
                                 <ResponsiveContainer width="100%" height={350}>
                                     <LineChart data={curveData}>
-                                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                                        <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} />
                                         <XAxis
                                             dataKey="supply"
-                                            stroke="rgba(255,255,255,0.3)"
+                                            stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"}
                                             fontSize={11}
                                             tickFormatter={(v) => `${v}M`}
                                         />
                                         <YAxis
-                                            stroke="rgba(255,255,255,0.3)"
+                                            stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"}
                                             fontSize={11}
                                             tickFormatter={(v) => v.toFixed(4)}
                                             width={65}
                                         />
                                         <Tooltip
                                             contentStyle={{
-                                                background: 'rgba(15,15,30,0.95)',
-                                                border: '1px solid rgba(255,255,255,0.1)',
+                                                background: isDark ? 'rgba(15,15,30,0.95)' : 'rgba(255,255,255,0.95)',
+                                                border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
                                                 borderRadius: '12px',
                                                 fontSize: '12px',
+                                                color: isDark ? '#fff' : '#000'
                                             }}
                                             formatter={(value: number) => [`${value.toFixed(6)} BNB`, 'Price']}
                                             labelFormatter={(label) => `Supply: ${label}M tokens`}
@@ -416,10 +424,10 @@ export default function AMMPage() {
                             </div>
 
                             {/* Buy/Sell Impact Simulation */}
-                            <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
+                            <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-6 transition-colors">
                                 <div className="flex items-center justify-between mb-4">
-                                    <h3 className="text-sm font-semibold text-gray-900">
-                                        📊 Buy / Sell Price Impact
+                                    <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 transition-colors flex items-center gap-2">
+                                        <BarChart2 className="w-4 h-4" /> Buy / Sell Price Impact
                                     </h3>
                                     <div className="flex items-center gap-4 text-xs text-gray-400">
                                         <span className="flex items-center gap-1">
@@ -432,20 +440,21 @@ export default function AMMPage() {
                                 </div>
                                 <ResponsiveContainer width="100%" height={280}>
                                     <BarChart data={impactData}>
-                                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                                        <XAxis dataKey="volume" stroke="rgba(255,255,255,0.3)" fontSize={11} />
+                                        <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} />
+                                        <XAxis dataKey="volume" stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"} fontSize={11} />
                                         <YAxis
-                                            stroke="rgba(255,255,255,0.3)"
+                                            stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"}
                                             fontSize={11}
                                             tickFormatter={(v) => `${v}%`}
                                             width={50}
                                         />
                                         <Tooltip
                                             contentStyle={{
-                                                background: 'rgba(15,15,30,0.95)',
-                                                border: '1px solid rgba(255,255,255,0.1)',
+                                                background: isDark ? 'rgba(15,15,30,0.95)' : 'rgba(255,255,255,0.95)',
+                                                border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
                                                 borderRadius: '12px',
                                                 fontSize: '12px',
+                                                color: isDark ? '#fff' : '#000'
                                             }}
                                             formatter={(value: number) => [`${value.toFixed(2)}%`, '']}
                                             labelFormatter={(label) => `Trade Volume: ${label} of supply`}
@@ -468,52 +477,52 @@ export default function AMMPage() {
                                     {
                                         label: 'Starting Price',
                                         value: `${settings.initialPrice} BNB`,
-                                        icon: '💰',
+                                        icon: <DollarSign className="w-5 h-5" />,
                                         color: 'text-gold',
                                     },
                                     {
                                         label: 'Curve Type',
                                         value: settings.curveType,
-                                        icon: '📈',
+                                        icon: <TrendingUp className="w-5 h-5" />,
                                         color: 'text-purple',
                                     },
                                     {
                                         label: 'Total Tax',
                                         value: `${settings.buyTax}% / ${settings.sellTax}%`,
-                                        icon: '💸',
+                                        icon: <Coins className="w-5 h-5" />,
                                         color: 'text-amber-400',
                                     },
                                     {
                                         label: 'Max Wallet',
                                         value: `${settings.maxWalletPercent}%`,
-                                        icon: '🐋',
+                                        icon: <Shield className="w-5 h-5" />,
                                         color: 'text-cyan-400',
                                     },
                                 ].map((card) => (
                                     <div
                                         key={card.label}
-                                        className="rounded-xl border border-gray-200 bg-white/[0.03] p-4 text-center"
+                                        className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-4 text-center transition-colors"
                                     >
                                         <div className="text-xl mb-1">{card.icon}</div>
-                                        <div className="text-xs text-gray-400 mb-1">{card.label}</div>
+                                        <div className="text-xs text-gray-400 dark:text-gray-500 mb-1 transition-colors">{card.label}</div>
                                         <div className={`text-sm font-bold capitalize ${card.color}`}>{card.value}</div>
                                     </div>
                                 ))}
                             </div>
 
                             {/* AI Recommendation */}
-                            <div className="rounded-2xl border border-gold/20 bg-gold/5 p-6">
+                            <div className="rounded-2xl border border-gold/20 bg-gold/5 p-6 transition-colors">
                                 <div className="flex items-start gap-4">
                                     <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center text-xl flex-shrink-0">
-                                        🤖
+                                        <Bot className="w-5 h-5 text-gold" />
                                     </div>
                                     <div>
-                                        <h4 className="text-sm font-semibold text-gold mb-2">AI Recommendation</h4>
-                                        <p className="text-sm text-gray-600 leading-relaxed">
+                                        <h4 className="text-sm font-semibold text-gold mb-2 transition-colors">AI Recommendation</h4>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed transition-colors">
                                             Based on similar BSC launches, we recommend a{' '}
-                                            <strong className="text-gray-900">linear bonding curve</strong> with{' '}
-                                            <strong className="text-gray-900">2% buy / 4% sell tax</strong> and a{' '}
-                                            <strong className="text-gray-900">2% max wallet limit</strong>. This
+                                            <strong className="text-gray-900 dark:text-gray-100 transition-colors">linear bonding curve</strong> with{' '}
+                                            <strong className="text-gray-900 dark:text-gray-100 transition-colors">2% buy / 4% sell tax</strong> and a{' '}
+                                            <strong className="text-gray-900 dark:text-gray-100 transition-colors">2% max wallet limit</strong>. This
                                             configuration provides moderate price stability while discouraging large dumps.
                                             The sell tax premium helps build the LP over time.
                                         </p>
@@ -528,7 +537,7 @@ export default function AMMPage() {
                                             }}
                                             className="mt-3 px-4 py-2 rounded-lg bg-gold/10 border border-gold/20 text-gold text-sm font-medium hover:bg-gold/20 transition-colors"
                                         >
-                                            ✨ Apply Recommended Settings
+                                            <Sparkles className="inline-block w-4 h-4 mr-1.5" /> Apply Recommended Settings
                                         </button>
                                     </div>
                                 </div>

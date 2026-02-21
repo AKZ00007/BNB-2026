@@ -3,6 +3,7 @@ import * as Accordion from '@radix-ui/react-accordion'
 import { SectionLabel } from '@/components/shared/SectionLabel'
 import { BlurFade } from '@/components/ui/blur-fade'
 import { useState } from 'react'
+import { Check } from 'lucide-react'
 
 const steps = [
     {
@@ -101,9 +102,9 @@ export function HowItWorks() {
 
                         {activeStep === 'step-3' && (
                             <div className="w-full max-w-[300px] bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-[#E5E7EB] dark:border-gray-800 p-4 text-xs font-mono animate-fade-in transition-colors">
-                                <div className="text-green-500 dark:text-green-400 mb-1">✓ Bot #2293 blocked</div>
-                                <div className="text-green-500 dark:text-green-400 mb-1">✓ Bot #4401 taxed 99%</div>
-                                <div className="text-green-500 dark:text-green-400">✓ Liquidity locked securely</div>
+                                <div className="text-green-500 dark:text-green-400 mb-1 flex items-center gap-1.5"><Check className="w-4 h-4" /> Bot #2293 blocked</div>
+                                <div className="text-green-500 dark:text-green-400 mb-1 flex items-center gap-1.5"><Check className="w-4 h-4" /> Bot #4401 taxed 99%</div>
+                                <div className="text-green-500 dark:text-green-400 flex items-center gap-1.5"><Check className="w-4 h-4" /> Liquidity locked securely</div>
                             </div>
                         )}
 

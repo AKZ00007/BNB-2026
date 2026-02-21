@@ -1,6 +1,8 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useTheme } from 'next-themes';
+import { Leaf, DollarSign, Activity, Users, PieChart as PieChartIcon, Trophy, RefreshCw, Gift, Flame, Bell } from 'lucide-react';
 import {
     LineChart,
     Line,
@@ -72,21 +74,21 @@ function StatCard({
     change,
     changePositive,
 }: {
-    icon: string;
+    icon: React.ReactNode;
     label: string;
     value: string;
     change: string;
     changePositive: boolean;
 }) {
     return (
-        <div className="rounded-xl border border-gray-200 bg-white/[0.03] p-5">
+        <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-5 transition-colors">
             <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-xl">
+                <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-xl transition-colors">
                     {icon}
                 </div>
-                <div className="text-xs text-gray-400 uppercase tracking-wide">{label}</div>
+                <div className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide transition-colors">{label}</div>
             </div>
-            <div className="text-2xl font-bold text-gray-900 mb-1">{value}</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1 transition-colors">{value}</div>
             <div className={`text-xs font-medium ${changePositive ? 'text-green-400' : 'text-red-400'}`}>
                 {changePositive ? '↑' : '↓'} {change}
             </div>
@@ -104,7 +106,7 @@ function SchedulerCard({
     buttonLabel,
     buttonColor,
 }: {
-    icon: string;
+    icon: React.ReactNode;
     title: string;
     description: string;
     fields: { label: string; placeholder: string; type?: string }[];
@@ -112,20 +114,20 @@ function SchedulerCard({
     buttonColor: string;
 }) {
     return (
-        <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
-            <div className="flex items-center gap-3 mb-3">
-                <span className="text-xl">{icon}</span>
-                <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
+        <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-6 transition-colors">
+            <div className="flex items-center gap-3 mb-3 text-gray-500 dark:text-gray-400">
+                <span className="flex items-center justify-center">{icon}</span>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 transition-colors">{title}</h3>
             </div>
-            <p className="text-xs text-gray-400 mb-4">{description}</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mb-4 transition-colors">{description}</p>
             <div className="space-y-3">
                 {fields.map((f) => (
                     <div key={f.label}>
-                        <label className="text-xs text-gray-600 mb-1 block">{f.label}</label>
+                        <label className="text-xs text-gray-600 dark:text-gray-400 mb-1 block transition-colors">{f.label}</label>
                         <input
                             type={f.type || 'text'}
                             placeholder={f.placeholder}
-                            className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-gold/30 transition-colors"
+                            className="w-full px-3 py-2 rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-gold/30 transition-colors"
                         />
                     </div>
                 ))}
@@ -153,18 +155,18 @@ function AlertItem({
     onToggle: () => void;
 }) {
     return (
-        <div className="flex items-center justify-between py-2.5 border-b border-white/5 last:border-0">
+        <div className="flex items-center justify-between py-2.5 border-b border-gray-200 dark:border-gray-800 last:border-0 transition-colors">
             <div>
-                <div className="text-sm text-gray-900">{label}</div>
-                <div className="text-xs text-gray-400">{condition}</div>
+                <div className="text-sm text-gray-900 dark:text-gray-100 transition-colors">{label}</div>
+                <div className="text-xs text-gray-400 dark:text-gray-500 transition-colors">{condition}</div>
             </div>
             <button
                 onClick={onToggle}
-                className={`w-10 h-5 rounded-full transition-colors relative ${active ? 'bg-gold' : 'bg-gray-100'
+                className={`w-10 h-5 rounded-full transition-colors relative ${active ? 'bg-gold' : 'bg-gray-200 dark:bg-gray-700'
                     }`}
             >
                 <div
-                    className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${active ? 'translate-x-5' : 'translate-x-0.5'
+                    className={`absolute top-0.5 w-4 h-4 rounded-full bg-white dark:bg-gray-200 shadow transition-transform ${active ? 'translate-x-5' : 'translate-x-0.5'
                         }`}
                 />
             </button>
@@ -175,6 +177,11 @@ function AlertItem({
 /* ── Main Page ───────────────────────────────────────────────────────────── */
 
 export default function GrowthPage() {
+    const { resolvedTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+    const isDark = mounted ? resolvedTheme === 'dark' : false;
+
     const [timeRange, setTimeRange] = useState<30 | 60 | 90>(30);
     const [alerts, setAlerts] = useState({
         holders: true,
@@ -190,7 +197,7 @@ export default function GrowthPage() {
         setAlerts((a) => ({ ...a, [key]: !a[key] }));
 
     return (
-        <main className="min-h-screen bg-[#FAFAFA] text-gray-900 overflow-hidden relative">
+        <main className="min-h-screen bg-[#FAFAFA] dark:bg-gray-950 text-gray-900 dark:text-gray-100 overflow-hidden relative transition-colors duration-300">
             {/* Ambient background */}
             <div className="fixed inset-0 pointer-events-none z-0">
                 <div className="absolute top-[-15%] left-[-10%] w-[50%] h-[50%] bg-green-500/3 rounded-full blur-[150px]" />
@@ -201,16 +208,16 @@ export default function GrowthPage() {
                 <div className="max-w-7xl mx-auto">
                     {/* Hero */}
                     <div className="text-center mb-10">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-400/10 border border-green-400/20 text-sm text-green-400 mb-4">
-                            🌱 Post-Launch Growth
+                        <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-green-400/10 border border-green-400/20 text-sm text-green-400 mb-4">
+                            <Leaf className="w-4 h-4" /> Post-Launch Growth
                         </div>
-                        <h1 className="text-3xl md:text-4xl font-bold mb-3">
+                        <h1 className="text-3xl md:text-4xl font-bold mb-3 transition-colors">
                             Grow Your Token{' '}
                             <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-emerald-400">
                                 After Launch
                             </span>
                         </h1>
-                        <p className="text-gray-600 max-w-2xl mx-auto">
+                        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto transition-colors">
                             Real-time analytics, holder growth tools, automated buyback mechanisms,
                             and community incentive programs — all in one dashboard.
                         </p>
@@ -223,8 +230,8 @@ export default function GrowthPage() {
                                 key={d}
                                 onClick={() => setTimeRange(d)}
                                 className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${timeRange === d
-                                        ? 'bg-gold/20 border border-gold/40 text-gold'
-                                        : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-100'
+                                    ? 'bg-gold/20 border border-gold/40 text-gold shadow-lg shadow-gold/5'
+                                    : 'bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100'
                                     }`}
                             >
                                 {d}D
@@ -234,17 +241,17 @@ export default function GrowthPage() {
 
                     {/* Live Metrics */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                        <StatCard icon="💰" label="Price" value="0.00187 BNB" change="12.3% (7d)" changePositive />
-                        <StatCard icon="📊" label="Market Cap" value="$1.87M" change="8.5% (7d)" changePositive />
-                        <StatCard icon="👥" label="Holders" value="1,247" change="+83 (7d)" changePositive />
-                        <StatCard icon="📈" label="24h Volume" value="$47.2K" change="3.1% (24h)" changePositive={false} />
+                        <StatCard icon={<DollarSign className="w-5 h-5" />} label="Price" value="0.00187 BNB" change="12.3% (7d)" changePositive />
+                        <StatCard icon={<Activity className="w-5 h-5" />} label="Market Cap" value="$1.87M" change="8.5% (7d)" changePositive />
+                        <StatCard icon={<Users className="w-5 h-5" />} label="Holders" value="1,247" change="+83 (7d)" changePositive />
+                        <StatCard icon={<Activity className="w-5 h-5" />} label="24h Volume" value="$47.2K" change="3.1% (24h)" changePositive={false} />
                     </div>
 
                     {/* Charts Row */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                         {/* Price Chart */}
-                        <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
-                            <h3 className="text-sm font-semibold text-gray-900 mb-4">💰 Price History</h3>
+                        <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-6 transition-colors">
+                            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 transition-colors flex items-center gap-2"><DollarSign className="w-4 h-4 text-gold" /> Price History</h3>
                             <ResponsiveContainer width="100%" height={280}>
                                 <AreaChart data={priceData}>
                                     <defs>
@@ -253,11 +260,17 @@ export default function GrowthPage() {
                                             <stop offset="95%" stopColor="#F0B90B" stopOpacity={0} />
                                         </linearGradient>
                                     </defs>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                                    <XAxis dataKey="day" stroke="rgba(255,255,255,0.3)" fontSize={10} interval={Math.floor(timeRange / 6)} />
-                                    <YAxis stroke="rgba(255,255,255,0.3)" fontSize={10} tickFormatter={(v) => v.toFixed(4)} width={55} />
+                                    <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} />
+                                    <XAxis dataKey="day" stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"} fontSize={10} interval={Math.floor(timeRange / 6)} />
+                                    <YAxis stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"} fontSize={10} tickFormatter={(v) => v.toFixed(4)} width={55} />
                                     <Tooltip
-                                        contentStyle={{ background: 'rgba(15,15,30,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '12px' }}
+                                        contentStyle={{
+                                            background: isDark ? 'rgba(15,15,30,0.95)' : 'rgba(255,255,255,0.95)',
+                                            border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+                                            borderRadius: '12px',
+                                            fontSize: '12px',
+                                            color: isDark ? '#fff' : '#000'
+                                        }}
                                         formatter={(v: number) => [`${v.toFixed(6)} BNB`, 'Price']}
                                     />
                                     <Area type="monotone" dataKey="price" stroke="#F0B90B" strokeWidth={2} fill="url(#priceGrad)" />
@@ -266,15 +279,21 @@ export default function GrowthPage() {
                         </div>
 
                         {/* Holder Growth Chart */}
-                        <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
-                            <h3 className="text-sm font-semibold text-gray-900 mb-4">👥 Holder Growth</h3>
+                        <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-6 transition-colors">
+                            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 transition-colors flex items-center gap-2"><Users className="w-4 h-4 text-green-400" /> Holder Growth</h3>
                             <ResponsiveContainer width="100%" height={280}>
                                 <LineChart data={holderData}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                                    <XAxis dataKey="day" stroke="rgba(255,255,255,0.3)" fontSize={10} interval={Math.floor(timeRange / 6)} />
-                                    <YAxis stroke="rgba(255,255,255,0.3)" fontSize={10} width={45} />
+                                    <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} />
+                                    <XAxis dataKey="day" stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"} fontSize={10} interval={Math.floor(timeRange / 6)} />
+                                    <YAxis stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"} fontSize={10} width={45} />
                                     <Tooltip
-                                        contentStyle={{ background: 'rgba(15,15,30,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '12px' }}
+                                        contentStyle={{
+                                            background: isDark ? 'rgba(15,15,30,0.95)' : 'rgba(255,255,255,0.95)',
+                                            border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+                                            borderRadius: '12px',
+                                            fontSize: '12px',
+                                            color: isDark ? '#fff' : '#000'
+                                        }}
                                     />
                                     <Line type="monotone" dataKey="holders" stroke="#4ade80" strokeWidth={2} dot={false} name="Total Holders" />
                                     <Line type="monotone" dataKey="newHolders" stroke="#a78bfa" strokeWidth={1.5} dot={false} name="New / Day" />
@@ -286,8 +305,8 @@ export default function GrowthPage() {
                     {/* Holder Analytics Row */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                         {/* Wallet Distribution Pie */}
-                        <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
-                            <h3 className="text-sm font-semibold text-gray-900 mb-4">🥧 Wallet Distribution</h3>
+                        <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-6 transition-colors">
+                            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 transition-colors flex items-center gap-2"><PieChartIcon className="w-4 h-4 text-purple" /> Wallet Distribution</h3>
                             <ResponsiveContainer width="100%" height={220}>
                                 <PieChart>
                                     <Pie
@@ -304,14 +323,20 @@ export default function GrowthPage() {
                                         ))}
                                     </Pie>
                                     <Tooltip
-                                        contentStyle={{ background: 'rgba(15,15,30,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '12px' }}
+                                        contentStyle={{
+                                            background: isDark ? 'rgba(15,15,30,0.95)' : 'rgba(255,255,255,0.95)',
+                                            border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+                                            borderRadius: '12px',
+                                            fontSize: '12px',
+                                            color: isDark ? '#fff' : '#000'
+                                        }}
                                         formatter={(v: number) => [`${v}%`, 'Share']}
                                     />
                                 </PieChart>
                             </ResponsiveContainer>
                             <div className="flex flex-wrap gap-2 mt-2">
                                 {HOLDER_DISTRIBUTION.map((d) => (
-                                    <span key={d.name} className="text-xs flex items-center gap-1 text-gray-400">
+                                    <span key={d.name} className="text-xs flex items-center gap-1 text-gray-400 dark:text-gray-500 transition-colors">
                                         <span className="w-2 h-2 rounded-full" style={{ background: d.color }} />
                                         {d.name}
                                     </span>
@@ -320,12 +345,12 @@ export default function GrowthPage() {
                         </div>
 
                         {/* Top Holders Table */}
-                        <div className="lg:col-span-2 rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
-                            <h3 className="text-sm font-semibold text-gray-900 mb-4">🏆 Top 10 Holders</h3>
+                        <div className="lg:col-span-2 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-6 transition-colors">
+                            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4 transition-colors flex items-center gap-2"><Trophy className="w-4 h-4 text-gold" /> Top 10 Holders</h3>
                             <div className="overflow-x-auto">
                                 <table className="w-full text-sm">
                                     <thead>
-                                        <tr className="text-gray-400 text-xs border-b border-white/5">
+                                        <tr className="text-gray-400 dark:text-gray-500 text-xs border-b border-gray-200 dark:border-gray-800 transition-colors">
                                             <th className="text-left py-2 font-medium">#</th>
                                             <th className="text-left py-2 font-medium">Address</th>
                                             <th className="text-right py-2 font-medium">Balance</th>
@@ -335,14 +360,14 @@ export default function GrowthPage() {
                                     </thead>
                                     <tbody>
                                         {TOP_HOLDERS.map((h) => (
-                                            <tr key={h.rank} className="border-b border-white/5 last:border-0 hover:bg-white/[0.02]">
-                                                <td className="py-2.5 text-gray-400">{h.rank}</td>
-                                                <td className="py-2.5 font-mono text-gray-900">{h.address}</td>
-                                                <td className="py-2.5 text-right text-gray-600">{h.balance}</td>
+                                            <tr key={h.rank} className="border-b border-gray-200 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors">
+                                                <td className="py-2.5 text-gray-400 dark:text-gray-500 transition-colors">{h.rank}</td>
+                                                <td className="py-2.5 font-mono text-gray-900 dark:text-gray-100 transition-colors">{h.address}</td>
+                                                <td className="py-2.5 text-right text-gray-600 dark:text-gray-400 transition-colors">{h.balance}</td>
                                                 <td className="py-2.5 text-right text-gold">{h.percent}%</td>
                                                 <td className="py-2.5 text-right">
                                                     {h.tag && (
-                                                        <span className="px-2 py-0.5 rounded-full text-xs bg-white text-gray-400">
+                                                        <span className="px-2 py-0.5 rounded-full text-xs bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 transition-colors">
                                                             {h.tag}
                                                         </span>
                                                     )}
@@ -358,7 +383,7 @@ export default function GrowthPage() {
                     {/* Growth Tools Row */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                         <SchedulerCard
-                            icon="🔄"
+                            icon={<RefreshCw className="w-5 h-5 text-green-400" />}
                             title="Automated Buyback"
                             description="Configure treasury-funded buybacks triggered by price drops"
                             fields={[
@@ -366,11 +391,11 @@ export default function GrowthPage() {
                                 { label: 'Trigger (% price drop)', placeholder: '10', type: 'number' },
                                 { label: 'Buyback Amount (BNB)', placeholder: '0.5', type: 'number' },
                             ]}
-                            buttonLabel="💰 Enable Buyback"
+                            buttonLabel="Enable Buyback"
                             buttonColor="bg-green-400/10 text-green-400 border border-green-400/20 hover:bg-green-400/20"
                         />
                         <SchedulerCard
-                            icon="🎁"
+                            icon={<Gift className="w-5 h-5 text-purple" />}
                             title="Airdrop Scheduler"
                             description="Distribute tokens to holders on a scheduled basis"
                             fields={[
@@ -378,11 +403,11 @@ export default function GrowthPage() {
                                 { label: 'Tokens per Address', placeholder: '1000', type: 'number' },
                                 { label: 'Distribution Date', placeholder: 'YYYY-MM-DD', type: 'date' },
                             ]}
-                            buttonLabel="🎁 Schedule Airdrop"
+                            buttonLabel="Schedule Airdrop"
                             buttonColor="bg-purple/10 text-purple border border-purple/20 hover:bg-purple/20"
                         />
                         <SchedulerCard
-                            icon="🔥"
+                            icon={<Flame className="w-5 h-5 text-orange-400" />}
                             title="Token Burn Scheduler"
                             description="Configure periodic burns from a designated wallet"
                             fields={[
@@ -390,16 +415,16 @@ export default function GrowthPage() {
                                 { label: 'Burn Amount per Period', placeholder: '500000', type: 'number' },
                                 { label: 'Period (days)', placeholder: '30', type: 'number' },
                             ]}
-                            buttonLabel="🔥 Schedule Burns"
+                            buttonLabel="Schedule Burns"
                             buttonColor="bg-orange-400/10 text-orange-400 border border-orange-400/20 hover:bg-orange-400/20"
                         />
                     </div>
 
                     {/* Growth Alerts */}
-                    <div className="rounded-2xl border border-gray-200 bg-white/[0.03] p-6">
+                    <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-6 transition-colors">
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-sm font-semibold text-gray-900">🔔 Growth Alerts</h3>
-                            <span className="text-xs text-gray-400">
+                            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 transition-colors flex items-center gap-2"><Bell className="w-4 h-4 text-blue-400" /> Growth Alerts</h3>
+                            <span className="text-xs text-gray-400 dark:text-gray-500 transition-colors">
                                 {Object.values(alerts).filter(Boolean).length} active
                             </span>
                         </div>

@@ -3,22 +3,22 @@ import { SectionLabel } from '@/components/shared/SectionLabel'
 import { BlurText } from '@/components/shared/BlurText'
 import { BlurFade } from '@/components/ui/blur-fade'
 import { AnimatedShinyText } from '@/components/ui/animated-shiny-text'
-import { ArrowRightIcon } from 'lucide-react'
+import { ArrowRightIcon, Ghost, TrendingDown, Skull, Megaphone } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const challenges = [
     {
-        icon: '😭',
+        icon: <Ghost className="w-8 h-8 text-primary" />,
         title: 'Bots Drain Your Liquidity',
         desc: 'MEV bots and snipers routinely drain 40%+ of initial liquidity within block 1. Without exponential tax protocols, your launch is doomed.'
     },
     {
-        icon: '📉',
+        icon: <TrendingDown className="w-8 h-8 text-red-500" />,
         title: 'Flawed Tokenomics',
         desc: 'Copy-pasting SafeMoon contracts leaves critical logical gaps in liquidity routing, causing the notorious "slow bleed" chart.'
     },
     {
-        icon: '💀',
+        icon: <Skull className="w-8 h-8 text-gray-400" />,
         title: 'High Dev Costs',
         desc: 'Hiring a solidity dev to write a secure vesting schedule and anti-whale protocol costs $5k-10k and takes weeks to audit.'
     }
@@ -33,7 +33,7 @@ export function Problem() {
                         "group rounded-full border border-black/5 dark:border-white/10 bg-neutral-100 dark:bg-neutral-900 text-base text-white transition-all ease-in hover:cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-800"
                     )}>
                         <AnimatedShinyText className="inline-flex items-center justify-center px-4 py-1.5 transition ease-out hover:text-neutral-600 dark:hover:text-neutral-300 hover:duration-300">
-                            <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">📣 Announcement → Introducing the new BNB Launchpad</span>
+                            <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-1.5"><Megaphone className="w-4 h-4 text-primary" /> Announcement → Introducing the new BNB Launchpad</span>
                             <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
                         </AnimatedShinyText>
                     </div>
@@ -55,7 +55,7 @@ export function Problem() {
                 <div className="grid md:grid-cols-3 gap-8">
                     {challenges.map((item, i) => (
                         <BlurFade key={i} delay={0.3 + (i * 0.1)} inView className="bg-[#F9FAFB] dark:bg-gray-900 rounded-2xl p-8 border border-[#E5E7EB] dark:border-gray-800 hover:shadow-lg dark:hover:shadow-primary/5 transition-all duration-300">
-                            <div className="text-4xl mb-6">{item.icon}</div>
+                            <div className="mb-6 bg-white dark:bg-gray-800 w-16 h-16 rounded-xl flex items-center justify-center shadow-sm border border-gray-100 dark:border-gray-700">{item.icon}</div>
                             <h3 className="text-xl font-bold text-[#111827] dark:text-gray-100 mb-3 transition-colors">{item.title}</h3>
                             <p className="text-[15px] text-[#6B7280] dark:text-gray-400 leading-relaxed transition-colors">{item.desc}</p>
                         </BlurFade>
