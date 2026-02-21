@@ -31,24 +31,32 @@ export default function Navbar() {
                             </NavigationMenu.Trigger>
                             <NavigationMenu.Content className="top-0 left-0 w-full md:absolute md:w-auto p-4">
                                 <div className="w-[480px] grid grid-cols-[200px_1fr] gap-4">
-                                    <Link href="/create" className="bg-[#FFF0F0] rounded-lg p-4 flex flex-col justify-end group/card hover:bg-primary-ultra transition-colors">
-                                        <Zap className="w-6 h-6 text-primary mb-6 group-hover/card:scale-110 transition-transform" />
-                                        <h3 className="font-bold text-[16px] text-gray-900 mb-1 group-hover/card:text-primary transition-colors">Token Designer</h3>
-                                        <p className="text-[13px] text-gray-500 leading-snug">Generate smart tokenomics automatically via AI</p>
-                                    </Link>
+                                    <NavigationMenu.Link asChild>
+                                        <Link href="/create" className="bg-[#FFF0F0] rounded-lg p-4 flex flex-col justify-end group/card hover:bg-primary-ultra transition-colors">
+                                            <Zap className="w-6 h-6 text-primary mb-6 group-hover/card:scale-110 transition-transform" />
+                                            <h3 className="font-bold text-[16px] text-gray-900 mb-1 group-hover/card:text-primary transition-colors">Token Designer</h3>
+                                            <p className="text-[13px] text-gray-500 leading-snug">Generate smart tokenomics automatically via AI</p>
+                                        </Link>
+                                    </NavigationMenu.Link>
                                     <div className="flex flex-col gap-1 py-1">
-                                        <Link href="/templates" className="block p-3 rounded-md hover:bg-gray-50 transition-colors group/link">
-                                            <h4 className="font-bold text-[14px] text-gray-900 flex items-center gap-2 group-hover/link:text-primary transition-colors"><LayoutGrid className="w-4 h-4 text-gray-400 group-hover/link:text-primary" /> Token Templates</h4>
-                                            <p className="text-[13px] text-gray-500 mt-1">Ready-made, pre-audited token structures.</p>
-                                        </Link>
-                                        <Link href="/amm" className="block p-3 rounded-md hover:bg-gray-50 transition-colors group/link">
-                                            <h4 className="font-bold text-[14px] text-gray-900 flex items-center gap-2 group-hover/link:text-primary transition-colors"><BarChart className="w-4 h-4 text-gray-400 group-hover/link:text-primary" /> AMM & Liquidity</h4>
-                                            <p className="text-[13px] text-gray-500 mt-1">Perfect liquidity ratios & anti-whaling.</p>
-                                        </Link>
-                                        <Link href="/plu" className="block p-3 rounded-md hover:bg-gray-50 transition-colors group/link">
-                                            <h4 className="font-bold text-[14px] text-gray-900 flex items-center gap-2 group-hover/link:text-primary transition-colors"><Shield className="w-4 h-4 text-gray-400 group-hover/link:text-primary" /> Token Vesting (PLU)</h4>
-                                            <p className="text-[13px] text-gray-500 mt-1">Time-locked OpenZeppelin distribution.</p>
-                                        </Link>
+                                        <NavigationMenu.Link asChild>
+                                            <Link href="/templates" className="block p-3 rounded-md hover:bg-gray-50 transition-colors group/link">
+                                                <h4 className="font-bold text-[14px] text-gray-900 flex items-center gap-2 group-hover/link:text-primary transition-colors"><LayoutGrid className="w-4 h-4 text-gray-400 group-hover/link:text-primary" /> Token Templates</h4>
+                                                <p className="text-[13px] text-gray-500 mt-1">Ready-made, pre-audited token structures.</p>
+                                            </Link>
+                                        </NavigationMenu.Link>
+                                        <NavigationMenu.Link asChild>
+                                            <Link href="/amm" className="block p-3 rounded-md hover:bg-gray-50 transition-colors group/link">
+                                                <h4 className="font-bold text-[14px] text-gray-900 flex items-center gap-2 group-hover/link:text-primary transition-colors"><BarChart className="w-4 h-4 text-gray-400 group-hover/link:text-primary" /> AMM & Liquidity</h4>
+                                                <p className="text-[13px] text-gray-500 mt-1">Perfect liquidity ratios & anti-whaling.</p>
+                                            </Link>
+                                        </NavigationMenu.Link>
+                                        <NavigationMenu.Link asChild>
+                                            <Link href="/plu" className="block p-3 rounded-md hover:bg-gray-50 transition-colors group/link">
+                                                <h4 className="font-bold text-[14px] text-gray-900 flex items-center gap-2 group-hover/link:text-primary transition-colors"><Shield className="w-4 h-4 text-gray-400 group-hover/link:text-primary" /> Token Vesting (PLU)</h4>
+                                                <p className="text-[13px] text-gray-500 mt-1">Time-locked OpenZeppelin distribution.</p>
+                                            </Link>
+                                        </NavigationMenu.Link>
                                     </div>
                                 </div>
                             </NavigationMenu.Content>
@@ -61,18 +69,24 @@ export default function Navbar() {
                             </NavigationMenu.Trigger>
                             <NavigationMenu.Content className="top-0 left-0 w-full md:absolute md:w-auto p-6">
                                 <div className="w-[560px] grid grid-cols-2 gap-x-8 gap-y-4">
-                                    <Link href="/launchpad" className="block p-4 rounded-lg hover:bg-gray-50 transition-colors group/link border border-transparent hover:border-gray-100">
-                                        <h4 className="font-bold text-[14px] text-gray-900 flex items-center gap-2 mb-1 group-hover/link:text-primary transition-colors"><Rocket className="w-4 h-4 text-gray-400 group-hover/link:text-primary" /> Token Launchpad</h4>
-                                        <p className="text-[13px] text-gray-500">Deploy memecoins & utility tokens directly to the blockchain securely.</p>
-                                    </Link>
-                                    <Link href="/growth" className="block p-4 rounded-lg hover:bg-gray-50 transition-colors group/link border border-transparent hover:border-gray-100">
-                                        <h4 className="font-bold text-[14px] text-gray-900 flex items-center gap-2 mb-1 group-hover/link:text-primary transition-colors"><LineChart className="w-4 h-4 text-gray-400 group-hover/link:text-primary" /> Post-Launch Growth</h4>
-                                        <p className="text-[13px] text-gray-500">Holder lifecycle tracking, price alerts, and distribution analytics.</p>
-                                    </Link>
-                                    <Link href="/dashboard" className="block p-4 rounded-lg hover:bg-gray-50 transition-colors group/link border border-transparent hover:border-gray-100">
-                                        <h4 className="font-bold text-[14px] text-gray-900 flex items-center gap-2 mb-1 group-hover/link:text-primary transition-colors"><FileText className="w-4 h-4 text-gray-400 group-hover/link:text-primary" /> My Config Dashboard</h4>
-                                        <p className="text-[13px] text-gray-500">Manage, edit, and resume your saved tokenomic configurations.</p>
-                                    </Link>
+                                    <NavigationMenu.Link asChild>
+                                        <Link href="/launchpad" className="block p-4 rounded-lg hover:bg-gray-50 transition-colors group/link border border-transparent hover:border-gray-100">
+                                            <h4 className="font-bold text-[14px] text-gray-900 flex items-center gap-2 mb-1 group-hover/link:text-primary transition-colors"><Rocket className="w-4 h-4 text-gray-400 group-hover/link:text-primary" /> Token Launchpad</h4>
+                                            <p className="text-[13px] text-gray-500">Deploy memecoins & utility tokens directly to the blockchain securely.</p>
+                                        </Link>
+                                    </NavigationMenu.Link>
+                                    <NavigationMenu.Link asChild>
+                                        <Link href="/growth" className="block p-4 rounded-lg hover:bg-gray-50 transition-colors group/link border border-transparent hover:border-gray-100">
+                                            <h4 className="font-bold text-[14px] text-gray-900 flex items-center gap-2 mb-1 group-hover/link:text-primary transition-colors"><LineChart className="w-4 h-4 text-gray-400 group-hover/link:text-primary" /> Post-Launch Growth</h4>
+                                            <p className="text-[13px] text-gray-500">Holder lifecycle tracking, price alerts, and distribution analytics.</p>
+                                        </Link>
+                                    </NavigationMenu.Link>
+                                    <NavigationMenu.Link asChild>
+                                        <Link href="/dashboard" className="block p-4 rounded-lg hover:bg-gray-50 transition-colors group/link border border-transparent hover:border-gray-100">
+                                            <h4 className="font-bold text-[14px] text-gray-900 flex items-center gap-2 mb-1 group-hover/link:text-primary transition-colors"><FileText className="w-4 h-4 text-gray-400 group-hover/link:text-primary" /> My Config Dashboard</h4>
+                                            <p className="text-[13px] text-gray-500">Manage, edit, and resume your saved tokenomic configurations.</p>
+                                        </Link>
+                                    </NavigationMenu.Link>
                                 </div>
                             </NavigationMenu.Content>
                         </NavigationMenu.Item>

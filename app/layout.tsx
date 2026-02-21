@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import { Web3Provider } from "@/components/providers/web3-provider";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import NextTopLoader from 'nextjs-toploader';
 import "./globals.css";
 
 const inter = Inter({
@@ -34,6 +35,17 @@ export default function RootLayout({
 
             </head>
             <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased selection:bg-red-100 selection:text-red-900`}>
+                <NextTopLoader
+                    color="#facc15"
+                    initialPosition={0.08}
+                    crawlSpeed={200}
+                    height={3}
+                    crawl={true}
+                    showSpinner={false}
+                    easing="ease"
+                    speed={200}
+                    shadow="0 0 10px #facc15,0 0 5px #facc15"
+                />
                 <Web3Provider>
                     <Navbar />
                     <main className="min-h-screen pt-16">
