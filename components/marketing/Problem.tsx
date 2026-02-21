@@ -8,19 +8,19 @@ import { cn } from '@/lib/utils'
 
 const challenges = [
     {
-        icon: <Ghost className="w-8 h-8 text-primary" />,
-        title: 'Bots Drain Your Liquidity',
-        desc: 'MEV bots and snipers routinely drain 40%+ of initial liquidity within block 1. Without exponential tax protocols, your launch is doomed.'
-    },
-    {
         icon: <TrendingDown className="w-8 h-8 text-red-500" />,
-        title: 'Flawed Tokenomics',
-        desc: 'Copy-pasting SafeMoon contracts leaves critical logical gaps in liquidity routing, causing the notorious "slow bleed" chart.'
+        title: 'Pump & Dumps',
+        desc: 'Tokens launch with zero liquidity protection. Devs hold massive wallets and remove LP at will, leaving investors with worthless bags.'
     },
     {
         icon: <Skull className="w-8 h-8 text-gray-400" />,
-        title: 'High Dev Costs',
-        desc: 'Hiring a solidity dev to write a secure vesting schedule and anti-whale protocol costs $5k-10k and takes weeks to audit.'
+        title: 'Malicious Smart Contracts',
+        desc: 'Hidden mint functions, targeted blacklists, and honeypot code trap retail investors before they even realize what happened.'
+    },
+    {
+        icon: <Ghost className="w-8 h-8 text-primary" />,
+        title: 'Zero Post-Launch Intelligence',
+        desc: 'Once a token is live, users are flying blind. There are no early AI warnings before a massive dev sell-off drops the price 90%.'
     }
 ]
 
@@ -47,7 +47,7 @@ export function Problem() {
                     />
                     <BlurFade delay={0.2} inView>
                         <p className="text-lg text-[#6B7280] dark:text-gray-400 transition-colors">
-                            90% of new tokens fail not because the community is dead, but because the underlying math and smart contract infrastructure was built to fail.
+                            90% of tokens launched on BNB Chain are designed to fail—whether through malicious smart contracts, instant liquidity drains, or zero post-launch transparency.
                         </p>
                     </BlurFade>
                 </div>

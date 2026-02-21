@@ -54,10 +54,10 @@ export default function NarrativeBlocks({ scrollYProgress }: Props) {
             >
                 <div className="max-w-xl text-left">
                     <h2 className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-6">
-                        Data-Driven <br /> Tokenomics
+                        Layer 1: <br /> Built-in Safety
                     </h2>
                     <p className="text-xl md:text-2xl text-white/60 leading-relaxed">
-                        Analyzes 50+ successful BSC launches. Optimal TGE unlocks, vesting curves.
+                        Guardian Token Templates. Structurally immune to snipers, hidden mints, and honeypots.
                     </p>
                 </div>
             </motion.div>
@@ -69,17 +69,17 @@ export default function NarrativeBlocks({ scrollYProgress }: Props) {
             >
                 <div className="max-w-xl">
                     <h2 className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-8">
-                        3 Survival <br /> Scenarios
+                        Layer 2: <br /> AI Intelligence
                     </h2>
                     <ul className="space-y-6 text-xl text-white/70">
                         <li className="flex items-center justify-end gap-3">
-                            <span className="text-cyan">+50% survival vs PinkSale</span>
+                            <span className="text-cyan">Sub-5 second AI Risk Scans</span>
                         </li>
                         <li className="flex items-center justify-end gap-3">
-                            <span className="text-gold">Anti-sniper LP delay</span>
+                            <span className="text-gold">Live BNB Chain Feed</span>
                         </li>
                         <li className="flex items-center justify-end gap-3">
-                            <span className="text-white">Exponential vesting protection</span>
+                            <span className="text-white">Human-readable AI warnings</span>
                         </li>
                     </ul>
                 </div>
@@ -90,11 +90,11 @@ export default function NarrativeBlocks({ scrollYProgress }: Props) {
                 style={{ opacity: deployOpacity, y: deployY }}
                 className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"
             >
-                <h2 className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-6">
-                    1-Click BSC Deployment
+                <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-white mb-6">
+                    Progressive Liquidity Unlock
                 </h2>
                 <p className="text-xl md:text-2xl text-white/60 max-w-2xl mx-auto">
-                    PancakeSwap LP + OpenZeppelin contracts.<br />Live explorer link.
+                    Health-based LP unlocks. Healthy tokens unlock. Scams freeze.
                 </p>
             </motion.div>
 
@@ -106,8 +106,8 @@ export default function NarrativeBlocks({ scrollYProgress }: Props) {
                 <h2 className="text-6xl md:text-8xl font-bold tracking-tight text-white mb-4 drop-shadow-2xl">
                     End 80% Memecoin Crashes
                 </h2>
-                <p className="text-2xl text-gold/90 mb-12">
-                    Built for BNB Hackathon Track 2
+                <p className="text-xl md:text-2xl text-gold/90 mb-12">
+                    Built for BNB Hackathon: PLU & AI Tracks
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-6 items-center pointer-events-auto">

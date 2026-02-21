@@ -3,11 +3,11 @@ import * as Accordion from '@radix-ui/react-accordion'
 import { Plus } from 'lucide-react'
 
 const faqs = [
-    { q: 'Do I need to know how to code?', a: 'Not at all. Our AI generates the Solidity code, tests it, and our interface deploys it directly to the BNB Smart Chain via your connected wallet.' },
-    { q: 'Is the generated smart contract safe?', a: 'Yes. Every contract starts from an OpenZeppelin foundation (the industry standard for secure smart contracts) and is injected with our battle-tested modular upgrades for taxes and vesting.' },
+    { q: 'Do I need to know how to code?', a: 'Not at all. You can launch our pre-audited Guardian Tokens with 1 click directly from the UI.' },
+    { q: 'Are Guardian Tokens safe?', a: 'Yes. Every contract starts from an OpenZeppelin foundation and includes hardcoded rules to prevent honeypots, hidden mints, and snipers.' },
     { q: 'What wallets are supported?', a: 'We use RainbowKit, which supports MetaMask, Trust Wallet, WalletConnect, Coinbase Wallet, and dozens more.' },
-    { q: 'Can I simulate the launch before paying?', a: 'Absolutely. You can run unlimited Free simulations on the BSC Testnet. You only pay when deploying to Mainnet.' },
-    { q: 'How does the Anti-Sniper bot protection work?', a: 'We implement an exponential block-delay tax. Anyone buying in Block 1 gets taxed 99% (which auto-burns or goes to LP), Block 2 gets taxed 50%, and by Block 4 taxes normalize to your set baseline. This destroys bot profitability.' }
+    { q: 'Can I test the platform?', a: 'Absolutely. You can run unlimited Free deployments on the BSC Testnet. The AI Risk Scanner is also completely free.' },
+    { q: 'How does Progressive Liquidity Unlock (PLU) work?', a: 'Instead of locking LP for arbitrarily long periods, PLU dynamically unlocks liquidity based on a real-time health score of your token. Healthy tokens unlock smoothly, while scams get frozen immediately.' }
 ]
 
 export function FAQ() {

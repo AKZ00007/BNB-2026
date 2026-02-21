@@ -8,23 +8,23 @@ import { Check } from 'lucide-react'
 const steps = [
     {
         id: 'step-1',
-        title: '1. Describe your vision',
-        content: 'Type in plain English what you want to achieve. E.g., "A governance token with a 5% marketing tax and anti-whale measures."'
+        title: '1. Select Guardian Template',
+        content: 'Choose from pre-audited Guardian Token templates. Core safety rules like anti-whale limits and immutable supply are baked right into the contract code.'
     },
     {
         id: 'step-2',
-        title: '2. AI generates tokenomics',
-        content: 'Our models instantly simulate thousands of liquidity events to output the optimal configurations and OpenZeppelin contract drafts.'
+        title: '2. 1-Click BNB Deployment',
+        content: 'Connect your EVM wallet via RainbowKit and deploy directly to the BNB Smart Chain. Your token is natively verified on BscScan instantly.'
     },
     {
         id: 'step-3',
-        title: '3. Testnet Simulation',
-        content: 'We dry-run your contract against simulated sniper bots to ensure your exponential tax routing holds up before going live.'
+        title: '3. Progressive Liquidity Lock',
+        content: 'Add liquidity to PancakeSwap. The PLU controller automatically escrows your LP tokens, unlocking them dynamically based on real-time AI health scores.'
     },
     {
         id: 'step-4',
-        title: '4. 1-Click BSC Deployment',
-        content: 'Connect your EVM wallet via RainbowKit and deploy directly to the Binance Smart Chain. Verification happens automatically.'
+        title: '4. Live AI Monitoring',
+        content: 'Once live, our backend watcher continuously analyzes BNB chain events. Your investors receive plain-language warnings if suspicious activity occurs.'
     }
 ]
 

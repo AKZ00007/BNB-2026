@@ -9,13 +9,13 @@ export function CTABanner() {
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-full bg-primary/5 blur-3xl pointer-events-none" />
 
                     <h2 className="text-4xl md:text-6xl font-extrabold text-[#111827] dark:text-gray-100 mb-6 tracking-tight relative z-10 max-w-2xl transition-colors">
-                        Launch your token the right way.
+                        Two layers of absolute protection.
                     </h2>
                     <p className="text-lg text-[#6B7280] dark:text-gray-400 mb-10 max-w-xl relative z-10 transition-colors">
-                        Stop relying on unverified copy-pasters. Generate safe, audited, and optimized token contracts in seconds with AI.
+                        Generate safe tokens instantly via our Control Layer, and scan any address on BNB Chain with our AI Intelligence Layer.
                     </p>
                     <div className="relative z-10 flex gap-4">
-                        <Button size="lg" className="px-10 text-lg">Start Building Free</Button>
+                        <Button size="lg" className="px-10 text-lg">Launch Your Token</Button>
                     </div>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import * as NavigationMenu from '@radix-ui/react-navigation-menu'
-import { ChevronDown, Zap, Shield, Sparkles, BarChart, Rocket, LayoutGrid, LineChart, FileText } from 'lucide-react'
+import { ChevronDown, Zap, Shield, Sparkles, BarChart, Rocket, LayoutGrid, LineChart, FileText, Radio, ShieldCheck } from 'lucide-react'
 import { ConnectWallet } from '@/components/wallet/connect-button'
 import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler'
 
@@ -86,6 +86,18 @@ export default function Navbar() {
                                         <Link href="/dashboard" className="block p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group/link border border-transparent hover:border-gray-100 dark:hover:border-gray-700">
                                             <h4 className="font-bold text-[14px] text-gray-900 dark:text-gray-100 flex items-center gap-2 mb-1 group-hover/link:text-primary transition-colors"><FileText className="w-4 h-4 text-gray-400 group-hover/link:text-primary" /> My Config Dashboard</h4>
                                             <p className="text-[13px] text-gray-500 dark:text-gray-400">Manage, edit, and resume your saved tokenomic configurations.</p>
+                                        </Link>
+                                    </NavigationMenu.Link>
+                                    <NavigationMenu.Link asChild>
+                                        <Link href="/scanner" className="block p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group/link border border-transparent hover:border-gray-100 dark:hover:border-gray-700">
+                                            <h4 className="font-bold text-[14px] text-gray-900 dark:text-gray-100 flex items-center gap-2 mb-1 group-hover/link:text-primary transition-colors"><ShieldCheck className="w-4 h-4 text-gray-400 group-hover/link:text-primary" /> Risk Scanner</h4>
+                                            <p className="text-[13px] text-gray-500 dark:text-gray-400">AI-powered token safety analysis for any BNB Chain contract.</p>
+                                        </Link>
+                                    </NavigationMenu.Link>
+                                    <NavigationMenu.Link asChild>
+                                        <Link href="/live" className="block p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group/link border border-transparent hover:border-gray-100 dark:hover:border-gray-700">
+                                            <h4 className="font-bold text-[14px] text-gray-900 dark:text-gray-100 flex items-center gap-2 mb-1 group-hover/link:text-primary transition-colors"><Radio className="w-4 h-4 text-gray-400 group-hover/link:text-primary" /> Live Monitoring</h4>
+                                            <p className="text-[13px] text-gray-500 dark:text-gray-400">Real-time BNB Chain event feed with AI-translated alerts.</p>
                                         </Link>
                                     </NavigationMenu.Link>
                                 </div>

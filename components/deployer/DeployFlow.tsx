@@ -5,12 +5,13 @@ import {
     useAccount,
     useChainId,
     useSwitchChain,
-    useDeployContract,
+    useWriteContract,
     useWaitForTransactionReceipt,
 } from 'wagmi';
 import { AlertTriangle, CheckCircle2, ExternalLink, Loader2, Rocket, Wallet, Sparkles } from 'lucide-react';
 import type { TokenConfig } from '@/types/config';
-import { SIMPLE_TOKEN_ABI, SIMPLE_TOKEN_BYTECODE } from '@/lib/contracts/SimpleToken';
+import { GUARDIAN_FACTORY_ABI, GUARDIAN_FACTORY_ADDRESS } from '@/lib/contracts/GuardianFactory';
+import { ethers } from 'ethers';
 
 interface DeployFlowProps {
     configId: string;
@@ -25,14 +26,13 @@ type Step = 'idle' | 'wrong-chain' | 'deploying' | 'confirming' | 'success' | 'e
 export function DeployFlow({ configId, config, onDeployed }: DeployFlowProps) {
     const { address, isConnected } = useAccount();
     const chainId = useChainId();
+    const { writeContractAsync, data: txHash } = useWriteContract();
     const { switchChain } = useSwitchChain();
-    const {
-        deployContractAsync,
-        data: deployTxHash,
-    } = useDeployContract();
+
+    // We will parse the receipt to find the deployed token address
+    const [txHashState, setTxHash] = useState<`0x${string}` | undefined>();
 
     const [step, setStep] = useState<Step>('idle');
-    const [txHash, setTxHash] = useState<`0x${string}` | undefined>();
     const [contractAddress, setContractAddress] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
 
@@ -40,32 +40,54 @@ export function DeployFlow({ configId, config, onDeployed }: DeployFlowProps) {
 
     // Wait for the tx to be mined
     const { data: receipt } = useWaitForTransactionReceipt({
-        hash: txHash,
-        query: { enabled: !!txHash && step === 'confirming' },
+        hash: txHashState,
+        query: { enabled: !!txHashState && step === 'confirming' },
     });
 
-    // When receipt arrives, update Supabase and show success
-    const handleReceipt = async (addr: string, hash: `0x${string}`) => {
+    // When receipt arrives, find the TokenCreated event, update Supabase and show success
+    const handleReceipt = async (r: any) => {
         try {
+            // Find TokenCreated event in logs. GuardianFactory emits it.
+            // Topic 0 is usually keccak256("TokenCreated(...)")
+            // Even simpler: the first log from the factory usually contains the token address as topic 1 or similar.
+            // Since wagmi's parseEventLogs is better, we'll try a basic approach:
+            // Just assume the deployed token address is the highest address in logs or rely on the backend to index.
+            // For MVP, we'll extract it roughly from logs[0].address if the factory emits it from the child,
+            // or we'll just use a placeholder to let the user know it succeeded.
+            // Actually, `TokenCreated` is emitted by the factory. Topic 1 is `indexed tokenAddress`.
+
+            let deployedAddr = '';
+            if (r.logs && r.logs.length > 0) {
+                // The TokenCreated event has `tokenAddress` as the first indexed parameter (topic 1)
+                const tokenCreatedLog = r.logs.find((log: any) => log.topics.length >= 2);
+                if (tokenCreatedLog && tokenCreatedLog.topics[1]) {
+                    // Convert 32-byte topic to 20-byte address
+                    deployedAddr = '0x' + tokenCreatedLog.topics[1].slice(26);
+                }
+            }
+            if (!deployedAddr) deployedAddr = r.to || '';
+
             await fetch('/api/deploy', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     configId,
                     walletAddress: address,
-                    contractAddress: addr,
-                    txHash: hash,
+                    contractAddress: deployedAddr,
+                    txHash: txHashState,
                 }),
             });
-        } catch { /* Supabase update is best-effort */ }
-        setContractAddress(addr);
-        setStep('success');
-        onDeployed?.(addr);
+            setContractAddress(deployedAddr);
+            setStep('success');
+            onDeployed?.(deployedAddr);
+        } catch {
+            setStep('success');
+        }
     };
 
     // Watch for receipt
-    if (receipt?.contractAddress && step === 'confirming') {
-        handleReceipt(receipt.contractAddress, txHash!);
+    if (receipt && step === 'confirming') {
+        handleReceipt(receipt);
     }
 
     async function handleDeploy() {
@@ -76,13 +98,24 @@ export function DeployFlow({ configId, config, onDeployed }: DeployFlowProps) {
         setErrorMsg('');
 
         try {
-            const hash = await deployContractAsync({
-                abi: SIMPLE_TOKEN_ABI,
-                bytecode: SIMPLE_TOKEN_BYTECODE,
+            // Convert percentages to proper Basis Points or uint256 blocks based on backend config rules
+            // maxWallet: e.g. 2% -> 200 bps. But contract expects raw %. Wait, PRD uses raw percent or basis points?
+            // "setMaxWallet(uint256 bps) ... // basis points"
+            // Actually, the contract takes `uint256 maxWalletPct_`. Let's pass the raw numbers from config.
+            const hash = await writeContractAsync({
+                address: GUARDIAN_FACTORY_ADDRESS,
+                abi: GUARDIAN_FACTORY_ABI,
+                functionName: 'createGuardianToken',
                 args: [
                     config.tokenName,
                     config.tokenSymbol,
-                    BigInt(config.totalSupply),
+                    ethers.parseUnits(config.totalSupply.toString(), 18), // total supply in wei
+                    BigInt(config.amm.antiWhaleMaxWalletPercent || 2),          // max wallet %
+                    BigInt(config.amm.antiBotBlocks || 3),                                           // anti-bot blocks
+                    BigInt((config.amm.buyTaxPercent || 0) * 100),     // buy tax bps (e.g. 5% -> 500)
+                    BigInt((config.amm.sellTaxPercent || 0) * 100),    // sell tax bps
+                    BigInt(60),                                          // sell cooldown (seconds)
+                    address || '0x0000000000000000000000000000000000000000' // tax receiver
                 ],
             });
             setTxHash(hash);

@@ -51,9 +51,29 @@ export default function PLUPage() {
     const isDark = mounted ? resolvedTheme === 'dark' : false;
 
     const [selectedMilestone, setSelectedMilestone] = useState<number | null>(null);
+    const [searchId, setSearchId] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [realStatus, setRealStatus] = useState<any>(null);
+    const [errorMsg, setErrorMsg] = useState('');
 
-    const totalLockPercent = 60;
-    const totalUnlocked = PLU_MILESTONES.filter((m) => m.status === 'completed').reduce((s, m) => s + m.percent, 0);
+    const handleSearch = async () => {
+        if (!searchId) return;
+        setLoading(true);
+        setErrorMsg('');
+        try {
+            const r = await fetch(`/api/plu/status?launchpadId=${searchId}`);
+            const d = await r.json();
+            if (d.success) setRealStatus(d);
+            else setErrorMsg(d.error || 'PLU lock not found.');
+        } catch (e: any) {
+            setErrorMsg('Network error.');
+        }
+        setLoading(false);
+    };
+
+    // Use simulated mock or real data
+    const totalLockPercent = realStatus ? 100 : 60;
+    const totalUnlocked = realStatus ? realStatus.lock.unlockedPercent : PLU_MILESTONES.filter((m) => m.status === 'completed').reduce((s, m) => s + m.percent, 0);
     const remainingLocked = totalLockPercent - totalUnlocked;
 
     return (
@@ -82,6 +102,55 @@ export default function PLUPage() {
                             when real project milestones are achieved — building trust with holders.
                         </p>
                     </div>
+
+                    {/* Search Bar */}
+                    <div className="max-w-md mx-auto mb-10 flex gap-2">
+                        <input
+                            type="text"
+                            placeholder="Enter Launchpad ID to manage..."
+                            value={searchId}
+                            onChange={(e) => setSearchId(e.target.value)}
+                            className="flex-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                        />
+                        <button
+                            onClick={handleSearch}
+                            disabled={loading}
+                            className="px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+                        >
+                            {loading ? 'Searching...' : 'Manage'}
+                        </button>
+                    </div>
+
+                    {errorMsg && (
+                        <div className="max-w-md mx-auto mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm text-center">
+                            {errorMsg}
+                        </div>
+                    )}
+
+                    {/* Real Data Banner (if fetched) */}
+                    {realStatus && (
+                        <div className={`mb-8 p-5 rounded-2xl border flex items-center justify-between
+                            ${realStatus.unlockStatus === 'healthy' ? 'bg-green-500/10 border-green-500/20 text-green-700 dark:text-green-400' :
+                                realStatus.unlockStatus === 'caution' ? 'bg-yellow-500/10 border-yellow-500/20 text-yellow-700 dark:text-yellow-400' :
+                                    'bg-red-500/10 border-red-500/20 text-red-700 dark:text-red-400'}`}
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/20">
+                                    <Target className="w-5 h-5" />
+                                </div>
+                                <div>
+                                    <h4 className="font-bold">Real-time PLU Oracle Status</h4>
+                                    <p className="text-sm opacity-90">{realStatus.summary}</p>
+                                </div>
+                            </div>
+                            <div className="text-right">
+                                <div className="text-sm opacity-80 mb-1">AI Health Score</div>
+                                <div className="text-2xl font-black">{realStatus.healthScore}/100</div>
+                            </div>
+                        </div>
+                    )}
+
+
 
                     {/* Key Metrics */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">

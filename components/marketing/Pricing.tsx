@@ -12,29 +12,29 @@ export function Pricing() {
 
     const plans = [
         {
-            name: 'Starter',
-            desc: 'Perfect for experimental memecoins.',
+            name: 'Intelligence Layer',
+            desc: 'Protect yourself before you invest anywhere on BNB Chain.',
             price: isAnnual ? '$0' : '$0',
             period: 'always free',
-            features: ['Basic ERC20 Generation', 'Standard 5% Tax', 'No initial vesting', 'Community Discord Access'],
-            cta: 'Deploy Free',
+            features: ['Unlimited AI Risk Scans', 'Live Chain-Wide Alerts', 'Sub-5s Contract Analysis', 'Safety Scores & Flags'],
+            cta: 'Try Scanner',
             highlight: false
         },
         {
-            name: 'Pro',
-            desc: 'For serious utility tokens and DAOs.',
-            price: isAnnual ? '$79' : '$99',
-            period: 'per deployment',
-            features: ['AI Tokenomics Generator', 'Anti-Sniper Block 1-3', 'OpenZeppelin Vesting', 'Priority Email Support'],
-            cta: 'Get Pro',
+            name: 'Control Layer',
+            desc: 'Launch a structurally secure Guardian Token for the hackathon.',
+            price: isAnnual ? '$0' : '$0',
+            period: 'hackathon promo',
+            features: ['Pre-audited Guardian Templates', 'Progressive Liquidity Unlock', 'Immutable Anti-Sniper Rules', 'Verified on BscScan'],
+            cta: 'Deploy Token',
             highlight: true
         },
         {
             name: 'Enterprise',
-            desc: 'For massive scale protocols.',
+            desc: 'For massive scale protocols & AI utility agents.',
             price: 'Custom',
             period: 'contact sales',
-            features: ['Custom AMM Integrations', 'Dedicated Solidity Dev', 'Certik Audit Fast-Track', '24/7 Phone Support'],
+            features: ['Custom AMM Integrations', 'Dedicated RPC Nodes', 'Phase 2: AI Agent Framework', '24/7 Priority Support'],
             cta: 'Contact Us',
             highlight: false
         }

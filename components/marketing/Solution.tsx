@@ -7,23 +7,23 @@ import { Link2, ShieldAlert, Cpu, Lock } from 'lucide-react'
 const features = [
     {
         icon: <Cpu className="w-5 h-5 text-primary" />,
-        title: 'AI Smart Configs',
-        desc: 'Tell the AI what your project does (e.g. "Deflationary DAO token"). It instantly generates the perfect liquidity ratios and tax splits.'
+        title: 'AI Risk Scanner',
+        desc: 'Before you buy any BEP-20 token, our AI analyzes the contract, holder distribution, and liquidity in under 5 seconds to provide a clear safety score.'
     },
     {
         icon: <ShieldAlert className="w-5 h-5 text-primary" />,
-        title: 'Auto Anti-Sniper',
-        desc: 'Block 1-3 MEV attack mitigation built-in. Dynamic tax automatically punishes block-zero buyers to protect real investors.'
+        title: 'Guardian Token Templates',
+        desc: 'Launch tokens using pre-audited templates with immutable safety rules. Structural immunity to snipers, hidden mints, and honeypots.'
     },
     {
         icon: <Lock className="w-5 h-5 text-primary" />,
-        title: 'OpenZeppelin Verified',
-        desc: 'Contracts are built from secure OpenZeppelin foundations. Team tokens are automatically locked into algorithmic vesting schedules.'
+        title: 'Progressive Liquidity Unlock (PLU)',
+        desc: 'Liquidity unlocks are driven by real-time project health scores, not just time. Healthy tokens unlock smoothly; scams trigger emergency freezes.'
     },
     {
         icon: <Link2 className="w-5 h-5 text-primary" />,
-        title: '1-Click BSC Deploy',
-        desc: 'Connect your wallet via RainbowKit, hit deploy, and boom—your tokens and AMM pool are officially live on BNB Smart Chain.'
+        title: 'Live Monitoring Network',
+        desc: 'Continuous chain-wide monitoring. Our AI translates complex on-chain dumps and malicious dev transactions into plain-language early warnings.'
     }
 ]
 
@@ -40,7 +40,7 @@ export function Solution() {
                             An enterprise-grade launchpad powered by AI.
                         </h2>
                         <p className="text-lg text-[#6B7280] dark:text-gray-400 mb-8 transition-colors">
-                            We took the $10,000 auditing process and compressed it into a single AI prompt. Generate, simulate, and deploy battle-tested tokenomics without writing a single line of Solidity.
+                            A dual-layer protocol. The <strong>Control Layer</strong> makes scams structurally impossible for tokens deployed here. The <strong>Intelligence Layer</strong> gives you chain-wide AI protection anywhere on BNB Chain.
                         </p>
 
                         <div className="grid sm:grid-cols-2 gap-6">

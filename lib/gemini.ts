@@ -125,3 +125,137 @@ export async function generateTokenConfig(userGoal: string): Promise<TokenConfig
   config.generatedAt = config.generatedAt || new Date().toISOString();
   return config;
 }
+
+// ─── Risk Scanner — Intelligence Layer ─────────────────────────────────────────
+
+export interface RiskScanResult {
+  score: number;           // 0–100
+  rating: 'SAFE' | 'WARNING' | 'DANGEROUS';
+  summary: string;         // AI-generated plain-language verdict
+  flags: string[];         // e.g. ["Mint function active", "No LP lock"]
+  details: {
+    contractCode: { risk: string; notes: string };
+    ownership: { risk: string; notes: string };
+    liquidity: { risk: string; notes: string };
+    holders: { risk: string; notes: string };
+    trading: { risk: string; notes: string };
+  };
+  analyzedAt: string;
+}
+
+export interface TokenScanInput {
+  contractAddress: string;
+  tokenName?: string;
+  tokenSymbol?: string;
+  isVerified: boolean;
+  sourceCode?: string;
+  creationDate?: string;
+  totalSupply?: string;
+}
+
+export interface DexScanInput {
+  priceUsd?: number;
+  marketCap?: number;
+  liquidity?: number;
+  volume24h?: number;
+  priceChange24h?: number;
+  txns24h?: { buys: number; sells: number };
+  pairCreatedAt?: string;
+}
+
+export async function analyzeTokenRisk(
+  token: TokenScanInput,
+  dex: DexScanInput | null
+): Promise<RiskScanResult> {
+  const client = getClient();
+
+  const systemPrompt = `You are GuardianLaunch AI — a blockchain security analyst specialized in BNB Chain (BSC) token safety.
+Your job is to analyze token contracts and market data to produce a risk assessment.
+
+You ALWAYS return a valid JSON object. No extra text, no markdown.
+
+Risk scoring rules:
+- 80–100 = SAFE — no critical flags, standard caution
+- 50–79 = WARNING — notable risk factors, proceed carefully
+- 0–49 = DANGEROUS — critical flags, high probability of scam
+
+Analysis dimensions:
+1. Contract Code: mint functions, tax modification, blacklists, hidden owners, proxy patterns
+2. Ownership: renounced? multisig? single EOA?
+3. Liquidity: LP locked? depth? concentration?
+4. Holder Distribution: top holders %, dev wallet %
+5. Trading History: age, volume patterns, buy/sell ratio anomalies`;
+
+  const userPrompt = `Analyze this BNB Chain token for rug pull risk:
+
+CONTRACT INFO:
+- Address: ${token.contractAddress}
+- Name: ${token.tokenName || 'Unknown'}
+- Symbol: ${token.tokenSymbol || 'Unknown'}
+- Verified on BscScan: ${token.isVerified ? 'YES' : 'NO'}
+- Total Supply: ${token.totalSupply || 'Unknown'}
+- Creation Date: ${token.creationDate || 'Unknown'}
+- Source Code Available: ${token.sourceCode ? 'YES (' + token.sourceCode.length + ' chars)' : 'NO — unverified contract'}
+${token.sourceCode ? `\nSOURCE CODE (first 3000 chars):\n${token.sourceCode.slice(0, 3000)}` : ''}
+
+DEX MARKET DATA:
+${dex ? `- Price: $${dex.priceUsd || 'N/A'}
+- Market Cap: $${dex.marketCap || 'N/A'}
+- Liquidity: $${dex.liquidity || 'N/A'}
+- 24h Volume: $${dex.volume24h || 'N/A'}
+- 24h Price Change: ${dex.priceChange24h || 'N/A'}%
+- 24h Transactions: ${dex.txns24h ? `${dex.txns24h.buys} buys / ${dex.txns24h.sells} sells` : 'N/A'}
+- Pair Created: ${dex.pairCreatedAt || 'N/A'}` : 'No DEX data available — token may not be traded yet.'}
+
+Return this exact JSON structure:
+{
+  "score": <number 0-100>,
+  "rating": "<SAFE|WARNING|DANGEROUS>",
+  "summary": "<2-3 sentence plain-language verdict for retail investors>",
+  "flags": ["<array of specific risk findings>"],
+  "details": {
+    "contractCode": { "risk": "<LOW|MEDIUM|HIGH|CRITICAL>", "notes": "<finding>" },
+    "ownership": { "risk": "<LOW|MEDIUM|HIGH|CRITICAL>", "notes": "<finding>" },
+    "liquidity": { "risk": "<LOW|MEDIUM|HIGH|CRITICAL>", "notes": "<finding>" },
+    "holders": { "risk": "<LOW|MEDIUM|HIGH|CRITICAL>", "notes": "<finding>" },
+    "trading": { "risk": "<LOW|MEDIUM|HIGH|CRITICAL>", "notes": "<finding>" }
+  }
+}`;
+
+  const completion = await client.chat.completions.create({
+    model: MODEL,
+    messages: [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt },
+    ],
+    temperature: 0.3, // Lower temperature = more deterministic security analysis
+    max_tokens: 1500,
+    response_format: { type: 'json_object' },
+  });
+
+  const text = completion.choices[0]?.message?.content?.trim();
+  if (!text) throw new Error('Groq returned an empty response for risk analysis');
+
+  let result: RiskScanResult;
+  try {
+    const parsed = JSON.parse(text);
+    result = {
+      score: Math.max(0, Math.min(100, Number(parsed.score) || 50)),
+      rating: ['SAFE', 'WARNING', 'DANGEROUS'].includes(parsed.rating) ? parsed.rating : 'WARNING',
+      summary: String(parsed.summary || 'Analysis complete.'),
+      flags: Array.isArray(parsed.flags) ? parsed.flags.map(String) : [],
+      details: parsed.details || {
+        contractCode: { risk: 'MEDIUM', notes: 'Could not analyze' },
+        ownership: { risk: 'MEDIUM', notes: 'Could not analyze' },
+        liquidity: { risk: 'MEDIUM', notes: 'Could not analyze' },
+        holders: { risk: 'MEDIUM', notes: 'Could not analyze' },
+        trading: { risk: 'MEDIUM', notes: 'Could not analyze' },
+      },
+      analyzedAt: new Date().toISOString(),
+    };
+  } catch {
+    throw new Error(`Groq returned invalid JSON for risk analysis: ${text.slice(0, 200)}`);
+  }
+
+  return result;
+}
