@@ -129,9 +129,17 @@ export default function ConfigDetailPage() {
                         {/* Deploy & Liquidity section */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                                    {row.status === 'testnet' ? '✅ Deployed to Testnet' : '🚀 Deploy to BSC Testnet'}
-                                </h2>
+                                <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                                    <h2 className="text-lg font-semibold text-gray-900">
+                                        {row.status === 'testnet' ? '✅ Deployed to Testnet' : '🚀 Deploy to BSC Testnet'}
+                                    </h2>
+                                    <Link
+                                        href={`/dashboard/${id}/demo`}
+                                        className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 hover:bg-black text-white rounded-lg text-sm font-medium transition-all shadow-sm active:scale-95 border border-gray-800"
+                                    >
+                                        Launch Interactive Demo
+                                    </Link>
+                                </div>
                                 {row.status === 'testnet' && row.testnet_address ? (
                                     <div className="glass-card-prominent rounded-2xl p-5 text-sm">
                                         <p className="text-gray-600 mb-2">Contract Address:</p>

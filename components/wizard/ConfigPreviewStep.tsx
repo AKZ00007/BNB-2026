@@ -9,7 +9,7 @@ import { ArrowLeft, History, Database, ShieldCheck, TrendingUp, Lock, ArrowUpRig
 
 interface ConfigPreviewStepProps {
     config: TokenConfig;
-    onSave: (config: TokenConfig) => void;
+    onSave: (config: TokenConfig) => Promise<void> | void;
     onBack: () => void;
 }
 
@@ -18,12 +18,14 @@ export function ConfigPreviewStep({ config: initialConfig, onSave, onBack }: Con
     const [isDeploying, setIsDeploying] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    const handleDeploy = () => {
+    const handleDeploy = async () => {
         setIsDeploying(true);
-        // Simulate network deploy
-        setTimeout(() => {
-            onSave(config);
-        }, 1500);
+        // Simulate network deploy time + run actual save
+        await Promise.all([
+            new Promise(resolve => setTimeout(resolve, 1500)),
+            onSave(config)
+        ]);
+        // Note: component unmounts on successful save, so no need to turn off isDeploying here
     };
 
     return (

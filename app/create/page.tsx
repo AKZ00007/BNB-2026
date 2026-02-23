@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useAccount } from 'wagmi';
 import { GoalInputStep } from '@/components/wizard/GoalInputStep';
 import { AILoadingStep } from '@/components/wizard/AILoadingStep';
 import { ConfigPreviewStep } from '@/components/wizard/ConfigPreviewStep';
@@ -26,6 +27,7 @@ function CreateTokenInner() {
     const [error, setError] = useState<string | null>(null);
     const [templateName, setTemplateName] = useState<string | null>(null);
     const searchParams = useSearchParams();
+    const { address } = useAccount();
 
     // Lock body scroll — this page is a full-screen IDE layout, no outer scrolling
     useEffect(() => {
@@ -75,7 +77,29 @@ function CreateTokenInner() {
         }
     };
 
-    const handleSave = (finalConfig: TokenConfig) => {
+    const handleSave = async (finalConfig: TokenConfig) => {
+        try {
+            const res = await fetch('/api/config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    config: finalConfig,
+                    walletAddress: address
+                })
+            });
+            const data = await res.json();
+            if (data.success && data.id) {
+                try {
+                    const existing: string[] = JSON.parse(localStorage.getItem('bnb_config_ids') || '[]');
+                    if (!existing.includes(data.id)) {
+                        localStorage.setItem('bnb_config_ids', JSON.stringify([data.id, ...existing].slice(0, 50)));
+                    }
+                } catch { /* ignore */ }
+            }
+        } catch (err) {
+            console.error('Failed to save config to DB:', err);
+        }
+
         setConfig(finalConfig);
         setStep('save');
     };
