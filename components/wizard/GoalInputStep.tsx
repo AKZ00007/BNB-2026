@@ -83,7 +83,7 @@ export function GoalInputStep({ onSubmit }: GoalInputStepProps) {
             </div>
 
             {/* Central Command Area — fills viewport so tabs peek from bottom */}
-            <div className="w-full max-w-[800px] mx-auto px-4 animate-fade-in relative z-10 flex flex-col items-center justify-center pt-[15vh] pb-[10vh]" style={{ minHeight: 'calc(100vh - 64px - 60px)' }}>
+            <div className="w-full max-w-[800px] mx-auto px-4 animate-fade-in relative z-10 flex flex-col items-center justify-center pt-[10vh] pb-[5vh]" style={{ minHeight: 'calc(100vh - 260px)' }}>
                 <h1 className="text-[24px] sm:text-[28px] font-semibold text-white text-center mb-6 tracking-tight">
                     Ready to build, Akshay?
                 </h1>
