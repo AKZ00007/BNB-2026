@@ -79,14 +79,14 @@ export function ConfigPreviewStep({ config: initialConfig, onSave, onBack }: Con
             <div className="flex flex-1 overflow-hidden relative">
 
                 {/* Interaction Pane (AI Chat & Tweaks) Desktop */}
-                <div className="hidden lg:flex flex-col w-[340px] border-r border-[#1F2937]/50 bg-[#0A0A0A] flex-shrink-0 relative z-10 transition-transform">
+                <div className="hidden lg:flex flex-col w-[340px] border-r border-slate-200 dark:border-[#1F2937]/50 bg-white dark:bg-[#0A0A0A] flex-shrink-0 relative z-10 transition-colors">
                     <ConfigSidebar config={config} onUpdate={setConfig} />
                 </div>
 
                 {/* Interaction Pane Mobile */}
-                <div className={`fixed inset-y-0 left-0 z-50 w-[300px] border-r border-[#1F2937]/50 bg-[#0A0A0A] transform transition-transform duration-300 lg:hidden ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-                    <div className="flex justify-end p-2 bg-[#0A0A0A] border-b border-[#1F2937]/50">
-                        <button onClick={() => setIsSidebarOpen(false)} className="text-gray-400 hover:text-white text-xs p-1">Close X</button>
+                <div className={`fixed inset-y-0 left-0 z-50 w-[300px] border-r border-slate-200 dark:border-[#1F2937]/50 bg-white dark:bg-[#0A0A0A] transform transition-transform duration-300 lg:hidden transition-colors ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                    <div className="flex justify-end p-2 bg-white dark:bg-[#0A0A0A] border-b border-slate-200 dark:border-[#1F2937]/50 transition-colors">
+                        <button onClick={() => setIsSidebarOpen(false)} className="text-slate-500 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white text-xs p-1 transition-colors">Close X</button>
                     </div>
                     <div className="h-[calc(100vh-40px)]">
                         <ConfigSidebar config={config} onUpdate={setConfig} />
@@ -97,53 +97,53 @@ export function ConfigPreviewStep({ config: initialConfig, onSave, onBack }: Con
                 <div className="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-10 relative">
 
                     {/* Background glows behind the preview frame */}
-                    <div className="absolute inset-0 pointer-events-none -z-10 bg-[#050505]">
-                        <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] bg-[#00CCFF]/5 blur-[120px] rounded-full mix-blend-screen" />
-                        <div className="absolute bottom-[20%] left-[10%] w-[30vw] h-[30vw] max-w-[400px] max-h-[400px] bg-[#9900FF]/5 blur-[120px] rounded-full mix-blend-screen" />
+                    <div className="absolute inset-0 pointer-events-none -z-10 bg-slate-50 dark:bg-[#050505] transition-colors">
+                        <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] bg-pink-500/5 dark:bg-[#00CCFF]/5 blur-[120px] rounded-full mix-blend-screen" />
+                        <div className="absolute bottom-[20%] left-[10%] w-[30vw] h-[30vw] max-w-[400px] max-h-[400px] bg-blue-500/5 dark:bg-[#9900FF]/5 blur-[120px] rounded-full mix-blend-screen" />
                     </div>
 
                     {/* Fake Browser/Canvas Frame */}
-                    <div className="max-w-[1000px] mx-auto bg-[#0A0A0A] border border-white/5 shadow-2xl rounded-2xl p-6 lg:p-8 relative ring-1 ring-white/5">
+                    <div className="max-w-[1000px] mx-auto bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-white/5 shadow-2xl rounded-2xl p-6 lg:p-8 relative ring-1 ring-slate-200 dark:ring-white/5 transition-colors">
                         <div className="absolute top-3 right-4 flex gap-1">
-                            <span className="w-2.5 h-2.5 rounded-full bg-white/10"></span>
-                            <span className="w-2.5 h-2.5 rounded-full bg-white/10"></span>
-                            <span className="w-2.5 h-2.5 rounded-full bg-white/10"></span>
+                            <span className="w-2.5 h-2.5 rounded-full bg-slate-200 dark:bg-white/10 transition-colors"></span>
+                            <span className="w-2.5 h-2.5 rounded-full bg-slate-200 dark:bg-white/10 transition-colors"></span>
+                            <span className="w-2.5 h-2.5 rounded-full bg-slate-200 dark:bg-white/10 transition-colors"></span>
                         </div>
 
                         <div className="mt-4 mb-8">
-                            <h2 className="text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+                            <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-3 transition-colors">
                                 {config.tokenName}
                                 <span className="px-2 py-0.5 rounded bg-[#10B981]/10 text-[#10B981] text-[10px] font-mono border border-[#10B981]/20 tracking-widest hidden sm:inline-block">
                                     COMPILED
                                 </span>
                             </h2>
-                            <p className="text-lg text-[#22D3EE] font-mono mt-1">${config.tokenSymbol}</p>
-                            <div className="flex items-center gap-4 text-[13px] text-gray-400 mt-4 flex-wrap">
+                            <p className="text-lg text-pink-600 dark:text-[#22D3EE] font-mono mt-1 transition-colors">${config.tokenSymbol}</p>
+                            <div className="flex items-center gap-4 text-[13px] text-slate-500 dark:text-gray-400 mt-4 flex-wrap transition-colors">
                                 <span className="flex items-center gap-1.5"><Database className="w-3.5 h-3.5" /> BEP-20 Standard</span>
                                 <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-[#10B981]" /> Audited</span>
-                                <a href="#" className="flex items-center gap-1 hover:text-white transition-colors">View Contract <ArrowUpRight className="w-3 h-3" /></a>
+                                <a href="#" className="flex items-center gap-1 hover:text-slate-900 dark:hover:text-white transition-colors">View Contract <ArrowUpRight className="w-3 h-3" /></a>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-6">
                             {/* Top Stats Column */}
                             <div className="lg:col-span-2 grid grid-cols-2 gap-4">
-                                <div className="bg-[#111111] border border-white/5 rounded-2xl p-5 flex flex-col justify-between group hover:border-white/10 transition-colors">
-                                    <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-2">Total Supply</p>
-                                    <p className="text-2xl font-mono text-white group-hover:text-[#22D3EE] transition-colors truncate">
+                                <div className="bg-slate-50 dark:bg-[#111111] border border-slate-200 dark:border-white/5 rounded-2xl p-5 flex flex-col justify-between group hover:border-pink-300 dark:hover:border-white/10 transition-colors shadow-sm dark:shadow-none">
+                                    <p className="text-[11px] font-semibold text-slate-500 dark:text-gray-500 uppercase tracking-widest mb-2 transition-colors">Total Supply</p>
+                                    <p className="text-2xl font-mono text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-[#22D3EE] transition-colors truncate">
                                         {config.totalSupply.toLocaleString()}
                                     </p>
                                 </div>
-                                <div className="bg-[#111111] border border-white/5 rounded-2xl p-5 flex flex-col justify-between group hover:border-white/10 transition-colors">
-                                    <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-2">TGE Unlock</p>
-                                    <p className="text-2xl font-mono text-white group-hover:text-[#22D3EE] transition-colors">
+                                <div className="bg-slate-50 dark:bg-[#111111] border border-slate-200 dark:border-white/5 rounded-2xl p-5 flex flex-col justify-between group hover:border-pink-300 dark:hover:border-white/10 transition-colors shadow-sm dark:shadow-none">
+                                    <p className="text-[11px] font-semibold text-slate-500 dark:text-gray-500 uppercase tracking-widest mb-2 transition-colors">TGE Unlock</p>
+                                    <p className="text-2xl font-mono text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-[#22D3EE] transition-colors">
                                         {config.tgePercent}%
                                     </p>
                                 </div>
                             </div>
 
                             {/* Risk Gauge */}
-                            <div className="bg-[#111111] border border-white/5 rounded-2xl p-5 flex flex-col items-center justify-center relative overflow-hidden">
+                            <div className="bg-slate-50 dark:bg-[#111111] border border-slate-200 dark:border-white/5 rounded-2xl p-5 flex flex-col items-center justify-center relative overflow-hidden transition-colors shadow-sm dark:shadow-none">
                                 <div className="absolute top-0 right-0 w-24 h-24 bg-[#10B981]/10 rounded-full blur-2xl" />
                                 <RiskScoreGauge score={config.risk.score} />
                             </div>
