@@ -135,16 +135,16 @@ export function GoalInputStep({ onSubmit }: GoalInputStepProps) {
             </div>
 
             {/* Dashboard Grid Section — peeks from bottom, scroll to reveal */}
-            <div className="w-full max-w-[1200px] mx-auto px-6 sm:px-12 pb-12 animate-fade-in relative z-10" style={{ animationDelay: '100ms', animationFillMode: 'both' }}>
+            <div className="w-full max-w-[1200px] mx-auto px-6 sm:px-10 pt-8 sm:pt-10 pb-12 bg-[#121212]/95 backdrop-blur-2xl border border-white/5 rounded-t-[32px] sm:rounded-t-[40px] animate-fade-in relative z-10 shadow-2xl flex-1" style={{ animationDelay: '100ms', animationFillMode: 'both' }}>
                 {/* Tabs */}
-                <div className="flex items-center gap-6 border-b border-white/10 mb-6 relative">
+                <div className="flex items-center gap-2 sm:gap-4 mb-8 relative">
                     {TABS.map((tab) => (
                         <button
                             key={tab.key}
                             onClick={() => setActiveTab(tab.key)}
-                            className={`text-[13px] font-medium pb-3 transition-colors relative z-10 -mb-[1px] ${activeTab === tab.key
-                                ? 'text-white border-b-2 border-white'
-                                : 'text-gray-500 hover:text-gray-300'
+                            className={`text-[14px] font-medium px-4 py-2 rounded-xl transition-all ${activeTab === tab.key
+                                ? 'bg-white/10 text-white'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5'
                                 }`}
                         >
                             {tab.label}
@@ -156,7 +156,7 @@ export function GoalInputStep({ onSubmit }: GoalInputStepProps) {
                             if (activeTab === 'templates') router.push('/templates');
                             else if (activeTab === 'projects') router.push('/dashboard');
                         }}
-                        className="ml-auto text-[13px] font-medium text-gray-400 hover:text-white flex items-center gap-1.5 transition-colors pb-3"
+                        className="ml-auto text-[14px] font-medium text-gray-400 hover:text-white flex items-center gap-1.5 transition-colors px-4 py-2"
                     >
                         Browse all <ArrowRight strokeWidth={2} className="w-3.5 h-3.5" />
                     </button>
