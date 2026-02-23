@@ -32,20 +32,20 @@ export function ProgressStepper({ currentStep }: ProgressStepperProps) {
                         <div className="flex items-center gap-3">
                             <div
                                 className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-all duration-300 ${state === 'completed'
-                                        ? 'bg-[#F0B90B] text-[#111827]'
-                                        : state === 'active'
-                                            ? 'bg-[#F0B90B]/20 border border-[#F0B90B] text-[#F0B90B]'
-                                            : 'bg-[#1F2937] border border-[#374151] text-gray-500'
+                                    ? 'bg-pink-500 text-white dark:bg-[#F0B90B] dark:text-[#111827]'
+                                    : state === 'active'
+                                        ? 'bg-pink-100 border border-pink-500 text-pink-600 dark:bg-[#F0B90B]/20 dark:border-[#F0B90B] dark:text-[#F0B90B]'
+                                        : 'bg-slate-100 border border-slate-300 text-slate-400 dark:bg-[#1F2937] dark:border-[#374151] dark:text-gray-500'
                                     }`}
                             >
                                 {state === 'completed' ? <Check className="w-3 h-3" /> : step.num}
                             </div>
                             <span
                                 className={`text-xs font-semibold tracking-wide transition-colors duration-300 ${state === 'active'
-                                        ? 'text-[#F0B90B]'
-                                        : state === 'completed'
-                                            ? 'text-gray-300'
-                                            : 'text-gray-500'
+                                    ? 'text-pink-600 dark:text-[#F0B90B]'
+                                    : state === 'completed'
+                                        ? 'text-slate-800 dark:text-gray-300'
+                                        : 'text-slate-400 dark:text-gray-500'
                                     }`}
                             >
                                 {step.label}
@@ -54,7 +54,7 @@ export function ProgressStepper({ currentStep }: ProgressStepperProps) {
 
                         {/* Connecting Line (except for last item) */}
                         {i < steps.length - 1 && (
-                            <div className="mx-4 w-16 h-[1px] bg-[#1F2937]"></div>
+                            <div className="mx-4 w-16 h-[1px] bg-slate-200 dark:bg-[#1F2937]"></div>
                         )}
                     </div>
                 );

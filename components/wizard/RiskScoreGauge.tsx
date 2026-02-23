@@ -24,7 +24,7 @@ export function RiskScoreGauge({ score }: { score: number }) {
                         stroke="currentColor"
                         strokeWidth="4"
                         fill="transparent"
-                        className="text-[#1F2937]"
+                        className="text-slate-200 dark:text-[#1F2937] transition-colors"
                     />
                     {/* Progress Ring */}
                     <circle

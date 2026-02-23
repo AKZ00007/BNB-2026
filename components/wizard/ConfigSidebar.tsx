@@ -40,12 +40,12 @@ export function ConfigSidebar({ config, onUpdate }: ConfigSidebarProps) {
     };
 
     return (
-        <div className="flex flex-col h-full w-full bg-[#0A0A0A]">
+        <div className="flex flex-col h-full w-full bg-slate-50 dark:bg-[#0A0A0A] transition-colors">
             {/* Header */}
-            <div className="px-5 py-4 border-b border-[#1F2937]/50 flex items-center justify-between">
+            <div className="px-5 py-4 border-b border-slate-200 dark:border-[#1F2937]/50 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-[#22D3EE]" />
-                    <h2 className="font-semibold text-white text-[13px] tracking-wide">AI Co-Pilot</h2>
+                    <Sparkles className="w-4 h-4 text-pink-500 dark:text-[#22D3EE]" />
+                    <h2 className="font-semibold text-slate-900 dark:text-white text-[13px] tracking-wide">AI Co-Pilot</h2>
                 </div>
             </div>
 
@@ -54,19 +54,19 @@ export function ConfigSidebar({ config, onUpdate }: ConfigSidebarProps) {
 
                 {/* AI Chat Input */}
                 <div className="mb-2">
-                    <div className="bg-[#111111] border border-white/5 rounded-xl p-3 shadow-inner">
+                    <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-white/5 rounded-xl p-3 shadow-sm dark:shadow-inner">
                         <form onSubmit={handleAIPrompt} className="relative">
                             <textarea
                                 value={prompt}
                                 onChange={(e) => setPrompt(e.target.value)}
                                 placeholder="E.g. Remove the anti-bot lock and set taxes to 0..."
-                                className="w-full h-20 bg-transparent text-[13px] text-gray-200 placeholder-gray-500 resize-none outline-none leading-relaxed"
+                                className="w-full h-20 bg-transparent text-[13px] text-slate-800 dark:text-gray-200 placeholder-slate-400 dark:placeholder-gray-500 resize-none outline-none leading-relaxed"
                             />
                             <div className="absolute bottom-0 right-0">
                                 <button
                                     type="submit"
                                     disabled={!prompt.trim() || isGenerating}
-                                    className="p-1.5 bg-[#22D3EE]/20 hover:bg-[#22D3EE]/30 text-[#22D3EE] rounded-lg transition-colors disabled:opacity-50 disabled:bg-gray-800 disabled:text-gray-500 flex items-center gap-1 text-[11px] font-bold"
+                                    className="p-1.5 bg-pink-100 dark:bg-[#22D3EE]/20 hover:bg-pink-200 dark:hover:bg-[#22D3EE]/30 text-pink-600 dark:text-[#22D3EE] rounded-lg transition-colors disabled:opacity-50 disabled:bg-slate-200 dark:disabled:bg-gray-800 disabled:text-slate-400 dark:disabled:text-gray-500 flex items-center gap-1 text-[11px] font-bold"
                                 >
                                     <Send className="w-3.5 h-3.5" />
                                 </button>
@@ -77,35 +77,35 @@ export function ConfigSidebar({ config, onUpdate }: ConfigSidebarProps) {
 
                 {/* Identity Settings */}
                 <section>
-                    <h3 className="text-[11px] font-bold text-gray-500 tracking-wider uppercase mb-3 flex items-center gap-2">
+                    <h3 className="text-[11px] font-bold text-slate-500 dark:text-gray-500 tracking-wider uppercase mb-3 flex items-center gap-2">
                         <Layers className="w-3.5 h-3.5" /> Identity
                     </h3>
                     <div className="space-y-3">
                         <div>
-                            <label className="text-xs text-gray-400 mb-1 block font-medium">Token Name</label>
+                            <label className="text-xs text-slate-600 dark:text-gray-400 mb-1 block font-medium">Token Name</label>
                             <input
                                 type="text"
                                 value={config.tokenName}
                                 onChange={(e) => onUpdate({ ...config, tokenName: e.target.value })}
-                                className="w-full bg-[#111111] border border-white/5 rounded-lg px-3 py-2 text-[13px] text-white focus:outline-none focus:border-[#22D3EE]/50 transition-colors"
+                                className="w-full bg-white dark:bg-[#111111] border border-slate-200 dark:border-white/5 rounded-lg px-3 py-2 text-[13px] text-slate-900 dark:text-white focus:outline-none focus:border-pink-300 dark:focus:border-[#22D3EE]/50 transition-colors shadow-sm"
                             />
                         </div>
                         <div>
-                            <label className="text-xs text-gray-400 mb-1 block font-medium">Ticker</label>
+                            <label className="text-xs text-slate-600 dark:text-gray-400 mb-1 block font-medium">Ticker</label>
                             <input
                                 type="text"
                                 value={config.tokenSymbol}
                                 onChange={(e) => onUpdate({ ...config, tokenSymbol: e.target.value.toUpperCase() })}
-                                className="w-full bg-[#111111] border border-white/5 rounded-lg px-3 py-2 text-[13px] text-white focus:outline-none focus:border-[#22D3EE]/50 font-mono transition-colors"
+                                className="w-full bg-white dark:bg-[#111111] border border-slate-200 dark:border-white/5 rounded-lg px-3 py-2 text-[13px] text-slate-900 dark:text-white focus:outline-none focus:border-pink-300 dark:focus:border-[#22D3EE]/50 font-mono transition-colors shadow-sm"
                             />
                         </div>
                         <div>
-                            <label className="text-xs text-gray-400 mb-1 block font-medium">Total Supply</label>
+                            <label className="text-xs text-slate-600 dark:text-gray-400 mb-1 block font-medium">Total Supply</label>
                             <input
                                 type="number"
                                 value={config.totalSupply}
                                 onChange={(e) => onUpdate({ ...config, totalSupply: Number(e.target.value) })}
-                                className="w-full bg-[#111111] border border-white/5 rounded-lg px-3 py-2 text-[13px] text-white focus:outline-none focus:border-[#22D3EE]/50 font-mono transition-colors"
+                                className="w-full bg-white dark:bg-[#111111] border border-slate-200 dark:border-white/5 rounded-lg px-3 py-2 text-[13px] text-slate-900 dark:text-white focus:outline-none focus:border-pink-300 dark:focus:border-[#22D3EE]/50 font-mono transition-colors shadow-sm"
                             />
                         </div>
                     </div>
@@ -113,38 +113,38 @@ export function ConfigSidebar({ config, onUpdate }: ConfigSidebarProps) {
 
                 {/* AMM & Taxes */}
                 <section>
-                    <h3 className="text-[11px] font-bold text-gray-500 tracking-wider uppercase mb-3 flex items-center gap-2">
+                    <h3 className="text-[11px] font-bold text-slate-500 dark:text-gray-500 tracking-wider uppercase mb-3 flex items-center gap-2">
                         <Settings2 className="w-3.5 h-3.5" /> Mechanics
                     </h3>
                     <div className="space-y-3">
                         <div className="grid grid-cols-2 gap-2">
                             <div>
-                                <label className="text-xs text-gray-400 mb-1 block font-medium">Buy Tax (%)</label>
+                                <label className="text-xs text-slate-600 dark:text-gray-400 mb-1 block font-medium">Buy Tax (%)</label>
                                 <input
                                     type="number"
                                     value={config.amm.buyTaxPercent}
                                     onChange={(e) => handleNestedChange('amm', 'buyTaxPercent', Number(e.target.value))}
-                                    className="w-full bg-[#111111] border border-white/5 rounded-lg px-3 py-2 text-[13px] text-white focus:outline-none focus:border-[#22D3EE]/50 transition-colors"
+                                    className="w-full bg-white dark:bg-[#111111] border border-slate-200 dark:border-white/5 rounded-lg px-3 py-2 text-[13px] text-slate-900 dark:text-white focus:outline-none focus:border-pink-300 dark:focus:border-[#22D3EE]/50 transition-colors shadow-sm"
                                 />
                             </div>
                             <div>
-                                <label className="text-xs text-gray-400 mb-1 block font-medium">Sell Tax (%)</label>
+                                <label className="text-xs text-slate-600 dark:text-gray-400 mb-1 block font-medium">Sell Tax (%)</label>
                                 <input
                                     type="number"
                                     value={config.amm.sellTaxPercent}
                                     onChange={(e) => handleNestedChange('amm', 'sellTaxPercent', Number(e.target.value))}
-                                    className="w-full bg-[#111111] border border-white/5 rounded-lg px-3 py-2 text-[13px] text-white focus:outline-none focus:border-[#22D3EE]/50 transition-colors"
+                                    className="w-full bg-white dark:bg-[#111111] border border-slate-200 dark:border-white/5 rounded-lg px-3 py-2 text-[13px] text-slate-900 dark:text-white focus:outline-none focus:border-pink-300 dark:focus:border-[#22D3EE]/50 transition-colors shadow-sm"
                                 />
                             </div>
                         </div>
 
                         {/* Toggle Anti-Bot */}
-                        <label className="flex items-center justify-between p-3 rounded-xl border border-white/5 bg-[#111111] cursor-pointer group hover:bg-[#151515] transition-colors mt-2">
+                        <label className="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-white/5 bg-white dark:bg-[#111111] cursor-pointer group hover:bg-slate-50 dark:hover:bg-[#151515] transition-colors mt-2 shadow-sm">
                             <div className="flex flex-col">
-                                <span className="text-[13px] font-medium text-gray-300 group-hover:text-white transition-colors">Anti-Bot Protection</span>
-                                <span className="text-[10px] text-gray-500">Blocks sniper bots on block 0</span>
+                                <span className="text-[13px] font-medium text-slate-800 dark:text-gray-300 group-hover:text-pink-600 dark:group-hover:text-white transition-colors">Anti-Bot Protection</span>
+                                <span className="text-[10px] text-slate-500 dark:text-gray-500">Blocks sniper bots on block 0</span>
                             </div>
-                            <div className={`w-8 h-4 rounded-full transition-colors relative ${config.amm.antiBotBlocks > 0 ? 'bg-[#22D3EE]' : 'bg-[#374151]'}`}>
+                            <div className={`w-8 h-4 rounded-full transition-colors relative ${config.amm.antiBotBlocks > 0 ? 'bg-pink-500 dark:bg-[#22D3EE]' : 'bg-slate-300 dark:bg-[#374151]'}`}>
                                 <div className={`absolute top-[2px] bottom-[2px] w-3 bg-white rounded-full transition-all ${config.amm.antiBotBlocks > 0 ? 'left-[18px]' : 'left-[2px]'}`} />
                             </div>
                             <input

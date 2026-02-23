@@ -14,7 +14,7 @@ type Step = 'input' | 'loading' | 'preview' | 'save';
 
 export default function CreateTokenPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A]" />}>
+        <Suspense fallback={<div className="min-h-screen bg-white dark:bg-[#0A0A0A] transition-colors" />}>
             <CreateTokenInner />
         </Suspense>
     );
@@ -88,7 +88,7 @@ function CreateTokenInner() {
     };
 
     return (
-        <div className="flex h-[calc(100vh-64px)] w-full bg-[#0A0A0A] text-gray-100 overflow-hidden font-sans">
+        <div className="flex h-[calc(100vh-64px)] w-full bg-white dark:bg-[#0A0A0A] text-slate-800 dark:text-gray-100 overflow-hidden font-sans transition-colors">
             {/* Left Panel: Fixed Navigation */}
             <WizardSidebar />
 
