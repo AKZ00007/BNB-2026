@@ -20,8 +20,8 @@ export function Header() {
     return (
         <motion.header
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-                    ? 'bg-brand-charcoal/75 backdrop-blur-md border-b border-white/10'
-                    : 'bg-transparent border-b border-transparent'
+                ? 'bg-brand-charcoal/75 backdrop-blur-md border-b border-white/10'
+                : 'bg-transparent border-b border-transparent'
                 }`}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -36,7 +36,7 @@ export function Header() {
                         </svg>
                     </div>
                     <span className="text-xl font-bold tracking-tight text-white">
-                        BNB Launchpad
+                        GROWUP AI
                     </span>
                 </Link>
 
@@ -68,7 +68,7 @@ export function Header() {
                                     🔒 PLU Dashboard
                                 </Link>
                                 <Link href="/launchpad" className="block px-4 py-2 text-sm text-white/60 hover:text-white hover:bg-white/5 transition-colors">
-                                    🚀 Launchpad
+                                    🚀 GROWUP AI
                                 </Link>
                             </div>
                         )}

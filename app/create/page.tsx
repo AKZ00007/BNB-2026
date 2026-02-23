@@ -6,13 +6,15 @@ import { GoalInputStep } from '@/components/wizard/GoalInputStep';
 import { AILoadingStep } from '@/components/wizard/AILoadingStep';
 import { ConfigPreviewStep } from '@/components/wizard/ConfigPreviewStep';
 import { SaveStep } from '@/components/wizard/SaveStep';
+import { WizardSidebar } from '@/components/wizard/WizardSidebar';
+import { ProgressStepper } from '@/components/wizard/ProgressStepper';
 import type { TokenConfig } from '@/types/config';
 
 type Step = 'input' | 'loading' | 'preview' | 'save';
 
 export default function CreateTokenPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen bg-[#FAFAFA] dark:bg-gray-950 transition-colors duration-300" />}>
+        <Suspense fallback={<div className="min-h-screen bg-[#0A0A0A]" />}>
             <CreateTokenInner />
         </Suspense>
     );
@@ -24,6 +26,12 @@ function CreateTokenInner() {
     const [error, setError] = useState<string | null>(null);
     const [templateName, setTemplateName] = useState<string | null>(null);
     const searchParams = useSearchParams();
+
+    // Lock body scroll — this page is a full-screen IDE layout, no outer scrolling
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => { document.body.style.overflow = ''; };
+    }, []);
 
     // Load template config from sessionStorage if redirected from /templates
     useEffect(() => {
@@ -80,79 +88,57 @@ function CreateTokenInner() {
     };
 
     return (
-        <main className="min-h-screen bg-[#FAFAFA] dark:bg-gray-950 text-gray-900 dark:text-gray-100 overflow-hidden relative transition-colors duration-300">
-            {/* Ambient background */}
-            <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute top-[-15%] left-[-10%] w-[50%] h-[50%] bg-gold/4 rounded-full blur-[150px]" />
-                <div className="absolute bottom-[-15%] right-[-10%] w-[50%] h-[50%] bg-purple/8 rounded-full blur-[150px]" />
-                <div className="absolute top-[40%] left-[40%] w-[30%] h-[30%] bg-gold/3 rounded-full blur-[100px]" />
-            </div>
+        <div className="flex h-[calc(100vh-64px)] w-full bg-[#0A0A0A] text-gray-100 overflow-hidden font-sans">
+            {/* Left Panel: Fixed Navigation */}
+            <WizardSidebar />
 
-            {/* Step progress indicator */}
-            <div className="relative z-10 pt-24 pb-6 px-6">
-                <div className="max-w-2xl mx-auto">
-                    <div className="flex items-center justify-center gap-3 mb-10">
-                        {(['input', 'preview', 'save'] as const).map((s, i) => {
-                            const stepNum = i + 1;
-                            const isCurrent = step === s || (step === 'loading' && s === 'input');
-                            const isCompleted =
-                                (s === 'input' && (step === 'preview' || step === 'save')) ||
-                                (s === 'preview' && step === 'save');
+            {/* Right Panel: Main Content Area */}
+            <main className="flex-1 flex flex-col relative h-full overflow-y-auto custom-scrollbar">
 
-                            return (
-                                <div key={s} className="flex items-center gap-3">
-                                    <div
-                                        className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${isCompleted
-                                                ? 'bg-gold text-bg-base dark:text-gray-900'
-                                                : isCurrent
-                                                    ? 'bg-gold/20 border-2 border-gold text-gold'
-                                                    : 'bg-white dark:bg-gray-900 border border-[var(--border-gray-300, #D1D5DB)] dark:border-gray-800 text-gray-400 dark:text-gray-500'
-                                            }`}
-                                    >
-                                        {isCompleted ? '✓' : stepNum}
-                                    </div>
-                                    <span
-                                        className={`text-sm font-medium hidden sm:block transition-colors ${isCurrent ? 'text-gold' : isCompleted ? 'text-gray-600 dark:text-gray-300' : 'text-gray-400 dark:text-gray-600'
-                                            }`}
-                                    >
-                                        {s === 'input' ? 'Your Vision' : s === 'preview' ? 'Review Config' : 'Save'}
-                                    </span>
-                                    {i < 2 && (
-                                        <div className={`w-10 h-px sm:w-16 lg:w-24 transition-colors ${isCompleted ? 'bg-gold' : 'bg-gray-100 dark:bg-gray-800'}`} />
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
+                {/* Ambient dynamic background lighting */}
+                <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+                    <div className="absolute top-[-20%] left-[20%] w-[60%] h-[60%] bg-[#F0B90B]/5 rounded-full blur-[120px]" />
+                    <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#8B5CF6]/5 rounded-full blur-[100px]" />
+                </div>
+
+                {/* Top/Center Workspace Container */}
+                <div className="relative z-10 w-full flex-1 flex flex-col pt-16 pb-12 px-8 min-h-0">
+
+                    {/* Stepper only shows on Input and Load steps */}
+                    {(step === 'input' || step === 'loading') && (
+                        <ProgressStepper currentStep={step} />
+                    )}
 
                     {/* Template Banner */}
-                    {templateName && (
-                        <div className="mb-6 p-4 rounded-xl bg-purple/10 dark:bg-purple/20 border border-purple/20 text-sm flex items-center gap-3 transition-colors">
+                    {templateName && step === 'input' && (
+                        <div className="max-w-2xl mx-auto mb-6 p-4 rounded-xl bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 text-sm flex items-center gap-3">
                             <span className="text-lg">✨</span>
-                            <span className="text-gray-600 dark:text-gray-300 transition-colors">
-                                Template applied: <strong className="text-purple dark:text-purple/80">{templateName}</strong> — review and customize below, then save.
+                            <span className="text-gray-300">
+                                Template applied: <strong className="text-[#8B5CF6]">{templateName}</strong>
                             </span>
                         </div>
                     )}
 
                     {/* Error Banner */}
                     {error && (
-                        <div className="mb-6 p-4 rounded-xl bg-error/10 border border-error/20 text-error text-sm">
+                        <div className="max-w-2xl mx-auto mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
                             ⚠️ {error}
                         </div>
                     )}
 
-                    {/* Step Renderer */}
-                    {step === 'input' && <GoalInputStep onSubmit={handleGoalSubmit} />}
-                    {step === 'loading' && <AILoadingStep />}
-                    {step === 'preview' && config && (
-                        <ConfigPreviewStep config={config} onSave={handleSave} onBack={handleReset} />
-                    )}
-                    {step === 'save' && config && (
-                        <SaveStep config={config} onCreateAnother={handleReset} />
-                    )}
+                    {/* Dynamic Step Router */}
+                    <div className="w-full flex-1 flex flex-col items-center">
+                        {step === 'input' && <GoalInputStep onSubmit={handleGoalSubmit} />}
+                        {step === 'loading' && <AILoadingStep />}
+                        {step === 'preview' && config && (
+                            <ConfigPreviewStep config={config} onSave={handleSave} onBack={handleReset} />
+                        )}
+                        {step === 'save' && config && (
+                            <SaveStep config={config} onCreateAnother={handleReset} />
+                        )}
+                    </div>
                 </div>
-            </div>
-        </main>
+            </main>
+        </div>
     );
 }

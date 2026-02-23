@@ -4,7 +4,7 @@ import { SectionLabel } from '@/components/shared/SectionLabel'
 import { Highlighter } from '@/components/ui/highlighter'
 
 const testimonials = [
-    { name: '0xGhost', title: 'DAO Founder', text: <>I used to pay audits 10k. Now I press deploy on BNB Launchpad and sleep like a baby. <Highlighter action="highlight" color="#FEE2E2">The anti-whale protections are flawless.</Highlighter></> },
+    { name: '0xGhost', title: 'DAO Founder', text: <>I used to pay audits 10k. Now I press deploy on GROWUP AI and sleep like a baby. <Highlighter action="highlight" color="#FEE2E2">The anti-whale protections are flawless.</Highlighter></> },
     { name: 'Sarah', title: 'Token Dev', text: <>The customizable OpenZeppelin vesting schedules took literally 4 clicks. <Highlighter action="highlight" color="#FEE2E2">This is the future of smart contract deployment.</Highlighter></> },
     { name: 'Abe', title: 'Degen Trader', text: <>Tokens launched here don't get sniped on block 1 because of the exponential tax. <Highlighter action="highlight" color="#FEE2E2">Finally, a fair launchpad.</Highlighter></> },
     { name: 'DeFi_Dan', title: 'Yield Farmer', text: <>The AMM optimization tools saved us months of math. The UI is gorgeous, the code is solid.</> },

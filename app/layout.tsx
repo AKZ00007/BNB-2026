@@ -20,7 +20,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "AI Token Launchpad Designer | End Token Crashes",
+    title: "GROWUP AI | End Token Crashes",
     description: "Generate crash-proof tokenomics configurations from plain-English goals. AI-backed, data-driven, 1-click BSC deployment.",
     keywords: "token launchpad, BSC, BNB Chain, tokenomics, AI, DeFi, crypto",
 };

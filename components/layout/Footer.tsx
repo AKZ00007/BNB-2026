@@ -19,12 +19,13 @@ export default function Footer() {
             <div className="max-w-[1200px] mx-auto px-8">
                 {/* Logo */}
                 <div className="flex items-center gap-2 mb-10 group">
-                    <div className="w-6 h-6 grid grid-cols-2 gap-0.5">
-                        {[...Array(4)].map((_, i) => (
-                            <div key={i} className={`bg-gray-900 dark:bg-gray-100 rounded-sm transition-colors duration-300 group-hover:bg-primary dark:group-hover:bg-primary`} style={{ transitionDelay: `${i * 50}ms` }} />
-                        ))}
-                    </div>
-                    <span className="font-bold text-base text-gray-900 dark:text-gray-100 transition-colors">BNB Launchpad</span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="12" height="12" rx="1" className="fill-gray-900 dark:fill-gray-100 group-hover:fill-primary dark:group-hover:fill-primary transition-colors" />
+                        <rect x="14" y="2" width="9" height="9" rx="1" className="fill-gray-900 dark:fill-gray-100 group-hover:fill-primary dark:group-hover:fill-primary transition-colors delay-75" />
+                        <rect x="2" y="14" width="9" height="9" rx="1" className="fill-gray-900 dark:fill-gray-100 group-hover:fill-primary dark:group-hover:fill-primary transition-colors delay-100" />
+                        <rect x="14" y="14" width="7" height="7" rx="1" className="fill-gray-900 dark:fill-gray-100 group-hover:fill-primary dark:group-hover:fill-primary transition-colors delay-150" />
+                    </svg>
+                    <span className="font-bold text-base text-gray-900 dark:text-gray-100 transition-colors">GROWUP AI</span>
                 </div>
 
                 {/* Link columns */}
@@ -61,7 +62,7 @@ export default function Footer() {
                 {/* Bottom bar */}
                 <div className="border-t border-gray-100 dark:border-gray-800 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 transition-colors">
                     <p className="text-xs text-gray-400 dark:text-gray-500 transition-colors">
-                        Copyright © 2026 BNB Launchpad — Build secure tokenomics with AI.
+                        Copyright © 2026 GROWUP AI — Build secure tokenomics with AI.
                     </p>
                     <div className="flex items-center gap-6">
                         <Link href="#" className="text-xs text-gray-500 dark:text-gray-400 hover:underline transition-colors">Privacy Policy</Link>

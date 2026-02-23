@@ -37,7 +37,7 @@ export default function NarrativeBlocks({ scrollYProgress }: Props) {
                 className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"
             >
                 <h1 className="text-6xl md:text-8xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60 drop-shadow-2xl">
-                    BNB Launchpad
+                    GROWUP AI
                 </h1>
                 <p className="mt-6 text-2xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-gold to-cyan font-medium">
                     AI-Powered Token Launches

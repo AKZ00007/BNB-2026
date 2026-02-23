@@ -13,13 +13,13 @@ export default function Navbar() {
                 <Link href="/" className="flex items-center gap-2 group">
                     <div className="shrink-0">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="2" y="2" width="9" height="9" className="fill-gray-900 dark:fill-gray-100 group-hover:fill-primary dark:group-hover:fill-primary transition-colors" />
-                            <rect x="13" y="2" width="9" height="9" className="fill-gray-900 dark:fill-gray-100 group-hover:fill-primary dark:group-hover:fill-primary transition-colors delay-75" />
-                            <rect x="2" y="13" width="9" height="9" className="fill-gray-900 dark:fill-gray-100 group-hover:fill-primary dark:group-hover:fill-primary transition-colors delay-100" />
-                            <rect x="13" y="13" width="9" height="9" className="fill-gray-900 dark:fill-gray-100 group-hover:fill-primary dark:group-hover:fill-primary transition-colors delay-150" />
+                            <rect x="0" y="0" width="12" height="12" rx="1" className="fill-gray-900 dark:fill-gray-100 group-hover:fill-primary dark:group-hover:fill-primary transition-colors" />
+                            <rect x="14" y="2" width="9" height="9" rx="1" className="fill-gray-900 dark:fill-gray-100 group-hover:fill-primary dark:group-hover:fill-primary transition-colors delay-75" />
+                            <rect x="2" y="14" width="9" height="9" rx="1" className="fill-gray-900 dark:fill-gray-100 group-hover:fill-primary dark:group-hover:fill-primary transition-colors delay-100" />
+                            <rect x="14" y="14" width="7" height="7" rx="1" className="fill-gray-900 dark:fill-gray-100 group-hover:fill-primary dark:group-hover:fill-primary transition-colors delay-150" />
                         </svg>
                     </div>
-                    <span className="font-bold text-base text-gray-900 dark:text-gray-100 transition-colors">BNB Launchpad</span>
+                    <span className="font-bold text-base text-gray-900 dark:text-gray-100 transition-colors">GROWUP AI</span>
                 </Link>
 
                 {/* Radix Navigation */}
@@ -72,7 +72,7 @@ export default function Navbar() {
                                 <div className="w-[560px] grid grid-cols-2 gap-x-8 gap-y-4">
                                     <NavigationMenu.Link asChild>
                                         <Link href="/launchpad" className="block p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group/link border border-transparent hover:border-gray-100 dark:hover:border-gray-700">
-                                            <h4 className="font-bold text-[14px] text-gray-900 dark:text-gray-100 flex items-center gap-2 mb-1 group-hover/link:text-primary transition-colors"><Rocket className="w-4 h-4 text-gray-400 group-hover/link:text-primary" /> Token Launchpad</h4>
+                                            <h4 className="font-bold text-[14px] text-gray-900 dark:text-gray-100 flex items-center gap-2 mb-1 group-hover/link:text-primary transition-colors"><Rocket className="w-4 h-4 text-gray-400 group-hover/link:text-primary" /> GROWUP AI</h4>
                                             <p className="text-[13px] text-gray-500 dark:text-gray-400">Deploy memecoins & utility tokens directly to the blockchain securely.</p>
                                         </Link>
                                     </NavigationMenu.Link>
