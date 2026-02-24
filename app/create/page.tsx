@@ -9,9 +9,10 @@ import { ConfigPreviewStep } from '@/components/wizard/ConfigPreviewStep';
 import { SaveStep } from '@/components/wizard/SaveStep';
 import { WizardSidebar } from '@/components/wizard/WizardSidebar';
 import { ProgressStepper } from '@/components/wizard/ProgressStepper';
+import { DeployFlow } from '@/components/deployer/DeployFlow';
 import type { TokenConfig } from '@/types/config';
 
-type Step = 'input' | 'loading' | 'preview' | 'save';
+type Step = 'input' | 'loading' | 'preview' | 'deploy' | 'save';
 
 export default function CreateTokenPage() {
     return (
@@ -24,6 +25,7 @@ export default function CreateTokenPage() {
 function CreateTokenInner() {
     const [step, setStep] = useState<Step>('input');
     const [config, setConfig] = useState<TokenConfig | null>(null);
+    const [configId, setConfigId] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [templateName, setTemplateName] = useState<string | null>(null);
     const searchParams = useSearchParams();
@@ -89,6 +91,7 @@ function CreateTokenInner() {
             });
             const data = await res.json();
             if (data.success && data.id) {
+                setConfigId(data.id);
                 try {
                     const existing: string[] = JSON.parse(localStorage.getItem('bnb_config_ids') || '[]');
                     if (!existing.includes(data.id)) {
@@ -101,9 +104,8 @@ function CreateTokenInner() {
         }
 
         setConfig(finalConfig);
-        setStep('save');
+        setStep('deploy');
     };
-
     const handleReset = () => {
         setConfig(null);
         setError(null);
@@ -156,6 +158,19 @@ function CreateTokenInner() {
                         {step === 'loading' && <AILoadingStep />}
                         {step === 'preview' && config && (
                             <ConfigPreviewStep config={config} onSave={handleSave} onBack={handleReset} />
+                        )}
+                        {step === 'deploy' && config && configId && (
+                            <div className="w-full max-w-2xl mx-auto flex flex-col items-center mt-12 animate-fade-in">
+                                <DeployFlow
+                                    configId={configId}
+                                    config={config}
+                                    onDeployed={(addr) => {
+                                        setTimeout(() => {
+                                            window.location.href = `/dashboard/${configId}`;
+                                        }, 3000);
+                                    }}
+                                />
+                            </div>
                         )}
                         {step === 'save' && config && (
                             <SaveStep config={config} onCreateAnother={handleReset} />

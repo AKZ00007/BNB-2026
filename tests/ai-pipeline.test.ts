@@ -50,7 +50,11 @@ const VALID_CONFIG = {
         buyTaxPercent: 2,
         sellTaxPercent: 4,
         antiWhaleMaxWalletPercent: 2,
+        maxTxPercent: 1.5,
         antiBotBlocks: 3,
+        cooldownSeconds: 30,
+        dynamicTaxEnabled: true,
+        twapDeviationPercent: 15,
         bondingCurve: 'linear',
     },
     plu: {

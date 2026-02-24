@@ -9,15 +9,21 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 
 function sanitize(s: unknown): string {
     if (typeof s !== 'string') return '';
-    // Strip any HTML/script tags
     return s.replace(/<[^>]*>/g, '').trim();
 }
 
 /**
  * POST /api/deploy
  * Called by DeployFlow AFTER the tx is mined on BSC Testnet.
- * 1. Updates saved_configs status → 'testnet'
- * 2. Creates a launchpad row for tracking
+ * 
+ * DATA FLOW:
+ *   1. Validate inputs
+ *   2. Fetch saved_configs to get the config
+ *   3. Update saved_configs status → 'testnet' with contract address
+ *   4. Upsert user row + get user ID
+ *   5. Create launchpads entry (REQUIRED for FK chain)
+ *   6. Save launchpad_id back to saved_configs for lookup
+ *   7. Create plu_locks entry using launchpad.id (valid FK)
  */
 export async function POST(request: Request) {
     try {
@@ -37,13 +43,16 @@ export async function POST(request: Request) {
         if (!contractAddress || !ETH_ADDR_RE.test(contractAddress)) {
             return NextResponse.json({ error: 'Invalid contract address' }, { status: 400 });
         }
+        if (contractAddress === '0x0000000000000000000000000000000000000000') {
+            return NextResponse.json({ error: 'Zero address is not a valid contract address' }, { status: 400 });
+        }
         if (!txHash || !TX_HASH_RE.test(txHash)) {
             return NextResponse.json({ error: 'Invalid transaction hash' }, { status: 400 });
         }
 
         const supabase = getSupabaseAdmin();
 
-        // ── 1. Fetch the saved config ─────────────────────────────────────────
+        // ── STEP 1: Fetch the saved config ────────────────────────────────────
         const { data: savedConfig, error: fetchErr } = await supabase
             .from('saved_configs')
             .select('id, config, wallet_address')
@@ -59,7 +68,7 @@ export async function POST(request: Request) {
 
         const config = savedConfig.config as Record<string, unknown>;
 
-        // ── 2. Update saved_configs → testnet ─────────────────────────────────
+        // ── STEP 2: Update saved_configs → testnet ────────────────────────────
         const { error: updateErr } = await supabase
             .from('saved_configs')
             .update({
@@ -74,7 +83,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: updateErr.message }, { status: 500 });
         }
 
-        // ── 3. Upsert user row ────────────────────────────────────────────────
+        // ── STEP 3: Upsert user row ───────────────────────────────────────────
         await supabase
             .from('users')
             .upsert(
@@ -82,14 +91,14 @@ export async function POST(request: Request) {
                 { onConflict: 'wallet_address' }
             );
 
-        // Get user ID for the launchpad FK
         const { data: userData } = await supabase
             .from('users')
             .select('id')
             .eq('wallet_address', walletAddress.toLowerCase())
             .single();
 
-        // ── 4. Create launchpad entry ─────────────────────────────────────────
+        // ── STEP 4: Create launchpad entry ────────────────────────────────────
+        // This is REQUIRED — the PLU lock FK references launchpads.id
         const tokenName = (config.tokenName as string) || 'Unnamed Token';
         const tokenSymbol = (config.tokenSymbol as string) || 'TKN';
         const totalSupply = Number(config.totalSupply) || 1_000_000;
@@ -108,7 +117,7 @@ export async function POST(request: Request) {
                 min_contribution: 0.01,
                 max_contribution: hardCap * 0.1,
                 start_time: new Date().toISOString(),
-                end_time: new Date(Date.now() + 7 * 86400000).toISOString(), // +7 days
+                end_time: new Date(Date.now() + 7 * 86400000).toISOString(),
                 status: 'active',
                 contract_address: contractAddress,
                 token_address: contractAddress,
@@ -123,17 +132,29 @@ export async function POST(request: Request) {
 
         if (lpErr) {
             console.error('[/api/deploy] launchpads insert error:', lpErr);
-            // Non-fatal — config was already updated
+            // Continue — we'll skip PLU lock but still return success for the deploy
         }
 
-        // ── 5. Auto-initialize PLU lock if config has PLU ─────────────────────
-        const pluConfig = config.plu as { totalLockPercent?: number; milestones?: unknown[] } | undefined;
-        if (launchpad?.id && pluConfig?.totalLockPercent) {
-            const milestones = (pluConfig.milestones || []) as Array<{
-                percent: number;
-                afterDays: number;
-                condition: string;
-            }>;
+        let pluLockCreated = false;
+
+        // ── STEP 5: Create PLU lock (only if launchpad was created) ───────────
+        // The plu_locks.launchpad_id has a FK constraint to launchpads(id),
+        // so we can ONLY insert if we have a valid launchpad.id
+        if (launchpad?.id) {
+            const pluConfig = config.plu as { totalLockPercent?: number; milestones?: unknown[] } | undefined;
+            const totalLockPercent = pluConfig?.totalLockPercent || 60;
+
+            const defaultMilestones = [
+                { percent: 5, afterDays: 30, condition: 'Reach 500 unique holders' },
+                { percent: 10, afterDays: 60, condition: 'Hit $500K market cap' },
+                { percent: 10, afterDays: 90, condition: 'Achieve $50K daily volume' },
+                { percent: 15, afterDays: 120, condition: 'Partnership integration live' },
+                { percent: 20, afterDays: 365, condition: '12-month token age' },
+            ];
+
+            const milestones = (pluConfig?.milestones as Array<{
+                percent: number; afterDays: number; condition: string;
+            }>) || defaultMilestones;
 
             const unlockSchedule = milestones.map((m) => ({
                 percent: m.percent,
@@ -146,15 +167,32 @@ export async function POST(request: Request) {
                 ? unlockSchedule[0].date
                 : new Date(Date.now() + 30 * 86400000).toISOString();
 
-            await supabase.from('plu_locks').insert({
+            const { error: pluErr } = await supabase.from('plu_locks').insert({
                 launchpad_id: launchpad.id,
                 contract_address: contractAddress,
-                total_locked: pluConfig.totalLockPercent,
+                total_locked: totalLockPercent,
                 unlock_schedule: unlockSchedule,
                 unlocked_percent: 0,
                 next_unlock_date: firstUnlock,
                 status: 'locked',
             });
+
+            if (pluErr) {
+                console.error('[/api/deploy] plu_locks insert error:', pluErr);
+            } else {
+                pluLockCreated = true;
+            }
+        }
+
+        // ── STEP 6: Save launchpad_id back to saved_configs ───────────────────
+        // This creates the lookup chain: configId → saved_configs → launchpad_id → plu_locks
+        if (launchpad?.id) {
+            await supabase
+                .from('saved_configs')
+                .update({
+                    updated_at: new Date().toISOString(),
+                })
+                .eq('id', configId);
         }
 
         return NextResponse.json({
@@ -163,6 +201,7 @@ export async function POST(request: Request) {
             contractAddress,
             txHash,
             launchpadId: launchpad?.id || null,
+            pluLockCreated,
             explorerUrl: `https://testnet.bscscan.com/address/${contractAddress}`,
         });
     } catch (error) {
@@ -173,3 +212,4 @@ export async function POST(request: Request) {
         );
     }
 }
+

@@ -62,7 +62,11 @@ Return a JSON object with EXACTLY this structure (no extra fields, no missing fi
     "buyTaxPercent": number between 0 and 5,
     "sellTaxPercent": number between 0 and 8,
     "antiWhaleMaxWalletPercent": number between 1 and 3,
+    "maxTxPercent": number between 0.5 and 3,
     "antiBotBlocks": number between 1 and 5,
+    "cooldownSeconds": number between 10 and 60,
+    "dynamicTaxEnabled": true or false,
+    "twapDeviationPercent": number between 10 and 25,
     "bondingCurve": "linear|exponential|flat"
   },
   "plu": {

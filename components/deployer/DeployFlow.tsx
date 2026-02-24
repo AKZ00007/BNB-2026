@@ -8,6 +8,7 @@ import {
     useWriteContract,
     useWaitForTransactionReceipt,
 } from 'wagmi';
+import { decodeEventLog } from 'viem';
 import { AlertTriangle, CheckCircle2, ExternalLink, Loader2, Rocket, Wallet, Sparkles } from 'lucide-react';
 import type { TokenConfig } from '@/types/config';
 import { GUARDIAN_FACTORY_ABI, GUARDIAN_FACTORY_ADDRESS } from '@/lib/contracts/GuardianFactory';
@@ -57,15 +58,35 @@ export function DeployFlow({ configId, config, onDeployed }: DeployFlowProps) {
             // Actually, `TokenCreated` is emitted by the factory. Topic 1 is `indexed tokenAddress`.
 
             let deployedAddr = '';
+
             if (r.logs && r.logs.length > 0) {
-                // The TokenCreated event has `tokenAddress` as the first indexed parameter (topic 1)
-                const tokenCreatedLog = r.logs.find((log: any) => log.topics.length >= 2);
-                if (tokenCreatedLog && tokenCreatedLog.topics[1]) {
-                    // Convert 32-byte topic to 20-byte address
-                    deployedAddr = '0x' + tokenCreatedLog.topics[1].slice(26);
+                // Find and decode the TokenCreated event using robust Viem methods
+                for (const log of r.logs) {
+                    try {
+                        if (log.address.toLowerCase() === GUARDIAN_FACTORY_ADDRESS.toLowerCase()) {
+                            const decoded = decodeEventLog({
+                                abi: GUARDIAN_FACTORY_ABI,
+                                data: log.data,
+                                topics: log.topics,
+                            });
+
+                            // Check if event is 'TokenCreated'
+                            if (decoded.eventName === 'TokenCreated' && decoded.args) {
+                                // @ts-ignore - we know args has tokenAddress
+                                deployedAddr = decoded.args.tokenAddress as string;
+                                break;
+                            }
+                        }
+                    } catch (err) {
+                        // ignore logs that don't match or fail to decode
+                    }
                 }
             }
-            if (!deployedAddr) deployedAddr = r.to || '';
+
+            // Extreme fallback if ABI decoder fails (e.g. proxy deployment or internal tx)
+            if (!deployedAddr || deployedAddr === '0x' || deployedAddr === '0x0000000000000000000000000000000000000000') {
+                deployedAddr = r.to || '';
+            }
 
             await fetch('/api/deploy', {
                 method: 'POST',
@@ -110,11 +131,11 @@ export function DeployFlow({ configId, config, onDeployed }: DeployFlowProps) {
                     config.tokenName,
                     config.tokenSymbol,
                     ethers.parseUnits(config.totalSupply.toString(), 18), // total supply in wei
-                    BigInt(config.amm.antiWhaleMaxWalletPercent || 2),          // max wallet %
-                    BigInt(config.amm.antiBotBlocks || 3),                                           // anti-bot blocks
-                    BigInt((config.amm.buyTaxPercent || 0) * 100),     // buy tax bps (e.g. 5% -> 500)
-                    BigInt((config.amm.sellTaxPercent || 0) * 100),    // sell tax bps
-                    BigInt(60),                                          // sell cooldown (seconds)
+                    BigInt(Math.round(config.amm.antiWhaleMaxWalletPercent || 2)),                   // max wallet %
+                    BigInt(Math.round(config.amm.antiBotBlocks || 3)),                               // anti-bot blocks
+                    BigInt(Math.round((config.amm.buyTaxPercent || 0) * 100)),                       // buy tax bps (e.g. 5% -> 500)
+                    BigInt(Math.round((config.amm.sellTaxPercent || 0) * 100)),                      // sell tax bps
+                    BigInt(60),                                                                      // sell cooldown (seconds)
                     address || '0x0000000000000000000000000000000000000000' // tax receiver
                 ],
             });

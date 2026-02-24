@@ -11,7 +11,7 @@ import { LiquidityFlow } from '@/components/deployer/LiquidityFlow';
 import { ExportButton } from '@/components/dashboard/ExportButton';
 import {
     ArrowLeft, Shield, Loader2, AlertTriangle,
-    Coins, Percent, TrendingUp, Droplets
+    Coins, Percent, TrendingUp, Droplets, CheckCircle2, Rocket, Droplet
 } from 'lucide-react';
 import type { TokenConfig } from '@/types/config';
 
@@ -21,6 +21,12 @@ interface ConfigRow {
     status: 'saved' | 'testnet' | 'mainnet';
     testnet_address?: string;
     created_at: string;
+}
+
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+
+function isValidContractAddress(addr?: string): boolean {
+    return !!addr && addr !== ZERO_ADDRESS && addr.length === 42 && addr.startsWith('0x');
 }
 
 function StatPill({ label, value, icon: Icon }: { label: string; value: string; icon: any }) {
@@ -130,8 +136,12 @@ export default function ConfigDetailPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-                                    <h2 className="text-lg font-semibold text-gray-900">
-                                        {row.status === 'testnet' ? '✅ Deployed to Testnet' : '🚀 Deploy to BSC Testnet'}
+                                    <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                                        {row.status === 'testnet' && isValidContractAddress(row.testnet_address) ? (
+                                            <><CheckCircle2 className="w-5 h-5 text-success" /> Deployed to Testnet</>
+                                        ) : (
+                                            <><Rocket className="w-5 h-5 text-gold" /> Deploy to BSC Testnet</>
+                                        )}
                                     </h2>
                                     <Link
                                         href={`/dashboard/${id}/demo`}
@@ -140,7 +150,7 @@ export default function ConfigDetailPage() {
                                         Launch Interactive Demo
                                     </Link>
                                 </div>
-                                {row.status === 'testnet' && row.testnet_address ? (
+                                {row.status === 'testnet' && isValidContractAddress(row.testnet_address) ? (
                                     <div className="glass-card-prominent rounded-2xl p-5 text-sm">
                                         <p className="text-gray-600 mb-2">Contract Address:</p>
                                         <a
@@ -162,10 +172,10 @@ export default function ConfigDetailPage() {
                             </div>
 
                             {/* PancakeSwap Liquidity — only shows after deploy */}
-                            {row.status === 'testnet' && row.testnet_address && (
+                            {row.status === 'testnet' && isValidContractAddress(row.testnet_address) && (
                                 <div>
-                                    <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                                        💧 Add PancakeSwap Liquidity
+                                    <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                                        <Droplet className="w-5 h-5 text-[#00CCFF]" /> Add PancakeSwap Liquidity
                                     </h2>
                                     <LiquidityFlow
                                         contractAddress={row.testnet_address as `0x${string}`}

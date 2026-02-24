@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTheme } from 'next-themes';
-import { Lock, Unlock, Hourglass, CheckCircle2, BarChart2, Target, PieChart as PieChartIcon, Calendar } from 'lucide-react';
+import { useAccount } from 'wagmi';
+import { Lock, Unlock, Hourglass, CheckCircle2, BarChart2, Target, PieChart as PieChartIcon, Calendar, Shield, Coins, Search, Wallet } from 'lucide-react';
 import {
     BarChart,
     Bar,
@@ -46,6 +47,7 @@ const UNLOCK_SCHEDULE = [
 
 export default function PLUPage() {
     const { resolvedTheme } = useTheme();
+    const { address, isConnected } = useAccount();
     const [mounted, setMounted] = useState(false);
     useEffect(() => setMounted(true), []);
     const isDark = mounted ? resolvedTheme === 'dark' : false;
@@ -56,12 +58,39 @@ export default function PLUPage() {
     const [realStatus, setRealStatus] = useState<any>(null);
     const [errorMsg, setErrorMsg] = useState('');
 
-    const handleSearch = async () => {
-        if (!searchId) return;
+    // Auto-fetch user's deployed tokens
+    const [deployedTokens, setDeployedTokens] = useState<any[]>([]);
+    const [tokensLoading, setTokensLoading] = useState(false);
+    const [selectedToken, setSelectedToken] = useState<any>(null);
+
+    useEffect(() => {
+        if (!isConnected || !address) return;
+        setTokensLoading(true);
+        fetch(`/api/config?wallet=${address}`)
+            .then(r => r.json())
+            .then(d => {
+                if (d.success && d.configs) {
+                    setDeployedTokens(d.configs);
+                }
+            })
+            .catch(() => { })
+            .finally(() => setTokensLoading(false));
+    }, [address, isConnected]);
+
+    const handleSearch = async (overrideId?: string, overrideAddr?: string) => {
+        const id = overrideId || searchId;
+        const addr = overrideAddr || '';
+        if (!id && !addr) return;
         setLoading(true);
         setErrorMsg('');
+        setRealStatus(null);
         try {
-            const r = await fetch(`/api/plu/status?launchpadId=${searchId}`);
+            // Build query params — use all available identifiers for max lookup reliability
+            const params = new URLSearchParams();
+            if (id) params.set('configId', id);
+            if (addr) params.set('contractAddress', addr);
+
+            const r = await fetch(`/api/plu/status?${params.toString()}`);
             const d = await r.json();
             if (d.success) setRealStatus(d);
             else setErrorMsg(d.error || 'PLU lock not found.');
@@ -71,10 +100,93 @@ export default function PLUPage() {
         setLoading(false);
     };
 
-    // Use simulated mock or real data
-    const totalLockPercent = realStatus ? 100 : 60;
-    const totalUnlocked = realStatus ? realStatus.lock.unlockedPercent : PLU_MILESTONES.filter((m) => m.status === 'completed').reduce((s, m) => s + m.percent, 0);
-    const remainingLocked = totalLockPercent - totalUnlocked;
+    const handleSelectToken = (token: any) => {
+        setSelectedToken(token);
+        setErrorMsg('');
+        setRealStatus(null);
+        if (token.id) {
+            setSearchId(token.id);
+        }
+        // Auto-trigger search with both configId and contractAddress
+        handleSearch(token.id, token.testnet_address || '');
+    };
+
+    // ── Dynamic Data Calculation ──────────────────────────────────────────
+
+    // 1. Compute Milestones
+    const displayMilestones = useMemo(() => {
+        if (!realStatus?.schedule || realStatus.schedule.length === 0) return PLU_MILESTONES;
+
+        const now = new Date().getTime();
+        return realStatus.schedule.map((m: any, i: number) => {
+            const milestoneTime = new Date(m.date).getTime();
+            const createdTime = new Date(realStatus.lock.createdAt || now).getTime();
+            const afterDays = Math.round((milestoneTime - createdTime) / 86400000);
+
+            let status = 'pending';
+            let completedDate = null;
+
+            if (milestoneTime <= now) {
+                status = 'completed';
+                completedDate = new Date(m.date).toISOString().split('T')[0];
+            } else if (i === 0 || new Date(realStatus.schedule[i - 1].date).getTime() <= now) {
+                // This is the next active milestone
+                status = 'active';
+            }
+
+            return {
+                id: i + 1,
+                condition: m.condition || `Milestone ${i + 1}`,
+                percent: m.percent,
+                afterDays: Math.max(0, afterDays),
+                status: status as 'completed' | 'active' | 'pending',
+                completedDate
+            };
+        });
+    }, [realStatus]);
+
+    // 2. Compute Lock Stats
+    const totalLockPercent = realStatus ? realStatus.lock.totalLocked : 60;
+    const totalUnlocked = realStatus
+        ? realStatus.lock.unlockedPercent
+        : displayMilestones.filter((m) => m.status === 'completed').reduce((s, m) => s + m.percent, 0);
+    const textRemainingLocked = totalLockPercent - totalUnlocked;
+    const remainingToUnlockChart = 100 - totalUnlocked; // for circulating math
+
+    // 3. Compute Pie Chart Distribution
+    const displayLockDist = useMemo(() => {
+        if (!realStatus) return LOCK_DISTRIBUTION;
+
+        const activeMilestone = displayMilestones.find(m => m.status === 'active')?.percent || 0;
+        const pendingValue = textRemainingLocked - activeMilestone;
+        const circulating = 100 - totalLockPercent;
+
+        return [
+            { name: 'Unlocked', value: totalUnlocked, color: '#4ade80' },
+            { name: 'Active Milestone', value: activeMilestone, color: '#F0B90B' },
+            { name: 'Pending', value: pendingValue, color: '#64748b' },
+            { name: 'Circulating', value: circulating, color: '#a78bfa' },
+        ].filter(d => d.value > 0);
+    }, [realStatus, displayMilestones, totalUnlocked, textRemainingLocked, totalLockPercent]);
+
+    // 4. Compute Unlock Schedule (Bar Chart)
+    const displayUnlockSchedule = useMemo(() => {
+        if (!realStatus?.schedule || realStatus.schedule.length === 0) return UNLOCK_SCHEDULE;
+
+        let cumulative = 0;
+        return realStatus.schedule.map((m: any, i: number) => {
+            cumulative += m.percent;
+            const createdTime = new Date(realStatus.lock.createdAt).getTime();
+            const milestoneTime = new Date(m.date).getTime();
+            const months = Math.max(1, Math.round((milestoneTime - createdTime) / (30 * 86400000)));
+
+            return {
+                month: `M${months}`,
+                unlocked: cumulative,
+                locked: totalLockPercent - cumulative
+            };
+        });
+    }, [realStatus, totalLockPercent]);
 
     return (
         <main className="min-h-screen bg-[#FAFAFA] dark:bg-gray-950 text-gray-900 dark:text-gray-100 overflow-hidden relative transition-colors duration-300">
@@ -103,22 +215,84 @@ export default function PLUPage() {
                         </p>
                     </div>
 
+                    {/* Your Deployed Tokens */}
+                    {mounted && isConnected && (
+                        <div className="mb-8">
+                            <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-3 flex items-center gap-2 transition-colors">
+                                <Wallet className="w-4 h-4" /> Your Deployed Tokens
+                            </h3>
+                            {tokensLoading ? (
+                                <div className="text-sm text-gray-400 text-center py-6">Loading your tokens...</div>
+                            ) : deployedTokens.length === 0 ? (
+                                <div className="text-sm text-gray-400 text-center py-6 rounded-2xl border border-dashed border-gray-200 dark:border-gray-800">
+                                    No deployed tokens found. Deploy a token first from the <a href="/create" className="text-cyan-400 underline">Token Wizard</a>.
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    {deployedTokens.map((token: any) => (
+                                        <button
+                                            key={token.id}
+                                            onClick={() => handleSelectToken(token)}
+                                            className={`text-left p-4 rounded-2xl border transition-all hover:scale-[1.02] active:scale-[0.98] ${selectedToken?.id === token.id
+                                                ? 'border-cyan-400 bg-cyan-500/5 ring-1 ring-cyan-400/30'
+                                                : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] hover:border-gray-300 dark:hover:border-gray-700'
+                                                }`}
+                                        >
+                                            <div className="flex items-center gap-3 mb-2">
+                                                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400/20 to-blue-400/20 flex items-center justify-center">
+                                                    <Coins className="w-4 h-4 text-cyan-400" />
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <div className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate transition-colors">
+                                                        {token.config?.tokenName || 'Unnamed Token'}
+                                                    </div>
+                                                    <div className="text-xs text-gray-400 font-mono">
+                                                        ${token.config?.tokenSymbol || 'TKN'}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center justify-between text-xs">
+                                                <span className={`px-2 py-0.5 rounded-full font-medium ${token.status === 'testnet'
+                                                    ? 'bg-green-400/10 text-green-400 border border-green-400/20'
+                                                    : 'bg-gray-100 dark:bg-gray-800 text-gray-500 border border-gray-200 dark:border-gray-700'
+                                                    }`}>
+                                                    {token.status === 'testnet' ? 'Deployed' : 'Saved'}
+                                                </span>
+                                                <span className="text-gray-400 font-mono">
+                                                    {token.testnet_address
+                                                        ? `${token.testnet_address.slice(0, 6)}...${token.testnet_address.slice(-4)}`
+                                                        : 'Not deployed'}
+                                                </span>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
                     {/* Search Bar */}
-                    <div className="max-w-md mx-auto mb-10 flex gap-2">
-                        <input
-                            type="text"
-                            placeholder="Enter Launchpad ID to manage..."
-                            value={searchId}
-                            onChange={(e) => setSearchId(e.target.value)}
-                            className="flex-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
-                        />
-                        <button
-                            onClick={handleSearch}
-                            disabled={loading}
-                            className="px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
-                        >
-                            {loading ? 'Searching...' : 'Manage'}
-                        </button>
+                    <div className="max-w-md mx-auto mb-10">
+                        <p className="text-xs text-gray-400 text-center mb-2">Or search by Config ID</p>
+                        <div className="flex gap-2">
+                            <div className="relative flex-1">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                <input
+                                    type="text"
+                                    placeholder="Paste Config ID..."
+                                    value={searchId}
+                                    onChange={(e) => setSearchId(e.target.value)}
+                                    className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                                />
+                            </div>
+                            <button
+                                onClick={() => handleSearch()}
+                                disabled={loading}
+                                className="px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+                            >
+                                {loading ? 'Loading...' : 'Search'}
+                            </button>
+                        </div>
                     </div>
 
                     {errorMsg && (
@@ -157,9 +331,9 @@ export default function PLUPage() {
                         {[
                             { label: 'Total Locked', value: `${totalLockPercent}%`, icon: <Lock className="w-5 h-5" />, color: 'text-cyan-400' },
                             { label: 'Unlocked', value: `${totalUnlocked}%`, icon: <Unlock className="w-5 h-5" />, color: 'text-green-400' },
-                            { label: 'Remaining', value: `${remainingLocked}%`, icon: <Hourglass className="w-5 h-5" />, color: 'text-gold' },
-                            { label: 'Milestones Met', value: `${PLU_MILESTONES.filter((m) => m.status === 'completed').length}/${PLU_MILESTONES.length}`, icon: <CheckCircle2 className="w-5 h-5" />, color: 'text-purple' },
-                        ].map((stat, i) => (
+                            { label: 'Remaining', value: `${textRemainingLocked}%`, icon: <Hourglass className="w-5 h-5" />, color: 'text-gold' },
+                            { label: 'Milestones Met', value: `${displayMilestones.filter((m: any) => m.status === 'completed').length}/${displayMilestones.length}`, icon: <CheckCircle2 className="w-5 h-5" />, color: 'text-purple' },
+                        ].map((stat: any, i: number) => (
                             <div key={i} className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-5 flex items-center gap-4 transition-colors">
                                 <div className={`w-12 h-12 rounded-xl bg-gray-50 dark:bg-gray-800/50 flex items-center justify-center ${stat.color} transition-colors`}>
                                     {stat.icon}
@@ -182,7 +356,7 @@ export default function PLUPage() {
                             />
                             <div
                                 className="h-full bg-gold/30 transition-all duration-700"
-                                style={{ width: `${(10 / totalLockPercent) * 100}%` }}
+                                style={{ width: `${((displayMilestones.find((m: any) => m.status === 'active')?.percent || 0) / totalLockPercent) * 100}%` }}
                             />
                         </div>
                         <div className="flex justify-between mt-2 text-xs text-gray-400">
@@ -197,15 +371,15 @@ export default function PLUPage() {
                         <div className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-8 transition-colors">
                             <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-6 transition-colors flex items-center gap-2"><Target className="w-4 h-4 text-red-500" /> Milestone Tracker</h3>
                             <div className="space-y-1">
-                                {PLU_MILESTONES.map((m, i) => (
+                                {displayMilestones.map((m: any, i: number) => (
                                     <div
                                         key={m.id}
-                                        className={`relative pl-10 pb-6 cursor-pointer group ${i === PLU_MILESTONES.length - 1 ? '' : ''
+                                        className={`relative pl-10 pb-6 cursor-pointer group ${i === displayMilestones.length - 1 ? '' : ''
                                             }`}
                                         onClick={() => setSelectedMilestone(selectedMilestone === m.id ? null : m.id)}
                                     >
                                         {/* Vertical line */}
-                                        {i < PLU_MILESTONES.length - 1 && (
+                                        {i < displayMilestones.length - 1 && (
                                             <div className={`absolute left-[14px] top-8 bottom-0 w-px transition-colors ${m.status === 'completed' ? 'bg-green-400/30' : 'bg-gray-200 dark:bg-gray-800'
                                                 }`} />
                                         )}
@@ -255,7 +429,7 @@ export default function PLUPage() {
                             <ResponsiveContainer width="100%" height={220}>
                                 <PieChart>
                                     <Pie
-                                        data={LOCK_DISTRIBUTION}
+                                        data={displayLockDist}
                                         cx="50%"
                                         cy="50%"
                                         innerRadius={55}
@@ -263,7 +437,7 @@ export default function PLUPage() {
                                         paddingAngle={3}
                                         dataKey="value"
                                     >
-                                        {LOCK_DISTRIBUTION.map((entry, i) => (
+                                        {displayLockDist.map((entry: any, i: number) => (
                                             <Cell key={i} fill={entry.color} />
                                         ))}
                                     </Pie>
@@ -280,7 +454,7 @@ export default function PLUPage() {
                                 </PieChart>
                             </ResponsiveContainer>
                             <div className="space-y-2 mt-3">
-                                {LOCK_DISTRIBUTION.map((d) => (
+                                {displayLockDist.map((d: any) => (
                                     <div key={d.name} className="flex items-center justify-between text-xs">
                                         <span className="flex items-center gap-2">
                                             <span className="w-2.5 h-2.5 rounded-full" style={{ background: d.color }} />
@@ -301,7 +475,7 @@ export default function PLUPage() {
                             </div>
                         </div>
                         <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={UNLOCK_SCHEDULE}>
+                            <BarChart data={displayUnlockSchedule}>
                                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} />
                                 <XAxis dataKey="month" stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"} fontSize={12} />
                                 <YAxis stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"} fontSize={11} tickFormatter={(v) => `${v}%`} />
@@ -324,8 +498,8 @@ export default function PLUPage() {
                     {/* PLU Trust Score */}
                     <div className="rounded-2xl border border-gold/20 bg-gold/5 p-6 transition-colors">
                         <div className="flex items-start gap-4">
-                            <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-2xl flex-shrink-0">
-                                🛡️
+                            <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center flex-shrink-0">
+                                <Shield className="w-6 h-6 text-gold" />
                             </div>
                             <div>
                                 <h4 className="text-sm font-semibold text-gold mb-2">PLU Trust Score: 8.5 / 10</h4>

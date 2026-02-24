@@ -44,10 +44,12 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-verify": "^3.0.10",
     "@openzeppelin/contracts": "^5.4.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.3.1",
     "eslint": "^8",
     "eslint-config-next": "^15.1.6",
     "hardhat": "^3.1.9",

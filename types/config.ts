@@ -23,7 +23,11 @@ export interface AMMConfig {
     buyTaxPercent: number;
     sellTaxPercent: number;
     antiWhaleMaxWalletPercent: number; // max wallet % of supply
+    maxTxPercent: number;              // max single TX % of supply
     antiBotBlocks: number; // blocks to restrict bot sniping at launch
+    cooldownSeconds: number;           // min seconds between trades per wallet
+    dynamicTaxEnabled: boolean;        // escalating sell tax under pressure
+    twapDeviationPercent: number;      // max allowed TWAP price deviation %
     bondingCurve: 'linear' | 'exponential' | 'flat';
 }
 

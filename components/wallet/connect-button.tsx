@@ -1,14 +1,29 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { Button } from '@/components/ui/button'
 import { Loader2, Wallet } from 'lucide-react'
 import { injected } from 'wagmi/connectors'
 
 export function ConnectWallet() {
+    const [mounted, setMounted] = useState(false)
     const { address, isConnected } = useAccount()
     const { connect, isPending } = useConnect()
     const { disconnect } = useDisconnect()
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    if (!mounted) {
+        return (
+            <Button disabled className="bg-gold/50 text-bg-base font-semibold gap-2 transition-all">
+                <Wallet className="w-4 h-4" />
+                Connect Wallet
+            </Button>
+        )
+    }
 
     if (isConnected) {
         return (

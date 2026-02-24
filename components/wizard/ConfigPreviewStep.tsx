@@ -220,13 +220,31 @@ export function ConfigPreviewStep({ config: initialConfig, onSave, onBack }: Con
                                         <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${config.amm.antiBotBlocks > 0 ? 'bg-[#10B981]/20' : 'bg-[#EF4444]/20'}`}>
                                             {config.amm.antiBotBlocks > 0 ? <CheckIcon className="w-3 h-3 text-[#10B981]" /> : <XIcon className="w-3 h-3 text-[#EF4444]" />}
                                         </div>
-                                        <span className="text-[13px] text-slate-600 dark:text-gray-300">Anti-Sniper Bot Protection</span>
+                                        <span className="text-[13px] text-slate-600 dark:text-gray-300">Anti-Bot: {config.amm.antiBotBlocks} block delay</span>
                                     </li>
-                                    <li className="flex items-center gap-3 flex-wrap">
+                                    <li className="flex items-center gap-3">
                                         <div className="w-5 h-5 rounded-full bg-[#10B981]/20 flex items-center justify-center shrink-0">
                                             <CheckIcon className="w-3 h-3 text-[#10B981]" />
                                         </div>
-                                        <span className="text-[13px] text-slate-600 dark:text-gray-300">Max Tx Limit: {config.amm.antiWhaleMaxWalletPercent}%</span>
+                                        <span className="text-[13px] text-slate-600 dark:text-gray-300">Max Wallet: {config.amm.antiWhaleMaxWalletPercent}% | Max TX: {config.amm.maxTxPercent || 1.5}%</span>
+                                    </li>
+                                    <li className="flex items-center gap-3">
+                                        <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${(config.amm.cooldownSeconds || 0) > 0 ? 'bg-[#10B981]/20' : 'bg-[#EF4444]/20'}`}>
+                                            {(config.amm.cooldownSeconds || 0) > 0 ? <CheckIcon className="w-3 h-3 text-[#10B981]" /> : <XIcon className="w-3 h-3 text-[#EF4444]" />}
+                                        </div>
+                                        <span className="text-[13px] text-slate-600 dark:text-gray-300">Trade Cooldown: {config.amm.cooldownSeconds || 0}s</span>
+                                    </li>
+                                    <li className="flex items-center gap-3">
+                                        <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${config.amm.dynamicTaxEnabled ? 'bg-[#10B981]/20' : 'bg-slate-200 dark:bg-gray-700'}`}>
+                                            {config.amm.dynamicTaxEnabled ? <CheckIcon className="w-3 h-3 text-[#10B981]" /> : <XIcon className="w-3 h-3 text-slate-400" />}
+                                        </div>
+                                        <span className="text-[13px] text-slate-600 dark:text-gray-300">Dynamic Tax: {config.amm.dynamicTaxEnabled ? 'Enabled' : 'Disabled'}</span>
+                                    </li>
+                                    <li className="flex items-center gap-3">
+                                        <div className="w-5 h-5 rounded-full bg-[#10B981]/20 flex items-center justify-center shrink-0">
+                                            <CheckIcon className="w-3 h-3 text-[#10B981]" />
+                                        </div>
+                                        <span className="text-[13px] text-slate-600 dark:text-gray-300">TWAP Guard: ±{config.amm.twapDeviationPercent || 15}% deviation limit</span>
                                     </li>
                                 </ul>
 
