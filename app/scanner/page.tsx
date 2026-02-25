@@ -4,8 +4,10 @@ import { useState } from 'react';
 import {
     Search, Shield, ShieldAlert, ShieldX, Loader2, AlertTriangle,
     CheckCircle2, XCircle, Info, ExternalLink, Clock, Activity,
-    Lock, Users, Code2, BarChart3,
+    Lock, Users, Code2, BarChart3, Zap, Terminal, Shuffle,
 } from 'lucide-react';
+import { readTokenInfo, parseRevertReason, EXECUTION_PROOF, type TokenInfo } from '@/lib/contracts/guardian-token';
+import { buildMetricsFromTokenInfo, computeGuardianScore } from '@/lib/guardian-score';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -111,6 +113,43 @@ export default function ScannerPage() {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<ScanResult | null>(null);
     const [error, setError] = useState('');
+    const [guardianInfo, setGuardianInfo] = useState<TokenInfo | null>(null);
+    const [guardianScore, setGuardianScore] = useState<ReturnType<typeof computeGuardianScore> | null>(null);
+    const [guardianLoading, setGuardianLoading] = useState(false);
+
+    async function fetchGuardianData(addr: string, isVerified: boolean) {
+        setGuardianLoading(true);
+        try {
+            const info = await readTokenInfo(addr);
+            setGuardianInfo(info);
+            const metrics = buildMetricsFromTokenInfo(info, isVerified);
+            setGuardianScore(computeGuardianScore(metrics));
+        } catch {
+            // Guardian data unavailable — non-guardian token, fail silently
+            setGuardianInfo(null);
+            setGuardianScore(null);
+        } finally {
+            setGuardianLoading(false);
+        }
+    }
+
+    async function loadRandomToken() {
+        try {
+            const res = await fetch('https://api.dexscreener.com/latest/dex/tokens/BSC');
+            const data = await res.json();
+            const pairs = data?.pairs ?? [];
+            if (pairs.length > 0) {
+                const random = pairs[Math.floor(Math.random() * pairs.length)];
+                const addr = random?.baseToken?.address;
+                if (addr) {
+                    setAddress(addr);
+                    setResult(null);
+                    setGuardianInfo(null);
+                    setGuardianScore(null);
+                }
+            }
+        } catch { /* silently ignore */ }
+    }
 
     async function handleScan() {
         const trimmed = address.trim();
@@ -124,6 +163,8 @@ export default function ScannerPage() {
         setLoading(true);
         setError('');
         setResult(null);
+        setGuardianInfo(null);
+        setGuardianScore(null);
 
         try {
             const res = await fetch('/api/scan', {
@@ -139,6 +180,8 @@ export default function ScannerPage() {
             }
 
             setResult(data as ScanResult);
+            // Fetch live on-chain guardian data in parallel (silent fail)
+            fetchGuardianData(trimmed, data.token?.verified ?? false);
         } catch (err) {
             setError((err as Error).message);
         } finally {
@@ -188,6 +231,14 @@ export default function ScannerPage() {
                                 disabled={loading}
                             />
                         </div>
+                        <button
+                            onClick={loadRandomToken}
+                            title="Try a random trending BSC token"
+                            className="px-4 py-3 rounded-xl text-sm font-semibold border border-cyan-400/30 text-cyan-400 hover:bg-cyan-400/10 transition-all flex items-center gap-2"
+                            disabled={loading}
+                        >
+                            <Shuffle className="w-4 h-4" /> Random
+                        </button>
                         <button
                             onClick={handleScan}
                             disabled={loading || !address.trim()}
@@ -261,6 +312,79 @@ export default function ScannerPage() {
                                 </div>
                             </div>
                         </div>
+
+                        {/* ── Guardian Safety Panel (live on-chain data) ── */}
+                        {(guardianInfo || guardianLoading) && (
+                            <div className="glass-card rounded-2xl p-5 border border-cyan-400/20">
+                                <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
+                                    <Shield className="w-4 h-4 text-cyan-400" />
+                                    Guardian Safety Panel
+                                    <span className="ml-auto text-xs text-cyan-400/60 flex items-center gap-1">
+                                        <Zap className="w-3 h-3" /> Live from BSC Node
+                                    </span>
+                                </h3>
+
+                                {guardianLoading && (
+                                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                                        <Loader2 className="w-3 h-3 animate-spin" /> Reading on-chain data…
+                                    </div>
+                                )}
+
+                                {guardianInfo && guardianScore && (
+                                    <>
+                                        {/* Score row */}
+                                        <div className="flex items-center gap-3 mb-4 p-3 rounded-xl bg-gray-50 dark:bg-gray-900/50">
+                                            <div className={`text-2xl font-bold ${guardianScore.score >= 90 ? 'text-green-400' :
+                                                    guardianScore.score >= 70 ? 'text-yellow-400' :
+                                                        guardianScore.score >= 50 ? 'text-orange-400' : 'text-red-400'
+                                                }`}>{guardianScore.score}<span className="text-sm text-gray-500">/100</span></div>
+                                            <div>
+                                                <div className="text-sm font-semibold">{guardianScore.tier.emoji} {guardianScore.tier.label}</div>
+                                                <div className="text-xs text-gray-500">Guardian Score · computed from live contract</div>
+                                            </div>
+                                        </div>
+
+                                        {/* Live stats grid */}
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
+                                            {[
+                                                { label: 'Buy Tax', value: `${Number(guardianInfo.buyTaxBps) / 100}%`, ok: guardianInfo.buyTaxBps <= 500n },
+                                                { label: 'Sell Tax', value: `${Number(guardianInfo.sellTaxBps) / 100}%`, ok: guardianInfo.sellTaxBps <= 1000n },
+                                                { label: 'Sell Cooldown', value: `${guardianInfo.sellCooldownSeconds}s`, ok: guardianInfo.sellCooldownSeconds > 0n },
+                                                { label: 'Anti-Whale', value: guardianInfo.maxWalletAmount < guardianInfo.totalSupply ? 'Active' : 'None', ok: guardianInfo.maxWalletAmount < guardianInfo.totalSupply },
+                                                { label: 'Verified', value: result.token.verified ? 'Yes ✓' : 'No', ok: result.token.verified },
+                                                { label: 'Data Source', value: 'eth_call', ok: true },
+                                            ].map(({ label, value, ok }) => (
+                                                <div key={label} className="p-2 rounded-lg bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800">
+                                                    <div className="text-xs text-gray-500">{label}</div>
+                                                    <div className={`text-sm font-semibold ${ok ? 'text-green-400' : 'text-red-400'}`}>{value}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {/* Execution Proof card (Gap 1) */}
+                                        <div className="p-3 rounded-xl bg-gray-900/80 border border-cyan-400/20 font-mono text-xs">
+                                            <div className="flex items-center gap-2 text-cyan-400 mb-2">
+                                                <Terminal className="w-3 h-3" />
+                                                <span className="font-semibold">How Guardian Works — Not a Scanner</span>
+                                            </div>
+                                            <div className="text-gray-400 space-y-1">
+                                                <div>Execution Source: <span className="text-green-400">{EXECUTION_PROOF.source}</span></div>
+                                                <div>Simulation Depth: <span className="text-green-400">{EXECUTION_PROOF.depth}</span></div>
+                                                <div>Call Stack:</div>
+                                                {EXECUTION_PROOF.callStack.map((s, i) => (
+                                                    <div key={i} className="pl-3 text-purple-300">{i > 0 ? '→ ' : '  '}{s}</div>
+                                                ))}
+                                                <div className="mt-2 pt-2 border-t border-gray-800 space-y-0.5">
+                                                    {EXECUTION_PROOF.guarantees.map((g, i) => (
+                                                        <div key={i} className="text-green-400">✔ {g}</div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        )}
 
                         {/* Flags */}
                         {result.flags.length > 0 && (
