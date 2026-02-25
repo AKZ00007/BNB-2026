@@ -149,7 +149,7 @@ export default function PLUPage() {
     const totalLockPercent = realStatus ? realStatus.lock.totalLocked : 60;
     const totalUnlocked = realStatus
         ? realStatus.lock.unlockedPercent
-        : displayMilestones.filter((m) => m.status === 'completed').reduce((s, m) => s + m.percent, 0);
+        : displayMilestones.filter((m: { status: string; percent: number }) => m.status === 'completed').reduce((s: number, m: { status: string; percent: number }) => s + m.percent, 0);
     const textRemainingLocked = totalLockPercent - totalUnlocked;
     const remainingToUnlockChart = 100 - totalUnlocked; // for circulating math
 
@@ -157,7 +157,7 @@ export default function PLUPage() {
     const displayLockDist = useMemo(() => {
         if (!realStatus) return LOCK_DISTRIBUTION;
 
-        const activeMilestone = displayMilestones.find(m => m.status === 'active')?.percent || 0;
+        const activeMilestone = displayMilestones.find((m: { status: string; percent: number }) => m.status === 'active')?.percent || 0;
         const pendingValue = textRemainingLocked - activeMilestone;
         const circulating = 100 - totalLockPercent;
 

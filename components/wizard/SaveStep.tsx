@@ -46,7 +46,7 @@ export function SaveStep({ config, onCreateAnother }: SaveStepProps) {
                 Launch Successful!
             </h1>
             <p className="text-slate-500 dark:text-gray-400 text-center mb-10 max-w-md transition-colors">
-                <strong className="text-slate-900 dark:text-white">{config.tokenName} ({config.ticker})</strong> is now deployed on the BNB Smart Chain Testnet.
+                <strong className="text-slate-900 dark:text-white">{config.tokenName} ({config.tokenSymbol})</strong> is now deployed on the BNB Smart Chain Testnet.
             </p>
 
             {/* Contract Address Box */}
