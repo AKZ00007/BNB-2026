@@ -77,7 +77,7 @@ const ATTACKS: {
 // ─── Component ─────────────────────────────────────────────────────────────────
 
 export default function LiveDemoPage() {
-    const [tokenAddress, setTokenAddress] = useState(GUARDIAN_TOKEN_ADDRESS);
+    const [tokenAddress, setTokenAddress] = useState<string>(GUARDIAN_TOKEN_ADDRESS);
     const [tokenInfo, setTokenInfo] = useState<TokenInfo | null>(null);
     const [tokenLoading, setTokenLoading] = useState(false);
     const [attacks, setAttacks] = useState<Record<AttackType, AttackState>>({
@@ -250,8 +250,8 @@ export default function LiveDemoPage() {
                                         {/* Result */}
                                         {state.result && !state.loading && (
                                             <div className={`flex items-start gap-2 p-3 rounded-xl text-sm ${state.result.blocked
-                                                    ? 'bg-red-500/10 border border-red-500/20 text-red-400'
-                                                    : 'bg-green-500/10 border border-green-500/20 text-green-400'
+                                                ? 'bg-red-500/10 border border-red-500/20 text-red-400'
+                                                : 'bg-green-500/10 border border-green-500/20 text-green-400'
                                                 }`}>
                                                 {state.result.blocked
                                                     ? <XCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />

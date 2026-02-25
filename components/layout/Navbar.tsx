@@ -105,8 +105,8 @@ export default function Navbar() {
                         </NavigationMenu.Item>
 
                         <NavigationMenu.Item>
-                            <Link href="/explorer" className="block text-[15px] font-medium text-gray-900 dark:text-gray-100 hover:text-primary transition-colors">
-                                Explorer
+                            <Link href="/docs" className="block text-[15px] font-medium text-gray-900 dark:text-gray-100 hover:text-primary transition-colors">
+                                Docs
                             </Link>
                         </NavigationMenu.Item>
                     </NavigationMenu.List>

@@ -261,8 +261,8 @@ export default function GrowthPage() {
                                         </linearGradient>
                                     </defs>
                                     <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} />
-                                    <XAxis dataKey="day" stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"} fontSize={10} interval={Math.floor(timeRange / 6)} />
-                                    <YAxis stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"} fontSize={10} tickFormatter={(v) => v.toFixed(4)} width={55} />
+                                    <XAxis dataKey="day" stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"} tick={{ fill: '#9ca3af', fontSize: 10 }} interval={Math.floor(timeRange / 6)} />
+                                    <YAxis stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"} tick={{ fill: '#9ca3af', fontSize: 10 }} tickFormatter={(v) => v.toFixed(4)} width={55} />
                                     <Tooltip
                                         contentStyle={{
                                             background: isDark ? 'rgba(15,15,30,0.95)' : 'rgba(255,255,255,0.95)',
@@ -284,8 +284,8 @@ export default function GrowthPage() {
                             <ResponsiveContainer width="100%" height={280}>
                                 <LineChart data={holderData}>
                                     <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} />
-                                    <XAxis dataKey="day" stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"} fontSize={10} interval={Math.floor(timeRange / 6)} />
-                                    <YAxis stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"} fontSize={10} width={45} />
+                                    <XAxis dataKey="day" stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"} tick={{ fill: '#9ca3af', fontSize: 10 }} interval={Math.floor(timeRange / 6)} />
+                                    <YAxis stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"} tick={{ fill: '#9ca3af', fontSize: 10 }} width={45} />
                                     <Tooltip
                                         contentStyle={{
                                             background: isDark ? 'rgba(15,15,30,0.95)' : 'rgba(255,255,255,0.95)',

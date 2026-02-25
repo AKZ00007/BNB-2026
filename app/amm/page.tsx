@@ -391,12 +391,12 @@ export default function AMMPage() {
                                         <XAxis
                                             dataKey="supply"
                                             stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"}
-                                            fontSize={11}
+                                            tick={{ fill: '#9ca3af', fontSize: 11 }}
                                             tickFormatter={(v) => `${v}M`}
                                         />
                                         <YAxis
                                             stroke={isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"}
-                                            fontSize={11}
+                                            tick={{ fill: '#9ca3af', fontSize: 11 }}
                                             tickFormatter={(v) => v.toFixed(4)}
                                             width={65}
                                         />
