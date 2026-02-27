@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Web3Provider } from "@/components/providers/web3-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { AuthProvider } from "@/components/providers/auth-provider";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import NextTopLoader from 'nextjs-toploader';
@@ -54,11 +55,13 @@ export default function RootLayout({
                     disableTransitionOnChange
                 >
                     <Web3Provider>
-                        <Navbar />
-                        <main className="min-h-screen pt-16">
-                            {children}
-                        </main>
-                        <Footer />
+                        <AuthProvider>
+                            <Navbar />
+                            <main className="min-h-screen pt-16">
+                                {children}
+                            </main>
+                            <Footer />
+                        </AuthProvider>
                     </Web3Provider>
                 </ThemeProvider>
             </body>

@@ -1,11 +1,14 @@
 'use client'
 import Link from 'next/link'
 import * as NavigationMenu from '@radix-ui/react-navigation-menu'
-import { ChevronDown, Zap, Shield, Sparkles, BarChart, Rocket, LayoutGrid, LineChart, FileText, Radio, ShieldCheck } from 'lucide-react'
+import { ChevronDown, Zap, Shield, Sparkles, BarChart, Rocket, LayoutGrid, LineChart, FileText, Radio, ShieldCheck, LogOut } from 'lucide-react'
 import { ConnectWallet } from '@/components/wallet/connect-button'
 import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler'
+import { useAuth } from '@/components/providers/auth-provider'
 
 export default function Navbar() {
+    const { user, displayName, signOut } = useAuth();
+
     return (
         <div className="fixed top-0 left-0 right-0 z-[100] bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 transition-colors duration-300">
             <div className="max-w-[1200px] mx-auto px-8 h-16 flex items-center justify-between">
@@ -119,9 +122,24 @@ export default function Navbar() {
                 {/* CTAs */}
                 <div className="flex items-center gap-3">
                     <AnimatedThemeToggler />
-                    <Link href="/login" className="border border-gray-200 dark:border-gray-800 rounded-full px-4 py-2 text-[14px] font-semibold text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors hidden sm:block">
-                        Login
-                    </Link>
+                    {user ? (
+                        <>
+                            <span className="text-[13px] text-gray-500 dark:text-gray-400 hidden sm:block max-w-[140px] truncate">
+                                {displayName || user.email || 'Connected'}
+                            </span>
+                            <button
+                                onClick={signOut}
+                                className="border border-gray-200 dark:border-gray-800 rounded-full px-4 py-2 text-[14px] font-semibold text-gray-900 dark:text-gray-100 hover:bg-red-50 hover:text-red-600 hover:border-red-200 dark:hover:bg-red-950/30 dark:hover:text-red-400 dark:hover:border-red-800 transition-colors hidden sm:flex items-center gap-2"
+                            >
+                                <LogOut className="w-3.5 h-3.5" />
+                                Sign Out
+                            </button>
+                        </>
+                    ) : (
+                        <Link href="/login" className="border border-gray-200 dark:border-gray-800 rounded-full px-4 py-2 text-[14px] font-semibold text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors hidden sm:block">
+                            Login
+                        </Link>
+                    )}
                     <div className="scale-90 sm:scale-100 origin-right">
                         <ConnectWallet />
                     </div>
