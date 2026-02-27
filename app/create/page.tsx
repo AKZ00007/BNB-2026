@@ -128,7 +128,7 @@ function CreateTokenInner() {
                 </div>
 
                 {/* Top/Center Workspace Container */}
-                <div className="relative z-10 w-full flex-1 flex flex-col pt-16 pb-12 px-8 min-h-0">
+                <div className="relative z-10 w-full flex-1 flex flex-col pt-8 sm:pt-16 pb-12 px-4 sm:px-8 min-h-0">
 
                     {/* Stepper only shows on Input and Load steps */}
                     {(step === 'input' || step === 'loading') && (

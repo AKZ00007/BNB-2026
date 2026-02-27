@@ -6,7 +6,7 @@ import { ConfigCard } from '@/components/dashboard/ConfigCard';
 import { Sparkles, Plus, Loader2, Search, Rocket } from 'lucide-react';
 import Link from 'next/link';
 import type { TokenConfig } from '@/types/config';
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+
 import { useAuth } from '@/components/providers/auth-provider';
 
 interface SavedConfig {
@@ -110,7 +110,7 @@ export default function DashboardPage() {
     }
 
     return (
-        <ProtectedRoute>
+        <>
             <main className="min-h-screen bg-[#FAFAFA] dark:bg-gray-950 text-gray-900 dark:text-gray-100 overflow-hidden relative transition-colors duration-300">
                 <div className="fixed inset-0 pointer-events-none z-0">
                     <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-gold/5 rounded-full blur-[120px] animate-pulse-slow" />
@@ -213,6 +213,6 @@ export default function DashboardPage() {
                     )}
                 </div>
             </main>
-        </ProtectedRoute>
+        </>
     );
 }

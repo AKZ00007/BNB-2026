@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import {
     Home, Search, Book, FolderOpen, Star, Users,
     MoreHorizontal, Gift, Zap, Edit2, ChevronDown, FileText, Bell,
-    PanelLeftClose, PanelLeftOpen
+    PanelLeftClose, PanelLeftOpen, X
 } from 'lucide-react';
 
 const RECENT_PROJECTS = [
@@ -20,6 +20,7 @@ const RECENT_PROJECTS = [
 export function WizardSidebar() {
     const pathname = usePathname();
     const [collapsed, setCollapsed] = useState(false);
+    const [mobileOpen, setMobileOpen] = useState(false);
 
     const mainNav = [
         { href: '/create', label: 'Home', icon: Home },
@@ -33,7 +34,7 @@ export function WizardSidebar() {
         { href: '/dashboard', label: 'Shared with me', icon: Users },
     ];
 
-    const renderNavItem = (item: any) => {
+    const renderNavItem = (item: any, closeMobile?: boolean) => {
         const Icon = item.icon;
         const isActive = pathname === item.href;
         return (
@@ -41,91 +42,100 @@ export function WizardSidebar() {
                 key={item.label}
                 href={item.href}
                 title={collapsed ? item.label : undefined}
-                className={`flex items-center ${collapsed ? 'justify-center' : ''} gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-colors ${isActive
+                onClick={closeMobile ? () => setMobileOpen(false) : undefined}
+                className={`flex items-center ${collapsed && !mobileOpen ? 'justify-center' : ''} gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-colors ${isActive
                     ? 'bg-slate-100 text-slate-900 dark:bg-[#1a1a1a] dark:text-white'
                     : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-gray-400 dark:hover:bg-[#1a1a1a] dark:hover:text-white'
                     }`}
             >
                 <Icon strokeWidth={1.5} className="w-[18px] h-[18px] flex-shrink-0" />
-                {!collapsed && item.label}
+                {(!collapsed || mobileOpen) && item.label}
             </Link>
         );
     };
 
-    return (
-        <aside
-            className={`hidden lg:flex flex-col h-full bg-white dark:bg-[#0c0c0c] border-r border-slate-200 dark:border-[#1F2937] text-slate-600 dark:text-gray-300 flex-shrink-0 z-20 transition-all duration-300 ease-in-out ${collapsed ? 'w-[60px]' : 'w-[260px]'
-                }`}
-        >
-            {/* Workspace Switcher + Collapse Toggle */}
+    const sidebarContent = (isMobile: boolean) => (
+        <>
+            {/* Workspace Switcher + Toggle */}
             <div className="p-3">
                 <div className="flex items-center justify-between">
-                    {!collapsed && (
-                        <button className="flex-1 flex items-center gap-3 p-2 hover:bg-slate-50 dark:hover:bg-[#1a1a1a] rounded-lg transition-colors group overflow-hidden">
+                    {(!collapsed || isMobile) && (
+                        <div className="flex-1 flex items-center gap-3 p-2 overflow-hidden">
                             <div className="w-7 h-7 rounded bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-white font-bold text-xs shadow-sm flex-shrink-0">
                                 G
                             </div>
-                            <span className="font-medium text-[13px] text-slate-800 dark:text-gray-200 group-hover:text-slate-900 dark:group-hover:text-white transition-colors truncate">
+                            <span className="font-medium text-[13px] text-slate-800 dark:text-gray-200 truncate">
                                 GROWUP AI
                             </span>
+                        </div>
+                    )}
+                    {isMobile ? (
+                        <button
+                            onClick={() => setMobileOpen(false)}
+                            className="p-2 text-slate-400 dark:text-gray-500 hover:text-slate-800 dark:hover:text-white rounded-lg transition-colors"
+                        >
+                            <X strokeWidth={1.5} className="w-[18px] h-[18px]" />
+                        </button>
+                    ) : (
+                        <button
+                            onClick={() => setCollapsed(!collapsed)}
+                            className={`p-2 text-slate-400 dark:text-gray-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-[#1a1a1a] rounded-lg transition-colors flex-shrink-0 ${collapsed ? 'mx-auto' : ''}`}
+                            title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                        >
+                            {collapsed ? (
+                                <PanelLeftOpen strokeWidth={1.5} className="w-[18px] h-[18px]" />
+                            ) : (
+                                <PanelLeftClose strokeWidth={1.5} className="w-[18px] h-[18px]" />
+                            )}
                         </button>
                     )}
-                    <button
-                        onClick={() => setCollapsed(!collapsed)}
-                        className={`p-2 text-slate-400 dark:text-gray-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-[#1a1a1a] rounded-lg transition-colors flex-shrink-0 ${collapsed ? 'mx-auto' : ''
-                            }`}
-                        title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-                    >
-                        {collapsed ? (
-                            <PanelLeftOpen strokeWidth={1.5} className="w-[18px] h-[18px]" />
-                        ) : (
-                            <PanelLeftClose strokeWidth={1.5} className="w-[18px] h-[18px]" />
-                        )}
-                    </button>
                 </div>
             </div>
 
-            {/* Scrollable Nav Area */}
+            {/* Nav */}
             <nav className="flex-1 overflow-y-auto custom-scrollbar px-3 pb-4 mt-2">
-
-                {/* Main Nav */}
                 <div className="space-y-0.5 mb-8">
-                    {mainNav.map(renderNavItem)}
+                    {mainNav.map(i => renderNavItem(i, isMobile))}
                 </div>
 
-                {/* Projects Group */}
                 <div className="mb-8">
-                    {!collapsed && (
-                        <div className="px-3 mb-2 flex items-center justify-between">
+                    {(!collapsed || isMobile) && (
+                        <div className="px-3 mb-2">
                             <span className="text-[11px] font-semibold text-slate-400 dark:text-gray-500 tracking-wide">Projects</span>
                         </div>
                     )}
                     <div className="space-y-0.5">
-                        {projectsNav.map(renderNavItem)}
+                        {projectsNav.map(i => renderNavItem(i, isMobile))}
                     </div>
                 </div>
 
-                {/* Recents Group */}
-                {!collapsed && (
+                {(!collapsed || isMobile) && (
                     <div>
-                        <div className="px-3 mb-2 flex items-center justify-between">
+                        <div className="px-3 mb-2">
                             <span className="text-[11px] font-semibold text-slate-400 dark:text-gray-500 tracking-wide">Recents</span>
                         </div>
                         <div className="space-y-0.5">
                             {RECENT_PROJECTS.map((project, i) => (
-                                <Link key={i} href="/dashboard" className="group relative flex items-center justify-between px-3 py-2 rounded-lg text-[13px] font-medium text-slate-500 dark:text-gray-400 hover:bg-slate-50 hover:text-slate-900 dark:hover:bg-[#1a1a1a] dark:hover:text-white transition-colors cursor-pointer">
+                                <Link
+                                    key={i}
+                                    href="/dashboard"
+                                    onClick={isMobile ? () => setMobileOpen(false) : undefined}
+                                    className="group relative flex items-center justify-between px-3 py-2 rounded-lg text-[13px] font-medium text-slate-500 dark:text-gray-400 hover:bg-slate-50 hover:text-slate-900 dark:hover:bg-[#1a1a1a] dark:hover:text-white transition-colors cursor-pointer"
+                                >
                                     <div className="flex items-center gap-3 overflow-hidden">
                                         <FileText strokeWidth={1.5} className="w-[18px] h-[18px] flex-shrink-0 opacity-70 group-hover:opacity-100" />
                                         <span className="truncate">{project.name}</span>
                                     </div>
-                                    <div className="hidden group-hover:flex items-center gap-1 bg-slate-50 dark:bg-[#1a1a1a] pl-2 absolute right-2">
-                                        <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="p-1 hover:text-slate-900 text-slate-400 dark:hover:text-white dark:text-gray-500 transition-colors">
-                                            <Edit2 strokeWidth={1.5} className="w-3.5 h-3.5" />
-                                        </button>
-                                        <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="p-1 hover:text-slate-900 text-slate-400 dark:hover:text-white dark:text-gray-500 transition-colors">
-                                            <MoreHorizontal strokeWidth={1.5} className="w-4 h-4" />
-                                        </button>
-                                    </div>
+                                    {!isMobile && (
+                                        <div className="hidden group-hover:flex items-center gap-1 bg-slate-50 dark:bg-[#1a1a1a] pl-2 absolute right-2">
+                                            <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="p-1 hover:text-slate-900 text-slate-400 dark:hover:text-white dark:text-gray-500 transition-colors">
+                                                <Edit2 strokeWidth={1.5} className="w-3.5 h-3.5" />
+                                            </button>
+                                            <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="p-1 hover:text-slate-900 text-slate-400 dark:hover:text-white dark:text-gray-500 transition-colors">
+                                                <MoreHorizontal strokeWidth={1.5} className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    )}
                                 </Link>
                             ))}
                         </div>
@@ -133,10 +143,9 @@ export function WizardSidebar() {
                 )}
             </nav>
 
-            {/* Footer Area */}
-            <div className={`p-4 space-y-3 border-t border-slate-200 dark:border-[#1F2937]/50 mt-auto ${collapsed ? 'px-2' : ''}`}>
-                {/* Share Card */}
-                {!collapsed ? (
+            {/* Footer */}
+            <div className={`p-4 space-y-3 border-t border-slate-200 dark:border-[#1F2937]/50 mt-auto ${collapsed && !isMobile ? 'px-2' : ''}`}>
+                {(!collapsed || isMobile) ? (
                     <div className="bg-slate-50 dark:bg-[#111111] border border-slate-200 dark:border-[#1f1f1f] rounded-xl p-3 flex items-center gap-3 cursor-pointer hover:bg-slate-100 dark:hover:bg-[#151515] transition-colors">
                         <div className="w-8 h-8 rounded-full bg-white dark:bg-[#1a1a1a] shadow-sm flex items-center justify-center flex-shrink-0">
                             <Gift strokeWidth={1.5} className="w-4 h-4 text-slate-400 dark:text-gray-300" />
@@ -152,8 +161,7 @@ export function WizardSidebar() {
                     </button>
                 )}
 
-                {/* Upgrade Banner */}
-                {!collapsed ? (
+                {(!collapsed || isMobile) ? (
                     <div className="relative rounded-xl p-[1px] bg-gradient-to-r from-[#9900FF] to-[#00CCFF] cursor-pointer group shadow-sm hover:shadow-md transition-shadow">
                         <div className="bg-white dark:bg-[#0c0c0c] rounded-xl p-3 flex items-center gap-3 group-hover:bg-opacity-90 dark:group-hover:bg-opacity-80 transition-all">
                             <div className="w-8 h-8 rounded-full bg-slate-50 dark:bg-[#1a1a1a] flex items-center justify-center flex-shrink-0 shadow-sm">
@@ -171,14 +179,13 @@ export function WizardSidebar() {
                     </button>
                 )}
 
-                {/* User Profile */}
-                <div className={`flex items-center ${collapsed ? 'justify-center' : 'justify-between'} pt-2`}>
+                <div className={`flex items-center ${collapsed && !isMobile ? 'justify-center' : 'justify-between'} pt-2`}>
                     <button className="flex items-center gap-2">
                         <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-slate-700 to-slate-500 dark:from-gray-700 dark:to-gray-500 flex items-center justify-center text-[10px] font-bold text-white border border-slate-200 dark:border-[#2a2a2a]">
                             G
                         </div>
                     </button>
-                    {!collapsed && (
+                    {(!collapsed || isMobile) && (
                         <button className="p-2 text-slate-400 dark:text-gray-500 hover:text-slate-800 dark:hover:text-white transition-colors relative">
                             <Bell strokeWidth={1.5} className="w-4 h-4" />
                             <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-red-500 rounded-full border border-[#0c0c0c]"></div>
@@ -186,6 +193,40 @@ export function WizardSidebar() {
                     )}
                 </div>
             </div>
-        </aside>
+        </>
+    );
+
+    return (
+        <>
+            {/* Desktop sidebar */}
+            <aside
+                className={`hidden lg:flex flex-col h-full bg-white dark:bg-[#0c0c0c] border-r border-slate-200 dark:border-[#1F2937] text-slate-600 dark:text-gray-300 flex-shrink-0 z-20 transition-all duration-300 ease-in-out ${collapsed ? 'w-[60px]' : 'w-[260px]'
+                    }`}
+            >
+                {sidebarContent(false)}
+            </aside>
+
+            {/* Mobile sidebar toggle button */}
+            <button
+                onClick={() => setMobileOpen(true)}
+                className="lg:hidden fixed bottom-6 left-4 z-[90] w-12 h-12 rounded-full bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
+                aria-label="Open sidebar"
+            >
+                <PanelLeftOpen strokeWidth={1.5} className="w-5 h-5" />
+            </button>
+
+            {/* Mobile sidebar overlay */}
+            {mobileOpen && (
+                <div className="lg:hidden fixed inset-0 z-[95]">
+                    <div
+                        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+                        onClick={() => setMobileOpen(false)}
+                    />
+                    <aside className="absolute left-0 top-0 bottom-0 w-[280px] bg-white dark:bg-[#0c0c0c] border-r border-slate-200 dark:border-[#1F2937] text-slate-600 dark:text-gray-300 flex flex-col overflow-hidden shadow-2xl">
+                        {sidebarContent(true)}
+                    </aside>
+                </div>
+            )}
+        </>
     );
 }

@@ -86,11 +86,12 @@ export function ConfigPreviewStep({ config: initialConfig, onSave, onBack }: Con
                 </div>
 
                 {/* Interaction Pane Mobile */}
-                <div className={`fixed inset-y-0 left-0 z-50 w-[300px] border-r border-slate-200 dark:border-[#1F2937]/50 bg-white dark:bg-[#0A0A0A] transform transition-transform duration-300 lg:hidden transition-colors ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-                    <div className="flex justify-end p-2 bg-white dark:bg-[#0A0A0A] border-b border-slate-200 dark:border-[#1F2937]/50 transition-colors">
-                        <button onClick={() => setIsSidebarOpen(false)} className="text-slate-500 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white text-xs p-1 transition-colors">Close X</button>
+                <div className={`fixed inset-y-0 left-0 z-50 w-[300px] sm:w-[340px] border-r border-slate-200 dark:border-[#1F2937]/50 bg-white dark:bg-[#0A0A0A] transform transition-transform duration-300 lg:hidden flex flex-col ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                    <div className="flex items-center justify-between p-3 bg-white dark:bg-[#0A0A0A] border-b border-slate-200 dark:border-[#1F2937]/50 transition-colors flex-shrink-0">
+                        <span className="text-xs font-bold text-slate-500 dark:text-gray-400 uppercase tracking-wider">Edit Config</span>
+                        <button onClick={() => setIsSidebarOpen(false)} className="p-1.5 text-slate-500 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 transition-colors text-xs font-medium">✕ Close</button>
                     </div>
-                    <div className="h-[calc(100vh-40px)]">
+                    <div className="flex-1 overflow-hidden">
                         <ConfigSidebar config={config} onUpdate={setConfig} />
                     </div>
                 </div>
