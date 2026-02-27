@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
+import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import {
     LineChart,
@@ -211,10 +212,14 @@ export default function AMMPage() {
                                 Trading Mechanics
                             </span>
                         </h1>
-                        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto transition-colors">
+                        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto transition-colors mb-6">
                             Configure bonding curves, fee structures, and anti-whale protections.
                             Preview how price reacts to buy/sell pressure before you deploy.
                         </p>
+
+                        <Link href="/live" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-red-500 to-orange-500 text-white font-bold text-sm shadow-lg shadow-red-500/20 hover:scale-105 transition-transform">
+                            <Flame className="w-5 h-5" /> Test Config in Live Attack Simulator
+                        </Link>
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -542,6 +547,30 @@ export default function AMMPage() {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    {/* Massive Live Attack CTA */}
+                    <div className="mt-8 rounded-2xl border border-red-500/30 bg-gradient-to-br from-red-500/10 to-orange-500/5 p-8 relative overflow-hidden group">
+                        <div className="absolute top-[-50%] right-[-10%] w-[300px] h-[300px] bg-red-500/20 rounded-full blur-[80px]" />
+
+                        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                            <div>
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/20 text-red-500 text-xs font-bold mb-3 border border-red-500/30">
+                                    <Flame className="w-3.5 h-3.5" /> LIVE TRANSACTION ORACLE
+                                </div>
+                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                                    Test these mechanics against Real Hacks
+                                </h3>
+                                <p className="text-gray-600 dark:text-gray-400 max-w-xl text-sm leading-relaxed">
+                                    Don&apos;t just trust the charts. Send real `eth_call` simulations to the BSC Testnet.
+                                    Watch the Guardian Token intercept Whale Dumps, Sniper Bots, and Unauthorized Mints in real-time.
+                                </p>
+                            </div>
+
+                            <Link href="/live" className="whitespace-nowrap inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-red-500 to-orange-500 text-white font-bold text-lg shadow-lg shadow-red-500/30 hover:scale-105 transition-transform">
+                                <Shield className="w-5 h-5" /> Enter Live Attack Simulator
+                            </Link>
                         </div>
                     </div>
                 </div>

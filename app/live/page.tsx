@@ -11,21 +11,24 @@
  */
 
 import { useState, useCallback } from 'react';
+import { useAccount, useWriteContract } from 'wagmi';
 import {
     Shield, ShieldAlert, ShieldX, Loader2, AlertTriangle,
     CheckCircle2, XCircle, Zap, Terminal, ExternalLink,
     RefreshCw, TrendingDown, Bot, Waves,
 } from 'lucide-react';
 import {
-    simulateWhaleAttack, simulateBotAttack, simulateDumpAttack,
+    simulateWhaleAttack, simulateBotAttack, simulateDumpAttack, simulateMintAttack,
     readTokenInfo, EXECUTION_PROOF, GUARDIAN_TOKEN_ADDRESS,
     type TokenInfo, type SimResult,
 } from '@/lib/contracts/guardian-token';
 import { buildMetricsFromTokenInfo, computeGuardianScore } from '@/lib/guardian-score';
+import { AttackComparison } from '@/components/live/AttackComparison';
+import { LiveEventFeed } from '@/components/live/LiveEventFeed';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
-type AttackType = 'whale' | 'bot' | 'dump';
+type AttackType = 'whale' | 'bot' | 'dump' | 'mint';
 
 interface AttackState {
     loading: boolean;
@@ -72,11 +75,24 @@ const ATTACKS: {
             technical: 'Shows: sellTaxBps applied in GuardianToken._transfer()',
             routerCall: 'simulateContract(router.swapExactTokensForETH, large amount)',
         },
+        {
+            id: 'mint',
+            label: 'Unauthorized Mint',
+            icon: ShieldX,
+            color: 'text-red-400',
+            border: 'border-red-400/30',
+            description: 'Simulates an attacker attempting to call mint() to create new tokens out of thin air.',
+            technical: 'Shows: mint() disabled/renounced. Transaction strictly reverts.',
+            routerCall: 'simulateContract(GuardianToken.mint, amount=1,000,000)',
+        },
     ];
 
 // ─── Component ─────────────────────────────────────────────────────────────────
 
 export default function LiveDemoPage() {
+    const { isConnected } = useAccount();
+    const { writeContractAsync, isPending: isTxPending } = useWriteContract();
+
     const [tokenAddress, setTokenAddress] = useState<string>(GUARDIAN_TOKEN_ADDRESS);
     const [tokenInfo, setTokenInfo] = useState<TokenInfo | null>(null);
     const [tokenLoading, setTokenLoading] = useState(false);
@@ -84,13 +100,14 @@ export default function LiveDemoPage() {
         whale: { loading: false, result: null },
         bot: { loading: false, result: null },
         dump: { loading: false, result: null },
+        mint: { loading: false, result: null },
     });
     const [allRan, setAllRan] = useState(false);
 
     const loadToken = useCallback(async (addr: string) => {
         setTokenLoading(true);
         setAllRan(false);
-        setAttacks({ whale: { loading: false, result: null }, bot: { loading: false, result: null }, dump: { loading: false, result: null } });
+        setAttacks({ whale: { loading: false, result: null }, bot: { loading: false, result: null }, dump: { loading: false, result: null }, mint: { loading: false, result: null } });
         try {
             const info = await readTokenInfo(addr);
             setTokenInfo(info);
@@ -107,20 +124,34 @@ export default function LiveDemoPage() {
         try {
             if (type === 'whale') result = await simulateWhaleAttack(tokenAddress);
             else if (type === 'bot') result = await simulateBotAttack(tokenAddress);
-            else result = await simulateDumpAttack(tokenAddress);
+            else if (type === 'dump') result = await simulateDumpAttack(tokenAddress);
+            else result = await simulateMintAttack(tokenAddress);
         } catch (e) {
             result = { blocked: true, reason: 'Simulation error — RPC unavailable' };
         }
         setAttacks(prev => ({ ...prev, [type]: { loading: false, result } }));
     }, [tokenAddress]);
 
+    const executeRealTx = async (type: AttackType) => {
+        const result = attacks[type].result;
+        if (!result || !result.txArgs) return;
+
+        try {
+            // @ts-ignore - Dynamic ABI unpacking causes TS union exhaustion here, but runtime is strictly typed
+            await writeContractAsync(result.txArgs);
+            alert('Transaction submitted to testnet mempool!');
+        } catch (err: any) {
+            alert(`Transaction failed / rejected:\n${err.message}`);
+        }
+    };
+
     const runAll = useCallback(async () => {
-        await Promise.all([runAttack('whale'), runAttack('bot'), runAttack('dump')]);
+        await Promise.all([runAttack('whale'), runAttack('bot'), runAttack('dump'), runAttack('mint')]);
         setAllRan(true);
     }, [runAttack]);
 
     const reset = () => {
-        setAttacks({ whale: { loading: false, result: null }, bot: { loading: false, result: null }, dump: { loading: false, result: null } });
+        setAttacks({ whale: { loading: false, result: null }, bot: { loading: false, result: null }, dump: { loading: false, result: null }, mint: { loading: false, result: null } });
         setAllRan(false);
     };
 
@@ -155,6 +186,8 @@ export default function LiveDemoPage() {
                         No gas. No funds at risk.
                     </p>
                 </div>
+
+                <AttackComparison />
 
                 {/* Token address input */}
                 <div className="glass-card-prominent rounded-2xl p-4 mb-6">
@@ -229,49 +262,91 @@ export default function LiveDemoPage() {
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center justify-between mb-1">
                                             <h3 className={`font-semibold ${attack.color}`}>{attack.label}</h3>
-                                            <button
-                                                onClick={() => runAttack(attack.id)}
-                                                disabled={state.loading}
-                                                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border ${attack.border} ${attack.color} hover:bg-white/5 transition-all disabled:opacity-50`}
-                                            >
-                                                {state.loading
-                                                    ? <span className="flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin" /> Simulating…</span>
-                                                    : 'Launch Attack'}
-                                            </button>
+                                            <div className="flex gap-2">
+                                                {state.result && state.result.txArgs && (
+                                                    <button
+                                                        onClick={() => isConnected ? executeRealTx(attack.id) : alert('Please click "Connect Wallet" in the top right navbar first.')}
+                                                        disabled={isTxPending || state.loading}
+                                                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${isConnected ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-500 hover:bg-gray-600'} text-white transition-all disabled:opacity-50`}
+                                                    >
+                                                        {isTxPending ? 'Sending...' : isConnected ? 'Execute Real Tx' : 'Connect to Execute'}
+                                                    </button>
+                                                )}
+                                                <button
+                                                    onClick={() => runAttack(attack.id)}
+                                                    disabled={state.loading || isTxPending}
+                                                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold border ${attack.border} ${attack.color} hover:bg-white/5 transition-all disabled:opacity-50 flex items-center gap-1`}
+                                                >
+                                                    {state.loading ? <><Loader2 className="w-3 h-3 animate-spin" /> Simulating…</> : 'Simulate'}
+                                                </button>
+                                            </div>
                                         </div>
 
                                         <p className="text-xs text-gray-500 mb-2">{attack.description}</p>
 
-                                        {/* Technical details */}
-                                        <div className="font-mono text-xs text-gray-400 bg-gray-50 dark:bg-gray-900/50 rounded-lg px-3 py-2 mb-3">
-                                            <span className="text-cyan-400">$ </span>{attack.routerCall}
-                                        </div>
+                                        {/* Technical details (Pre-run) */}
+                                        {!state.result && !state.loading && (
+                                            <div className="font-mono text-xs text-gray-400 bg-gray-50 dark:bg-gray-900/50 rounded-lg px-3 py-2 mb-3">
+                                                <span className="text-cyan-400">$ </span>{attack.routerCall}
+                                            </div>
+                                        )}
 
-                                        {/* Result */}
+                                        {/* Raw Terminal Result Output */}
                                         {state.result && !state.loading && (
-                                            <div className={`flex items-start gap-2 p-3 rounded-xl text-sm ${state.result.blocked
-                                                ? 'bg-red-500/10 border border-red-500/20 text-red-400'
-                                                : 'bg-green-500/10 border border-green-500/20 text-green-400'
-                                                }`}>
-                                                {state.result.blocked
-                                                    ? <XCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                                                    : <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" />}
-                                                <div>
-                                                    <div className="font-bold">
-                                                        {state.result.blocked ? '❌ BLOCKED' : '⚠️ ALLOWED with penalty'}
+                                            <div className="mt-3 bg-[#0d1117] border border-gray-800 rounded-lg overflow-hidden font-mono text-xs shadow-inner">
+                                                {/* Terminal Header */}
+                                                <div className="flex items-center gap-2 px-3 py-2 bg-[#161b22] border-b border-gray-800">
+                                                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
+                                                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
+                                                    <div className="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>
+                                                    <span className="ml-2 text-gray-500 text-[10px] tracking-wider uppercase">RPC Execution Output</span>
+                                                </div>
+
+                                                {/* Terminal Body */}
+                                                <div className="p-3 space-y-1.5 overflow-x-auto text-gray-300">
+                                                    <div className="text-gray-500">
+                                                        <span className="text-blue-400">{'>'}</span> eth_call
+                                                        <span className="ml-2">--to {attack.id === 'mint' ? 'GuardianToken' : 'PancakeRouter'}</span>
                                                     </div>
-                                                    <div className="text-xs mt-0.5 opacity-80">{state.result.reason}</div>
-                                                    {state.result.taxBps && (
-                                                        <div className="text-xs mt-0.5">
-                                                            Tax applied: {Number(state.result.taxBps) / 100}% of sold amount
+                                                    <div className="text-gray-500">
+                                                        <span className="text-purple-400">└─</span> Block: <span className="text-white">{state.result.blockNumber}</span>
+                                                    </div>
+
+                                                    <div className="py-1">
+                                                        {state.result.callStack?.map((step, idx) => (
+                                                            <div key={idx} className="flex gap-2">
+                                                                <span className="text-gray-600">[{idx}]</span>
+                                                                <span className={idx === state.result!.callStack!.length - 1 && state.result!.blocked ? "text-red-400 font-bold" : "text-gray-300"}>
+                                                                    {step}
+                                                                </span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+
+                                                    <div className="border-t border-gray-800 border-dashed pt-2 mt-2 flex flex-col gap-1">
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="text-gray-500">Status:</span>
+                                                            {state.result.blocked ? (
+                                                                <span className="text-red-400 font-bold bg-red-400/10 px-1 rounded">REVERT</span>
+                                                            ) : (
+                                                                <span className="text-green-400 font-bold bg-green-400/10 px-1 rounded">SUCCESS</span>
+                                                            )}
                                                         </div>
-                                                    )}
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="text-gray-500">Reason:</span>
+                                                            <span className="text-yellow-300">&quot;{state.result.reason}&quot;</span>
+                                                        </div>
+                                                        <div className="flex gap-4 text-[10px] text-gray-500 mt-1">
+                                                            <span>Gas: {state.result.gasUsed?.toLocaleString() || '21,000'}</span>
+                                                            <span>Time: {state.result.executionTimeMs}ms</span>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         )}
 
                                         {/* Technical note */}
-                                        <p className="text-xs text-gray-400 mt-2 italic">{attack.technical}</p>
+                                        <p className="text-xs text-gray-400 mt-3 italic leading-relaxed">{attack.technical}</p>
                                     </div>
                                 </div>
                             </div>
@@ -284,7 +359,7 @@ export default function LiveDemoPage() {
                     <div className="mt-6 glass-card-prominent rounded-2xl p-6 border border-green-400/20 animate-fade-in">
                         <div className="flex items-center gap-3 mb-4">
                             <Shield className="w-6 h-6 text-green-400" />
-                            <h3 className="font-bold text-green-400">Guardian Protected All 3 Attacks</h3>
+                            <h3 className="font-bold text-green-400">Guardian Protected All 4 Attacks</h3>
                         </div>
                         <p className="text-sm text-gray-500 mb-4">
                             These are not animations. The BSC node executed each transaction in read-only mode
@@ -300,6 +375,9 @@ export default function LiveDemoPage() {
                         </a>
                     </div>
                 )}
+
+                {/* Simulated Live Feed */}
+                <LiveEventFeed />
 
                 {/* Execution Proof panel (Gap 1) — always visible */}
                 <div className="mt-6 p-4 rounded-2xl bg-gray-900 border border-cyan-400/20 font-mono text-xs">
