@@ -569,7 +569,7 @@ export default function GrowthPage() {
                                     <button onClick={() => {
                                         setIsAirdropModalOpen(false);
                                         alert("BulkDistributor.sol contract executed on testnet! (Demo)");
-                                    }} className="px-6 py-2 bg-gradient-to-r from-purple to-indigo-500 hover:from-purple hover:to-indigo-400 text-white rounded-xl text-sm font-medium hover:opacity-90 transition-all flex items-center gap-2">
+                                    }} className="px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-500 hover:from-purple-500 hover:to-indigo-400 text-white rounded-xl text-sm font-semibold shadow-lg shadow-purple-500/25 transition-all flex items-center gap-2">
                                         Execute On-Chain Distribution
                                     </button>
                                 </div>
