@@ -9,6 +9,15 @@ GROWUP AI is built to become the default intelligent layer for launching, securi
 
 ---
 
+## Key Project Highlights
+
+- **A Complete, Functional Ecosystem on BNB:** We did not just build a UI mockup. GROWUP AI is a fully functional pipeline. Our platform actively queries LLaMa-3 (via Groq) to generate dynamic JSON tokenomics, translates those into EVM bytecode using our proprietary Guardian Smart Contract, and actually deploys it on the BSC Testnet.
+- **The "Live Attack Simulator":** In Web3, security marketing is often "trust me bro." We built a dashboard that actively simulates MEV bot attacks and Whale dumps against the deployed token, displaying the exact *on-chain BSC revert reasons*. We prove our immutable EVM bytecode security directly to the user.
+- **Solving Real BNB Ecosystem Pain Points:** The majority of newly launched tokens on BSC crash within 48 hours because creators lack the deep technical knowledge to implement Max Wallet limits, Sandwich Bot cooldowns, and dynamic taxes. By abstracting this complexity behind an AI zero-code interface, we constantly improve the liquidity retention, safety, and reputation of retail token launches on the BNB Chain.
+- **The AI Sybil-Resistance Engine:** Our Airdrop/Growth module does not execute blind, exploitable distributions. It actively pulls live BscScan transaction histories and uses our AI engine to classify wallets—separating genuine "Diamond Hand" community members from 100-wallet Sybil farming rings—before executing the smart contract multi-send.
+
+---
+
 ## Core Problems & Our Built Solutions
 
 ### 1. Complex and Vulnerable Token Deployments
