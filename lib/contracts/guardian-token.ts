@@ -27,7 +27,7 @@ export const AIBS_PAIR_ADDRESS =
 
 // PancakeSwap V2 Router on BSC Testnet
 export const PANCAKE_ROUTER_ADDRESS =
-    '0xD99D1c33F9fC3444f8101754aBC46c52416550d1' as const;
+    '0xD99D1c33F9fC3444f8101754aBC46c52416550D1' as const;
 
 // ── Client with 3-node fallback (critical for demo reliability) ─────────────
 export const client = createPublicClient({

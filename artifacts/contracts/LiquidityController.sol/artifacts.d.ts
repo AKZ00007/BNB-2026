@@ -15,7 +15,7 @@ export interface LiquidityController$Type {
   readonly deployedLinkReferences: {};
   readonly immutableReferences: {};
   readonly inputSourceName: "project/contracts/LiquidityController.sol";
-  readonly buildInfoId: "solc-0_8_20-30ae910a43f3452aca1f4140178d4e0de56f3d69";
+  readonly buildInfoId: "solc-0_8_20-ff2a648d193df156e0acd29b8d04b0ca4e8b6845";
 };
 
 import "hardhat/types/artifacts";

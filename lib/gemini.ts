@@ -263,3 +263,85 @@ Return this exact JSON structure:
 
   return result;
 }
+
+// ─── Loyalty Airdrop — Intelligence Layer ──────────────────────────────────────
+
+export interface WalletAirdropStats {
+  address: string;
+  holdingDays: number;
+  balancePercent: number;
+  sellFrequency: number;
+  buyDuringDips: number;
+  fundedBy?: string;
+}
+
+export interface AirdropClassification {
+  address: string;
+  classification: string; // e.g. "Diamond Holder", "Swing Trader", "Sybil Farmer"
+  loyaltyTier: 'Diamond' | 'Gold' | 'Silver' | 'Bronze' | 'Excluded';
+  rewardMultiplier: number;
+  geminiReasoning: string; // Specifically formatted explanation of why they got this score
+  isFlagged: boolean;
+}
+
+export interface AirdropSnapshotResult {
+  summary: string;
+  wallets: AirdropClassification[];
+}
+
+export async function rankAirdropWallets(wallets: WalletAirdropStats[]): Promise<AirdropSnapshotResult> {
+  const client = getClient();
+
+  const systemPrompt = `You are the GuardianLaunch Loyalty Analyst.
+Your job is to analyze on-chain wallet behavior and classify holders for token airdrop rewards.
+
+You ALWAYS return a valid JSON object matching the exact schema. No extra text, no markdown.
+
+CLASSIFICATIONS:
+- Diamond Holder: Holds long term, buys dips, rarely sells. (Multiplier 2.0x+)
+- Believer: Holds solid amount, low sells. (Multiplier 1.5x)
+- Swing Trader: Buys and sells frequently. (Multiplier 1.0x)
+- Sybil Farmer: Coordinated funding, zero organic behavior, identical balances. (Excluded, Multiplier 0.0x)
+
+You must explicitly spot Sybil farmers. If you see multiple wallets funded from the same source with identical holding days and zero buys/sells, FLAG THEM.`;
+
+  const userPrompt = `Analyze these wallets and return their loyalty classifications:
+
+WALLET DATA:
+${JSON.stringify(wallets, null, 2)}
+
+Return this exact JSON structure:
+{
+  "summary": "<2-3 sentence overview of the overall holder quality and any sybil attacks detected>",
+  "wallets": [
+    {
+      "address": "<wallet address>",
+      "classification": "<Diamond Holder | Believer | Swing Trader | Suspected Sybil>",
+      "loyaltyTier": "<Diamond | Gold | Silver | Bronze | Excluded>",
+      "rewardMultiplier": <number float>,
+      "geminiReasoning": "<1 sentence explanation of why this wallet got this classification>",
+      "isFlagged": <true/false - true ONLY if suspected malicious/sybil>
+    }
+  ]
+}`;
+
+  const completion = await client.chat.completions.create({
+    model: MODEL,
+    messages: [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt },
+    ],
+    temperature: 0.2, // Low temp for analytical consistency
+    max_tokens: 2500,
+    response_format: { type: 'json_object' },
+  });
+
+  const text = completion.choices[0]?.message?.content?.trim();
+  if (!text) throw new Error('Groq returned empty response for airdrop ranking');
+
+  try {
+    return JSON.parse(text) as AirdropSnapshotResult;
+  } catch {
+    throw new Error('Groq returned invalid JSON for airdrop ranking');
+  }
+}
