@@ -2,7 +2,8 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { useTheme } from 'next-themes';
-import { Leaf, DollarSign, Activity, Users, PieChart as PieChartIcon, Trophy, RefreshCw, Gift, Flame, Bell } from 'lucide-react';
+import { Leaf, DollarSign, Activity, Users, PieChart as PieChartIcon, Trophy, RefreshCw, Gift, Flame, Bell, ShieldAlert, CheckCircle2, Loader2, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
     LineChart,
     Line,
@@ -105,6 +106,7 @@ function SchedulerCard({
     fields,
     buttonLabel,
     buttonColor,
+    onClick,
 }: {
     icon: React.ReactNode;
     title: string;
@@ -112,28 +114,32 @@ function SchedulerCard({
     fields: { label: string; placeholder: string; type?: string }[];
     buttonLabel: string;
     buttonColor: string;
+    onClick?: () => void;
 }) {
     return (
-        <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-6 transition-colors">
+        <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-6 transition-colors flex flex-col h-full">
             <div className="flex items-center gap-3 mb-3 text-gray-500 dark:text-gray-400">
                 <span className="flex items-center justify-center">{icon}</span>
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 transition-colors">{title}</h3>
             </div>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mb-4 transition-colors">{description}</p>
-            <div className="space-y-3">
-                {fields.map((f) => (
-                    <div key={f.label}>
-                        <label className="text-xs text-gray-600 dark:text-gray-400 mb-1 block transition-colors">{f.label}</label>
-                        <input
-                            type={f.type || 'text'}
-                            placeholder={f.placeholder}
-                            className="w-full px-3 py-2 rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-gold/30 transition-colors"
-                        />
-                    </div>
-                ))}
-            </div>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mb-4 transition-colors flex-grow">{description}</p>
+            {fields.length > 0 && (
+                <div className="space-y-3 mb-4">
+                    {fields.map((f) => (
+                        <div key={f.label}>
+                            <label className="text-xs text-gray-600 dark:text-gray-400 mb-1 block transition-colors">{f.label}</label>
+                            <input
+                                type={f.type || 'text'}
+                                placeholder={f.placeholder}
+                                className="w-full px-3 py-2 rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-gold/30 transition-colors"
+                            />
+                        </div>
+                    ))}
+                </div>
+            )}
             <button
-                className={`mt-4 w-full py-2.5 rounded-xl text-sm font-semibold transition-all ${buttonColor}`}
+                onClick={onClick}
+                className={`mt-auto w-full py-2.5 rounded-xl text-sm font-semibold transition-all ${buttonColor}`}
             >
                 {buttonLabel}
             </button>
@@ -196,6 +202,31 @@ export default function GrowthPage() {
     const toggleAlert = (key: keyof typeof alerts) =>
         setAlerts((a) => ({ ...a, [key]: !a[key] }));
 
+    // AI Airdrop State
+    const [isAirdropModalOpen, setIsAirdropModalOpen] = useState(false);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [aiSnapshotData, setAiSnapshotData] = useState<any>(null);
+
+    const handleRunAirdropSnapshot = async () => {
+        setIsAnalyzing(true);
+        setIsAirdropModalOpen(true);
+        try {
+            const res = await fetch('/api/airdrop/snapshot', {
+                method: 'POST',
+            });
+            const result = await res.json();
+            if (result.success) {
+                setAiSnapshotData(result.data);
+            } else {
+                console.error(result.error);
+            }
+        } catch (error) {
+            console.error('Failed to run snapshot:', error);
+        } finally {
+            setIsAnalyzing(false);
+        }
+    };
+
     return (
         <main className="min-h-screen bg-[#FAFAFA] dark:bg-gray-950 text-gray-900 dark:text-gray-100 overflow-hidden relative transition-colors duration-300">
             {/* Ambient background */}
@@ -208,8 +239,8 @@ export default function GrowthPage() {
                 <div className="max-w-7xl mx-auto">
                     {/* Hero */}
                     <div className="text-center mb-10">
-                        <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-green-400/10 border border-green-400/20 text-sm text-green-400 mb-4">
-                            <Leaf className="w-4 h-4" /> Post-Launch Growth
+                        <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-sm text-blue-400 mb-4 transition-colors">
+                            <Activity className="w-4 h-4" /> Viewing Simulation: $GUARD (Testnet)
                         </div>
                         <h1 className="text-3xl md:text-4xl font-bold mb-3 transition-colors">
                             Grow Your Token{' '}
@@ -396,15 +427,12 @@ export default function GrowthPage() {
                         />
                         <SchedulerCard
                             icon={<Gift className="w-5 h-5 text-purple" />}
-                            title="Airdrop Scheduler"
-                            description="Distribute tokens to holders on a scheduled basis"
-                            fields={[
-                                { label: 'CSV Address List', placeholder: 'Upload or paste addresses' },
-                                { label: 'Tokens per Address', placeholder: '1000', type: 'number' },
-                                { label: 'Distribution Date', placeholder: 'YYYY-MM-DD', type: 'date' },
-                            ]}
-                            buttonLabel="Schedule Airdrop"
+                            title="AI Loyalty Airdrop"
+                            description="Use Groq to analyze wallet behavior, assign loyalty scores, and block Sybil farmers automatically."
+                            fields={[]}
+                            buttonLabel="Run AI Snapshot"
                             buttonColor="bg-purple/10 text-purple border border-purple/20 hover:bg-purple/20"
+                            onClick={handleRunAirdropSnapshot}
                         />
                         <SchedulerCard
                             icon={<Flame className="w-5 h-5 text-orange-400" />}
@@ -455,6 +483,101 @@ export default function GrowthPage() {
                     </div>
                 </div>
             </div>
+
+            {/* AI Airdrop Modal */}
+            <AnimatePresence>
+                {isAirdropModalOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setIsAirdropModalOpen(false)}
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.95, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.95, opacity: 0 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="relative w-full max-w-4xl max-h-[85vh] flex flex-col rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-2xl overflow-hidden"
+                        >
+                            <div className="p-6 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center bg-white/50 dark:bg-gray-900/50 transition-colors">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-xl bg-purple/10 flex items-center justify-center">
+                                        <Gift className="w-5 h-5 text-purple" />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 transition-colors">AI Loyalty Analysis</h2>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 transition-colors">Guardian AI is analyzing holder behavior to prevent Sybil attacks.</p>
+                                    </div>
+                                </div>
+                                <button onClick={() => setIsAirdropModalOpen(false)} className="text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
+
+                            <div className="flex-1 overflow-y-auto p-6">
+                                {isAnalyzing ? (
+                                    <div className="flex flex-col items-center justify-center h-64 space-y-4">
+                                        <Loader2 className="w-8 h-8 text-purple animate-spin" />
+                                        <div className="text-sm font-medium text-gray-500 dark:text-gray-400 animate-pulse">Llama-3.3-70b is analyzing wallet behavior...</div>
+                                    </div>
+                                ) : aiSnapshotData ? (
+                                    <div className="space-y-6">
+                                        <div className="p-4 rounded-xl bg-purple/5 border border-purple/10 text-purple">
+                                            <h3 className="text-sm font-semibold mb-1">AI Executive Summary</h3>
+                                            <p className="text-sm opacity-90">{aiSnapshotData.summary}</p>
+                                        </div>
+
+                                        <table className="w-full text-sm">
+                                            <thead>
+                                                <tr className="text-gray-400 dark:text-gray-500 text-xs border-b border-gray-200 dark:border-gray-800 transition-colors">
+                                                    <th className="text-left py-2 font-medium">Wallet Address & AI Reasoning</th>
+                                                    <th className="text-left py-2 font-medium">Classification</th>
+                                                    <th className="text-right py-2 font-medium">Reward Multiplier</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {aiSnapshotData.wallets.map((w: any, idx: number) => (
+                                                    <tr key={idx} className="border-b border-gray-200 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors">
+                                                        <td className="py-4 pr-4">
+                                                            <div className="font-mono text-xs text-gray-900 dark:text-gray-100 transition-colors">{w.address}</div>
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 transition-colors">{w.geminiReasoning}</div>
+                                                        </td>
+                                                        <td className="py-4 pr-4">
+                                                            <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${w.isFlagged ? 'bg-red-400/10 text-red-500 border-red-400/20' : 'bg-gold/10 text-gold border-gold/20'}`}>
+                                                                {w.isFlagged ? <ShieldAlert className="w-3 h-3" /> : <CheckCircle2 className="w-3 h-3" />}
+                                                                {w.classification}
+                                                            </div>
+                                                        </td>
+                                                        <td className="py-4 text-right">
+                                                            <span className={`font-semibold ${w.isFlagged ? 'text-red-500' : 'text-green-500'}`}>{w.rewardMultiplier.toFixed(1)}x</span>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                ) : (
+                                    <div className="flex justify-center h-64 items-center text-sm text-gray-500 dark:text-gray-400 transition-colors">Failed to load AI analysis. Check API key.</div>
+                                )}
+                            </div>
+
+                            {!isAnalyzing && aiSnapshotData && (
+                                <div className="p-6 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 flex justify-end gap-3 transition-colors">
+                                    <button onClick={() => setIsAirdropModalOpen(false)} className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">Cancel</button>
+                                    <button onClick={() => {
+                                        setIsAirdropModalOpen(false);
+                                        alert("BulkDistributor.sol contract executed on testnet! (Demo)");
+                                    }} className="px-6 py-2 bg-gradient-to-r from-purple to-indigo-500 hover:from-purple hover:to-indigo-400 text-white rounded-xl text-sm font-medium hover:opacity-90 transition-all flex items-center gap-2">
+                                        Execute On-Chain Distribution
+                                    </button>
+                                </div>
+                            )}
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </main>
     );
 }

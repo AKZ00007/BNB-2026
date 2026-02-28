@@ -658,7 +658,7 @@
   "linkReferences": {},
   "deployedLinkReferences": {},
   "immutableReferences": {
-    "7177": [
+    "7314": [
       {
         "length": 32,
         "start": 1034
@@ -668,7 +668,7 @@
         "start": 3397
       }
     ],
-    "7179": [
+    "7316": [
       {
         "length": 32,
         "start": 1430
@@ -680,5 +680,5 @@
     ]
   },
   "inputSourceName": "project/contracts/GuardianToken.sol",
-  "buildInfoId": "solc-0_8_20-30ae910a43f3452aca1f4140178d4e0de56f3d69"
+  "buildInfoId": "solc-0_8_20-ff2a648d193df156e0acd29b8d04b0ca4e8b6845"
 }
