@@ -30,20 +30,38 @@ GROWUP AI is built to become the default intelligent layer for launching, securi
 
 ---
 
-## Technical Architecture & Features
+## User Journey Diagram
 
-### 1. AI Tokenomics Engine
-- Natural language to JSON tokenomics configuration using LLaMa-3 (via Groq).
-- Mathematical validation of tax constraints, liquidity requirements, and supply distribution to ensure sustainability.
+```mermaid
+graph TD
+    A[Creator visits GROWUP AI] --> B[Enter plain-English token goals]
+    B --> C{AI Tokenomics Engine}
+    C -->|Simulates taxes, max wallet| D[Optimized JSON Configuration]
+    D --> E[1-Click Compile & Deploy]
+    E -->|Guardian Token Factory| F[BSC Testnet / Mainnet]
+    F --> G[Live Attack Simulator]
+    G -->|Visually proves EVM security| H[Investor Confidence]
+    F --> I[Growth Hub Suite]
+    I -->|Analyzes BscScan TXs| J{AI Sybil Detection}
+    J -->|Filters attackers| K[Loyalty Airdrops to Real Holders]
+```
 
-### 2. The Guardian Smart Contract
-- An optimized standard ERC-20 contract fortified with adjustable security parameters.
-- Built-in functions for `_transfer` interception to enforce dynamic taxes and holding periods.
-- Fixed supply architecture with renounced minting capabilities by default, maximizing investor trust.
+## Technical Architecture & Open-Source Dependencies
 
-### 3. The Growth Dashboard
-- Real-time token analytics focusing on wallet health over simple price metrics.
-- Tools for scheduling automated buybacks and multi-send token distributions powered by our AI wallet classifier.
+GROWUP AI leverages a modern, highly composable Web3 stack focused on the BNB Chain ecosystem.
+
+### Frontend Application
+- **Next.js 14 (App Router):** High-performance React framework for server-side rendering and routing.
+- **Tailwind CSS & Framer Motion:** For highly responsive, cinematic, and accessible UI components.
+- **Lucide React & Recharts:** For iconography and real-time dashboard data visualization.
+
+### Blockchain & Web3 Integration
+- **Viem & Wagmi:** State-of-the-art Ethereum/BSC typed interfaces for blockchain interaction, wallet connections, and contract execution.
+- **Hardhat:** Specifically utilized for compiling our dynamically generated `Guardian Token` smart contracts directly within the deployment flow.
+- **BscScan/Etherscan V2 API:** For pulling live, on-chain token transaction histories to feed the Growth Hub.
+
+### AI Engine Ecosystem
+- **Groq API & LLaMa-3 70B:** Unlocks near-instantaneous AI processing. Used for the tokenomics translation layer and the complex wallet behavior analysis (Sybil detection).
 
 ---
 
@@ -66,12 +84,41 @@ GROWUP AI is built to become the default intelligent layer for launching, securi
 
 ---
 
-## Running Locally
+## Deployment & Local Installation Instructions
 
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Configure environment variables (Groq API, Supabase, BSC RPC endpoints) in `.env.local`
-4. Run the development server: `npm run dev`
-5. Open [http://localhost:3000](http://localhost:3000)
+GROWUP AI is designed to be easily run locally for testing on the BSC Testnet.
 
+### Prerequisites
+- Node.js (v18 or higher)
+- MetaMask Extension (configured with BSC Testnet and funded with test BNB via the official faucet)
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/yourusername/growup-ai.git
+cd growup-ai
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Configure Environment Variables
+Create a `.env.local` file in the root directory and add the following keys. (Note: These are required for the AI and on-chain analytics features to function).
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+BSCSCAN_API_KEY=your_bscscan_or_etherscan_v2_key
+GROQ_API_KEY=your_groq_api_key
+```
+
+### 4. Run the Development Server
+```bash
+npm run dev
+```
+
+### 5. Access the Platform
+Open [http://localhost:3000](http://localhost:3000) in your browser. Ensure your MetaMask is connected to the BSC Testnet to interact with the deployment and simulator flows.
+
+---
 *GROWUP AI was built for the BNB Chain Hackathon, prioritizing security, automation, and real on-chain utility over hype.*
