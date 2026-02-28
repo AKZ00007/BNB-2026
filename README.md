@@ -1,6 +1,8 @@
 # GROWUP AI | End Token Crashes
 
-**Live Deployment:** [https://growupai.vercel.app/](https://growupai.vercel.app/)
+- **Live Deployment:** [https://growupai.vercel.app/](https://growupai.vercel.app/)
+- **Pitch Deck (Canva):** [View Presentation](https://www.canva.com/design/DAHClc3t0s8/BP34FUW6Rs7hvRNO0YuE6g/edit)
+- **Demo Video (Drive):** [Watch Demo](https://drive.google.com/drive/folders/1KfU4vkpXRNttNHvrJKeiQKfKK3Jf6_hQ)
 
 ## The Vision
 GROWUP AI is built to become the default intelligent layer for launching, securing, and scaling resilient token economies on the BNB Chain. We transition from a simple smart contract deployer into a comprehensive, AI-driven Web3 growth ecosystem, solving the most critical pain points that cause 95% of new token launches to fail.
